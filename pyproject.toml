@@ -1,11 +1,12 @@
 [tool.poetry]
-name = "base"
+name = "example"
 version = "0.1.0"
 description = ""
 authors = ["Emmanuel Nicolau <emmanicolau@gmail.com>"]
 
 [tool.poetry.dependencies]
 python = "^3.9"
+pytest = "^7.0.1"
 
 [tool.poetry.dev-dependencies]
 
