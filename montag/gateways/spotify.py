@@ -12,7 +12,7 @@ class SpotifyClient:
     client_id: str = os.environ["SPOTIFY_CLIENT_ID"]
     client_secret: str = os.environ["SPOTIFY_CLIENT_SECRET"]
     redirect_url: str = os.environ["SPOTIFY_REDIRECT_URL"]
-    state: str = str(uuid.uuid4())
+    state: str = str(uuid.uuid4())  # FIXME static
 
     def authorize_url(self):
         pass
@@ -28,4 +28,5 @@ class SpotifyClient:
 """
 Fiddles:
 client = SpotifyClient()
+client.authorize_url()
 """
