@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "example"
+name = "montag"
 version = "0.1.0"
 description = ""
 authors = ["Emmanuel Nicolau <emmanicolau@gmail.com>"]

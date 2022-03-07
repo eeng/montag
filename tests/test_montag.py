@@ -1,4 +1,4 @@
-from example import __version__
+from montag import __version__
 
 
 def test_version():
