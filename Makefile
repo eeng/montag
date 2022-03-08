@@ -1,3 +1,6 @@
+console:
+	poetry run ipython
+
 test:
 	poetry run pytest
 

@@ -1,5 +1,5 @@
 import os
-import uuid
+import secrets
 from urllib.parse import urlencode
 from dataclasses import dataclass, field
 
@@ -12,7 +12,7 @@ class SpotifyClient:
     client_id: str = os.environ["SPOTIFY_CLIENT_ID"]
     client_secret: str = os.environ["SPOTIFY_CLIENT_SECRET"]
     redirect_uri: str = os.environ["SPOTIFY_REDIRECT_URI"]
-    state: str = field(default_factory=lambda: str(uuid.uuid4()))
+    state: str = field(default_factory=lambda: str(secrets.token_hex(8)))
 
     def authorize_url(self):
         params = dict(
