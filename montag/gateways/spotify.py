@@ -1,5 +1,6 @@
 import os
 import secrets
+from typing import Tuple
 from urllib.parse import urlencode
 from dataclasses import dataclass, field
 
@@ -12,17 +13,17 @@ class SpotifyClient:
     client_id: str = os.environ["SPOTIFY_CLIENT_ID"]
     client_secret: str = os.environ["SPOTIFY_CLIENT_SECRET"]
     redirect_uri: str = os.environ["SPOTIFY_REDIRECT_URI"]
-    state: str = field(default_factory=lambda: str(secrets.token_hex(8)))
 
-    def authorize_url(self):
+    def authorize_url_and_state(self) -> Tuple[str, str]:
+        state = secrets.token_hex(8)
         params = dict(
             client_id=self.client_id,
             redirect_uri=self.redirect_uri,
-            state=self.state,
+            state=state,
             scope=SCOPE,
             response_type="code",
         )
-        return f"{BASE_URL}/authorize?{urlencode(params)}"
+        return (f"{BASE_URL}/authorize?{urlencode(params)}", state)
 
 
 """
