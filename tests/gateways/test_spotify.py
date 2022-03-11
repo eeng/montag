@@ -1,9 +1,14 @@
-from unittest.mock import Mock
-from montag.gateways.spotify import SpotifyClient
 import json
+import pytest
+from unittest.mock import Mock
+from montag.gateways.spotify import (
+    SpotifyClient,
+    SpotifyNotAuthorized,
+    SpotifyWrongRequest,
+)
 
 
-def authorize_url_and_state():
+def test_authorize_url_and_state():
     actual_url, state = SpotifyClient(
         client_id="FAKE_CLIENT_ID",
         client_secret="FAKE_CLIENT_SECRET",
@@ -29,20 +34,18 @@ def test_state_changes_with_every_call():
 
 
 def test_request_access_token():
-    access_token_response = resource("access_token_response.json")
-
-    fake_http_adapter = Mock()
-    fake_http_adapter.post.return_value = json_response(access_token_response)
+    access_token_response = resource("responses/access_token.json")
+    http_adapter = mock_http_adapter(post=access_token_response)
 
     client = SpotifyClient(
-        http_adapter=fake_http_adapter,
+        http_adapter=http_adapter,
         client_id="CLIENT_ID",
         client_secret="CLIENT_SECRET",
         redirect_uri="REDIRECT_URI",
     )
-    token = client.request_access_token("SOME_CODE")
+    auth_token = client.request_access_token("SOME_CODE")
 
-    fake_http_adapter.post.assert_called_once_with(
+    http_adapter.post.assert_called_once_with(
         "https://accounts.spotify.com/api/token",
         data=dict(
             grant_type="authorization_code",
@@ -52,7 +55,38 @@ def test_request_access_token():
             redirect_uri="REDIRECT_URI",
         ),
     )
-    assert token == access_token_response
+    assert auth_token == access_token_response
+    assert client.auth_token == access_token_response
+
+
+def test_me_successful():
+    me_response = resource("responses/me.json")
+    http_adapter = mock_http_adapter(get=me_response)
+    auth_token = {"access_token": "ACCESS_TOKEN"}
+
+    client = SpotifyClient(auth_token=auth_token, http_adapter=http_adapter)
+    profile = client.me()
+
+    http_adapter.get.assert_called_once_with(
+        "https://api.spotify.com/v1/me",
+        headers={"Authorization": "Bearer ACCESS_TOKEN"},
+    )
+
+    assert profile == me_response
+
+
+def test_me_requires_authorization():
+    with pytest.raises(SpotifyNotAuthorized):
+        SpotifyClient().me()
+
+
+def test_me_when_token_expired():
+    response = resource("responses/token_expired.json")
+    http_adapter = mock_http_adapter(get=response)
+
+    client = SpotifyClient(auth_token={"access_token": ""}, http_adapter=http_adapter)
+    with pytest.raises(SpotifyWrongRequest):
+        client.me()
 
 
 def resource(filename: str) -> dict:
@@ -60,7 +94,18 @@ def resource(filename: str) -> dict:
         return json.load(f)
 
 
+def mock_http_adapter(get=None, post=None) -> Mock:
+    fake_http_adapter = Mock()
+    if get is not None:
+        fake_http_adapter.get.return_value = json_response(get)
+    if post is not None:
+        fake_http_adapter.post.return_value = json_response(post)
+    return fake_http_adapter
+
+
 def json_response(json: dict) -> Mock:
     fake_response = Mock()
     fake_response.json.return_value = json
+    status_code = int(json["error"]["status"]) if "error" in json else 200
+    fake_response.status_code = status_code
     return fake_response

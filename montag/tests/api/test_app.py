@@ -8,7 +8,7 @@ from montag.gateways import spotify
 def test_spotify_login(client):
     response = client.get("/spotify/login")
     assert response.status_code == 302
-    assert spotify.BASE_URL in response.headers["Location"]
+    assert spotify.ACCOUNTS_URL in response.headers["Location"]
     assert "spotify_auth_state" in response.headers["Set-Cookie"]
 
 

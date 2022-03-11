@@ -28,14 +28,20 @@ def spotify_callback():
     received_state = request.args.get("state")
     if sent_state == received_state:
         code = request.args.get("code")
-        token = spotify_client().request_access_token(code)
-        session[SPOTIFY_SESSION_KEY] = token
-        return f"{token}"
+        auth_token = spotify_client().request_access_token(code)
+        session[SPOTIFY_SESSION_KEY] = auth_token
+        return f"{auth_token}"
     else:
         abort(403, description="Something went wrong during Spotify authorization")
 
 
+@app.route("/spotify/profile")
+def spotify_profile():
+    return spotify_client().me()
+
+
 def spotify_client():
     if "spotify_client" not in g:
-        g.spotify_client = SpotifyClient()
+        auth_token = session.get(SPOTIFY_SESSION_KEY)
+        g.spotify_client = SpotifyClient(auth_token=auth_token)
     return g.spotify_client
