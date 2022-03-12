@@ -2,9 +2,9 @@ import os
 import secrets
 import requests
 from dataclasses import dataclass
-from types import ModuleType
 from typing import Optional, TypedDict
 from urllib.parse import urlencode
+from montag.gateways.http import HttpAdapter, HttpResponse
 
 ACCOUNTS_URL = "https://accounts.spotify.com"
 API_URL = "https://api.spotify.com/v1"
@@ -21,7 +21,7 @@ class SpotifyClient:
     client_id: str = os.environ["SPOTIFY_CLIENT_ID"]
     client_secret: str = os.environ["SPOTIFY_CLIENT_SECRET"]
     redirect_uri: str = os.environ["SPOTIFY_REDIRECT_URI"]
-    http_adapter: ModuleType = requests
+    http_adapter: HttpAdapter = requests
     auth_token: Optional[AuthToken] = None
 
     def authorize_url_and_state(self) -> tuple[str, str]:
@@ -44,7 +44,11 @@ class SpotifyClient:
             client_secret=self.client_secret,
         )
         response = self.http_adapter.post(f"{ACCOUNTS_URL}/api/token", data=data)
-        self.auth_token = response.json()
+        json = self._parse_response(response)
+        self.auth_token = {
+            "access_token": json["access_token"],
+            "refresh_token": json["refresh_token"],
+        }
         return self.auth_token
 
     def refresh_access_token(self):
@@ -58,7 +62,7 @@ class SpotifyClient:
             client_secret=self.client_secret,
         )
         response = self.http_adapter.post(f"{ACCOUNTS_URL}/api/token", data=data)
-        self.auth_token |= response.json()
+        self.auth_token["access_token"] = self._parse_response(response)["access_token"]
         return self.auth_token
 
     def me(self):
@@ -88,7 +92,7 @@ class SpotifyClient:
         bearer = self.auth_token["access_token"]
         return {"Authorization": f"Bearer {bearer}"}
 
-    def _parse_response(self, response: requests.Response):
+    def _parse_response(self, response: HttpResponse):
         json = response.json()
         if response.status_code == 200:
             return json

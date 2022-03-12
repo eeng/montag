@@ -7,6 +7,7 @@ from montag.gateways.spotify import (
     NotAuthorizedError,
     BadRequestError,
 )
+from montag.util.dict import select_keys
 
 AUTH_TOKEN: AuthToken = {"access_token": "BQDMu5", "refresh_token": "AQAXsR"}
 
@@ -60,7 +61,7 @@ def test_request_access_token():
             redirect_uri="REDIRECT_URI",
         ),
     )
-    assert auth_token == response
+    assert auth_token == select_keys(response, "access_token", "refresh_token")
     assert client.auth_token == auth_token
 
 
@@ -85,7 +86,7 @@ def test_refresh_access_token():
             client_secret="CLIENT_SECRET",
         ),
     )
-    assert auth_token == AUTH_TOKEN | response
+    assert auth_token == {**AUTH_TOKEN, "access_token": response["access_token"]}
     assert client.auth_token == auth_token
 
 
