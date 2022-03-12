@@ -4,7 +4,9 @@ import requests
 from dataclasses import dataclass
 from typing import Optional, TypedDict
 from urllib.parse import urlencode
+from datetime import datetime, timedelta
 from montag.gateways.http import HttpAdapter, HttpResponse
+from montag.util.clock import Clock
 
 ACCOUNTS_URL = "https://accounts.spotify.com"
 API_URL = "https://api.spotify.com/v1"
@@ -14,6 +16,7 @@ SCOPE = "user-read-private user-read-email user-library-read"
 class AuthToken(TypedDict):
     access_token: str
     refresh_token: str
+    expires_at: datetime
 
 
 @dataclass
@@ -21,8 +24,9 @@ class SpotifyClient:
     client_id: str = os.environ["SPOTIFY_CLIENT_ID"]
     client_secret: str = os.environ["SPOTIFY_CLIENT_SECRET"]
     redirect_uri: str = os.environ["SPOTIFY_REDIRECT_URI"]
-    http_adapter: HttpAdapter = requests
     auth_token: Optional[AuthToken] = None
+    http_adapter: HttpAdapter = requests
+    clock: Clock = Clock()
 
     def authorize_url_and_state(self) -> tuple[str, str]:
         state = secrets.token_hex(8)
@@ -35,7 +39,7 @@ class SpotifyClient:
         )
         return (f"{ACCOUNTS_URL}/authorize?{urlencode(params)}", state)
 
-    def request_access_token(self, code: str):
+    def request_access_token(self, code: str) -> AuthToken:
         data = dict(
             grant_type="authorization_code",
             code=code,
@@ -45,13 +49,10 @@ class SpotifyClient:
         )
         response = self.http_adapter.post(f"{ACCOUNTS_URL}/api/token", data=data)
         json = self._parse_response(response)
-        self.auth_token = {
-            "access_token": json["access_token"],
-            "refresh_token": json["refresh_token"],
-        }
+        self.auth_token = self._extract_auth_token(json, json)
         return self.auth_token
 
-    def refresh_access_token(self):
+    def refresh_access_token(self) -> AuthToken:
         if self.auth_token is None:
             raise NotAuthorizedError
 
@@ -62,7 +63,22 @@ class SpotifyClient:
             client_secret=self.client_secret,
         )
         response = self.http_adapter.post(f"{ACCOUNTS_URL}/api/token", data=data)
-        self.auth_token["access_token"] = self._parse_response(response)["access_token"]
+        json = self._parse_response(response)
+        self.auth_token = self._extract_auth_token(json, self.auth_token)
+        return self.auth_token
+
+    def _extract_auth_token(self, json, refresh_token_dict) -> AuthToken:
+        return {
+            "refresh_token": refresh_token_dict["refresh_token"],
+            "access_token": json["access_token"],
+            "expires_at": self.clock.now() + timedelta(seconds=json["expires_in"]),
+        }
+
+    def refresh_access_token_if_needed(self) -> Optional[AuthToken]:
+        if self.auth_token is None:
+            return None
+        if self.clock.now() >= self.auth_token["expires_at"]:
+            self.refresh_access_token()
         return self.auth_token
 
     def me(self):
@@ -103,19 +119,13 @@ class SpotifyClient:
 class SpotifyError(Exception):
     """Base class for all Spotify errors"""
 
-    pass
-
 
 class BadRequestError(SpotifyError):
     """Raised when the API replies with a non-200 status code"""
 
-    pass
-
 
 class NotAuthorizedError(SpotifyError):
     """Raised when the authorization flow hasn't been started yet"""
-
-    pass
 
 
 """

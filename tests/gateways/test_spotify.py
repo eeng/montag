@@ -1,15 +1,21 @@
 import json
 import pytest
+from datetime import datetime
 from unittest.mock import Mock
+from montag.gateways.http import HttpAdapter, HttpResponse
 from montag.gateways.spotify import (
     AuthToken,
     SpotifyClient,
     NotAuthorizedError,
     BadRequestError,
 )
-from montag.util.dict import select_keys
+from montag.util.clock import Clock
 
-AUTH_TOKEN: AuthToken = {"access_token": "BQDMu5", "refresh_token": "AQAXsR"}
+AUTH_TOKEN: AuthToken = {
+    "access_token": "BQDMu5",
+    "refresh_token": "AQAXsR",
+    "expires_at": datetime.now(),
+}
 
 
 def test_authorize_url_and_state():
@@ -42,11 +48,13 @@ def test_state_changes_with_every_call():
 def test_request_access_token():
     response = resource("responses/access_token.json")
     http_adapter = mock_http_adapter(post=response)
+    clock = fake_clock(datetime(2022, 3, 12, 5, 0))
     client = SpotifyClient(
         http_adapter=http_adapter,
         client_id="CLIENT_ID",
         client_secret="CLIENT_SECRET",
         redirect_uri="REDIRECT_URI",
+        clock=clock,
     )
 
     auth_token = client.request_access_token("SOME_CODE")
@@ -61,18 +69,24 @@ def test_request_access_token():
             redirect_uri="REDIRECT_URI",
         ),
     )
-    assert auth_token == select_keys(response, "access_token", "refresh_token")
+    assert auth_token == {
+        "access_token": response["access_token"],
+        "refresh_token": response["refresh_token"],
+        "expires_at": datetime(2022, 3, 12, 6, 0),
+    }
     assert client.auth_token == auth_token
 
 
 def test_refresh_access_token():
     response = resource("responses/refreshed_token.json")
     http_adapter = mock_http_adapter(post=response)
+    clock = fake_clock(datetime(2022, 3, 12, 5, 0))
     client = SpotifyClient(
         auth_token=AUTH_TOKEN,
-        http_adapter=http_adapter,
         client_id="CLIENT_ID",
         client_secret="CLIENT_SECRET",
+        http_adapter=http_adapter,
+        clock=clock,
     )
 
     auth_token = client.refresh_access_token()
@@ -86,7 +100,11 @@ def test_refresh_access_token():
             client_secret="CLIENT_SECRET",
         ),
     )
-    assert auth_token == {**AUTH_TOKEN, "access_token": response["access_token"]}
+    assert auth_token == {
+        "refresh_token": AUTH_TOKEN["refresh_token"],
+        "access_token": response["access_token"],
+        "expires_at": datetime(2022, 3, 12, 6, 0),
+    }
     assert client.auth_token == auth_token
 
 
@@ -153,7 +171,7 @@ def resource(filename: str) -> dict:
         return json.load(f)
 
 
-def mock_http_adapter(get=None, post=None) -> Mock:
+def mock_http_adapter(get=None, post=None) -> HttpAdapter:
     fake_http_adapter = Mock()
     if get is not None:
         fake_http_adapter.get.return_value = json_response(get)
@@ -162,9 +180,15 @@ def mock_http_adapter(get=None, post=None) -> Mock:
     return fake_http_adapter
 
 
-def json_response(json: dict) -> Mock:
+def json_response(json: dict) -> HttpResponse:
     fake_response = Mock()
     fake_response.json.return_value = json
     status_code = int(json["error"]["status"]) if "error" in json else 200
     fake_response.status_code = status_code
     return fake_response
+
+
+def fake_clock(dt: datetime) -> Clock:
+    clock = Mock()
+    clock.now.return_value = datetime(2022, 3, 12, 5, 0)
+    return clock

@@ -44,4 +44,5 @@ def spotify_client():
     if "spotify_client" not in g:
         auth_token = session.get(SPOTIFY_SESSION_KEY)
         g.spotify_client = SpotifyClient(auth_token=auth_token)
+        session[SPOTIFY_SESSION_KEY] = g.spotify_client.refresh_access_token_if_needed()
     return g.spotify_client
