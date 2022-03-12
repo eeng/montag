@@ -8,7 +8,7 @@ from urllib.parse import urlencode
 
 ACCOUNTS_URL = "https://accounts.spotify.com"
 API_URL = "https://api.spotify.com/v1"
-SCOPE = "user-read-private user-read-email"
+SCOPE = "user-read-private user-read-email user-library-read"
 
 
 class AuthToken(TypedDict):
@@ -35,7 +35,7 @@ class SpotifyClient:
         )
         return (f"{ACCOUNTS_URL}/authorize?{urlencode(params)}", state)
 
-    def request_access_token(self, code):
+    def request_access_token(self, code: str):
         data = dict(
             grant_type="authorization_code",
             code=code,
@@ -48,6 +48,9 @@ class SpotifyClient:
         return self.auth_token
 
     def request_refreshed_token(self):
+        if self.auth_token is None:
+            raise NotAuthorizedError
+
         data = dict(
             grant_type="refresh_token",
             refresh_token=self.auth_token["refresh_token"],
@@ -61,7 +64,7 @@ class SpotifyClient:
         response = self.http_adapter.get(f"{API_URL}/me", headers=self._auth_header())
         return self._parse_response(response)
 
-    def my_playlists(self, limit=50, offset=0):
+    def my_playlists(self, limit: int = 50, offset: int = 0):
         response = self.http_adapter.get(
             f"{API_URL}/me/playlists",
             params=dict(limit=limit, offset=offset),
@@ -69,29 +72,43 @@ class SpotifyClient:
         )
         return self._parse_response(response)
 
+    def my_tracks(self, limit: int = 50, offset: int = 0):
+        response = self.http_adapter.get(
+            f"{API_URL}/me/tracks",
+            params=dict(limit=limit, offset=offset),
+            headers=self._auth_header(),
+        )
+        return self._parse_response(response)
+
     def _auth_header(self):
         if self.auth_token is None:
-            raise SpotifyNotAuthorized
+            raise NotAuthorizedError
 
         bearer = self.auth_token["access_token"]
         return {"Authorization": f"Bearer {bearer}"}
 
-    def _parse_response(self, response):
+    def _parse_response(self, response: requests.Response):
         json = response.json()
         if response.status_code == 200:
             return json
         else:
-            raise SpotifyWrongRequest(json)
+            raise BadRequestError(json)
 
 
-class SpotifyWrongRequest(Exception):
-    """Raised when the API replies with a non-200 status code."""
+class SpotifyError(Exception):
+    """Base class for all Spotify errors"""
 
     pass
 
 
-class SpotifyNotAuthorized(Exception):
-    """Raised when the authorization flow hasn't been started yet."""
+class BadRequestError(SpotifyError):
+    """Raised when the API replies with a non-200 status code"""
+
+    pass
+
+
+class NotAuthorizedError(SpotifyError):
+    """Raised when the authorization flow hasn't been started yet"""
 
     pass
 
@@ -101,4 +118,5 @@ client = SpotifyClient()
 url, _ = client.authorize_url_and_state()
 code = input(f"Go to {url} and then paste code here: ")
 auth_token = client.request_access_token(code)
+client.me()
 """

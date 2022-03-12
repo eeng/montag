@@ -27,7 +27,7 @@ def spotify_callback():
     sent_state = request.cookies.get(SPOTIFY_COOKIE_KEY)
     received_state = request.args.get("state")
     if sent_state == received_state:
-        code = request.args.get("code")
+        code = request.args["code"]
         auth_token = spotify_client().request_access_token(code)
         session[SPOTIFY_SESSION_KEY] = auth_token
         return f"{auth_token}"

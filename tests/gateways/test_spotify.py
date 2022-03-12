@@ -2,12 +2,13 @@ import json
 import pytest
 from unittest.mock import Mock
 from montag.gateways.spotify import (
+    AuthToken,
     SpotifyClient,
-    SpotifyNotAuthorized,
-    SpotifyWrongRequest,
+    NotAuthorizedError,
+    BadRequestError,
 )
 
-AUTH_TOKEN = {"access_token": "BQDMu5", "refresh_token": "AQAXsR", "expires_in": 3600}
+AUTH_TOKEN: AuthToken = {"access_token": "BQDMu5", "refresh_token": "AQAXsR"}
 
 
 def test_authorize_url_and_state():
@@ -22,7 +23,7 @@ def test_authorize_url_and_state():
         "client_id=FAKE_CLIENT_ID&"
         "redirect_uri=FAKE_REDIRECT_URL&"
         f"state={state}&"
-        "scope=user-read-private+user-read-email&"
+        "scope=user-read-private+user-read-email+user-library-read&"
         "response_type=code"
     )
     assert actual_url == expected_url
@@ -77,16 +78,16 @@ def test_me_successful():
 
 
 def test_me_requires_authorization():
-    with pytest.raises(SpotifyNotAuthorized):
+    with pytest.raises(NotAuthorizedError):
         SpotifyClient().me()
 
 
-def test_me_when_token_expired():
+def test_token_expired():
     response = resource("responses/token_expired.json")
     http_adapter = mock_http_adapter(get=response)
 
     client = SpotifyClient(auth_token=AUTH_TOKEN, http_adapter=http_adapter)
-    with pytest.raises(SpotifyWrongRequest):
+    with pytest.raises(BadRequestError):
         client.me()
 
 
@@ -101,6 +102,19 @@ def test_my_playlists():
         headers={"Authorization": f"Bearer {AUTH_TOKEN['access_token']}"},
     )
     assert playlists == response
+
+
+def test_my_tracks():
+    response = resource("responses/my_tracks.json")
+    http_adapter = mock_http_adapter(get=response)
+    client = SpotifyClient(auth_token=AUTH_TOKEN, http_adapter=http_adapter)
+    tracks = client.my_tracks(limit=5, offset=10)
+    http_adapter.get.assert_called_once_with(
+        "https://api.spotify.com/v1/me/tracks",
+        params={"limit": 5, "offset": 10},
+        headers={"Authorization": f"Bearer {AUTH_TOKEN['access_token']}"},
+    )
+    assert tracks == response
 
 
 def resource(filename: str) -> dict:
