@@ -12,11 +12,13 @@ AUTH_TOKEN: AuthToken = {"access_token": "BQDMu5", "refresh_token": "AQAXsR"}
 
 
 def test_authorize_url_and_state():
-    actual_url, state = SpotifyClient(
+    client = SpotifyClient(
         client_id="FAKE_CLIENT_ID",
         client_secret="FAKE_CLIENT_SECRET",
         redirect_uri="FAKE_REDIRECT_URL",
-    ).authorize_url_and_state()
+    )
+
+    actual_url, state = client.authorize_url_and_state()
 
     expected_url = (
         "https://accounts.spotify.com/authorize?"
@@ -37,15 +39,15 @@ def test_state_changes_with_every_call():
 
 
 def test_request_access_token():
-    access_token_response = resource("responses/access_token.json")
-    http_adapter = mock_http_adapter(post=access_token_response)
-
+    response = resource("responses/access_token.json")
+    http_adapter = mock_http_adapter(post=response)
     client = SpotifyClient(
         http_adapter=http_adapter,
         client_id="CLIENT_ID",
         client_secret="CLIENT_SECRET",
         redirect_uri="REDIRECT_URI",
     )
+
     auth_token = client.request_access_token("SOME_CODE")
 
     http_adapter.post.assert_called_once_with(
@@ -58,23 +60,47 @@ def test_request_access_token():
             redirect_uri="REDIRECT_URI",
         ),
     )
-    assert auth_token == access_token_response
-    assert client.auth_token == access_token_response
+    assert auth_token == response
+    assert client.auth_token == auth_token
 
 
-def test_me_successful():
-    me_response = resource("responses/me.json")
-    http_adapter = mock_http_adapter(get=me_response)
+def test_refresh_access_token():
+    response = resource("responses/refreshed_token.json")
+    http_adapter = mock_http_adapter(post=response)
+    client = SpotifyClient(
+        auth_token=AUTH_TOKEN,
+        http_adapter=http_adapter,
+        client_id="CLIENT_ID",
+        client_secret="CLIENT_SECRET",
+    )
 
+    auth_token = client.refresh_access_token()
+
+    http_adapter.post.assert_called_once_with(
+        "https://accounts.spotify.com/api/token",
+        data=dict(
+            grant_type="refresh_token",
+            refresh_token=AUTH_TOKEN["refresh_token"],
+            client_id="CLIENT_ID",
+            client_secret="CLIENT_SECRET",
+        ),
+    )
+    assert auth_token == AUTH_TOKEN | response
+    assert client.auth_token == auth_token
+
+
+def test_me():
+    response = resource("responses/me.json")
+    http_adapter = mock_http_adapter(get=response)
     client = SpotifyClient(auth_token=AUTH_TOKEN, http_adapter=http_adapter)
+
     profile = client.me()
 
     http_adapter.get.assert_called_once_with(
         "https://api.spotify.com/v1/me",
         headers={"Authorization": f"Bearer {AUTH_TOKEN['access_token']}"},
     )
-
-    assert profile == me_response
+    assert profile == response
 
 
 def test_me_requires_authorization():
@@ -95,7 +121,9 @@ def test_my_playlists():
     response = resource("responses/my_playlists.json")
     http_adapter = mock_http_adapter(get=response)
     client = SpotifyClient(auth_token=AUTH_TOKEN, http_adapter=http_adapter)
+
     playlists = client.my_playlists(limit=5, offset=10)
+
     http_adapter.get.assert_called_once_with(
         "https://api.spotify.com/v1/me/playlists",
         params={"limit": 5, "offset": 10},
@@ -108,7 +136,9 @@ def test_my_tracks():
     response = resource("responses/my_tracks.json")
     http_adapter = mock_http_adapter(get=response)
     client = SpotifyClient(auth_token=AUTH_TOKEN, http_adapter=http_adapter)
+
     tracks = client.my_tracks(limit=5, offset=10)
+
     http_adapter.get.assert_called_once_with(
         "https://api.spotify.com/v1/me/tracks",
         params={"limit": 5, "offset": 10},

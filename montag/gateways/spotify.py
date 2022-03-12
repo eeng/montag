@@ -47,7 +47,7 @@ class SpotifyClient:
         self.auth_token = response.json()
         return self.auth_token
 
-    def request_refreshed_token(self):
+    def refresh_access_token(self):
         if self.auth_token is None:
             raise NotAuthorizedError
 
@@ -58,7 +58,8 @@ class SpotifyClient:
             client_secret=self.client_secret,
         )
         response = self.http_adapter.post(f"{ACCOUNTS_URL}/api/token", data=data)
-        return response.json()
+        self.auth_token |= response.json()
+        return self.auth_token
 
     def me(self):
         response = self.http_adapter.get(f"{API_URL}/me", headers=self._auth_header())
@@ -119,4 +120,5 @@ url, _ = client.authorize_url_and_state()
 code = input(f"Go to {url} and then paste code here: ")
 auth_token = client.request_access_token(code)
 client.me()
+client.refresh_access_token()
 """
