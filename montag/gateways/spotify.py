@@ -61,6 +61,14 @@ class SpotifyClient:
         response = self.http_adapter.get(f"{API_URL}/me", headers=self._auth_header())
         return self._parse_response(response)
 
+    def my_playlists(self, limit=50, offset=0):
+        response = self.http_adapter.get(
+            f"{API_URL}/me/playlists",
+            params=dict(limit=limit, offset=offset),
+            headers=self._auth_header(),
+        )
+        return self._parse_response(response)
+
     def _auth_header(self):
         if self.auth_token is None:
             raise SpotifyNotAuthorized
@@ -69,10 +77,11 @@ class SpotifyClient:
         return {"Authorization": f"Bearer {bearer}"}
 
     def _parse_response(self, response):
+        json = response.json()
         if response.status_code == 200:
-            return response.json()
+            return json
         else:
-            raise SpotifyWrongRequest
+            raise SpotifyWrongRequest(json)
 
 
 class SpotifyWrongRequest(Exception):
@@ -91,6 +100,5 @@ class SpotifyNotAuthorized(Exception):
 client = SpotifyClient()
 url, _ = client.authorize_url_and_state()
 code = input(f"Go to {url} and then paste code here: ")
-token = client.request_access_token(code)
-print(f"Token: {token}")
+auth_token = client.request_access_token(code)
 """

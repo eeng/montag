@@ -1,0 +1,128 @@
+{
+    "href": "https://api.spotify.com/v1/users/alice/playlists?offset=0&limit=20",
+    "items": [
+        {
+            "collaborative": false,
+            "description": "",
+            "external_urls": {
+                "spotify": "https://open.spotify.com/playlist/5m7aOK7YN9oZy9cufeauD3"
+            },
+            "href": "https://api.spotify.com/v1/playlists/5m7aOK7YN9oZy9cufeauD3",
+            "id": "5m7aOK7YN9oZy9cufeauD3",
+            "images": [
+                {
+                    "height": 640,
+                    "url": "https://i.scdn.co/image/ab67616d0000b27346557fdc7325844aa2177155",
+                    "width": 640
+                }
+            ],
+            "name": "My Shazam Tracks",
+            "owner": {
+                "display_name": "alice",
+                "external_urls": {
+                    "spotify": "https://open.spotify.com/user/alice"
+                },
+                "href": "https://api.spotify.com/v1/users/alice",
+                "id": "alice",
+                "type": "user",
+                "uri": "spotify:user:alice"
+            },
+            "primary_color": null,
+            "public": true,
+            "snapshot_id": "MyxjNGM3NDc4YzQxMjcwNjhhZDU0ZTg4OTU3NGNjYzc2NTI4MzFmZjFh",
+            "tracks": {
+                "href": "https://api.spotify.com/v1/playlists/5m7aOK7YN9oZy9cufeauD3/tracks",
+                "total": 2
+            },
+            "type": "playlist",
+            "uri": "spotify:playlist:5m7aOK7YN9oZy9cufeauD3"
+        },
+        {
+            "collaborative": false,
+            "description": "",
+            "external_urls": {
+                "spotify": "https://open.spotify.com/playlist/4Rd2URtKmEhvcSr8wtltfs"
+            },
+            "href": "https://api.spotify.com/v1/playlists/4Rd2URtKmEhvcSr8wtltfs",
+            "id": "4Rd2URtKmEhvcSr8wtltfs",
+            "images": [
+                {
+                    "height": 640,
+                    "url": "https://mosaic.scdn.co/640/ab67616d0000b2730272b80e7311f476905c440eab67616d0000b27312d5c519807446bc5443749fab67616d0000b2734133716cfc80f0a138dc5719ab67616d0000b273a0fc6fd292bab2be473cbabe",
+                    "width": 640
+                },
+                {
+                    "height": 300,
+                    "url": "https://mosaic.scdn.co/300/ab67616d0000b2730272b80e7311f476905c440eab67616d0000b27312d5c519807446bc5443749fab67616d0000b2734133716cfc80f0a138dc5719ab67616d0000b273a0fc6fd292bab2be473cbabe",
+                    "width": 300
+                },
+                {
+                    "height": 60,
+                    "url": "https://mosaic.scdn.co/60/ab67616d0000b2730272b80e7311f476905c440eab67616d0000b27312d5c519807446bc5443749fab67616d0000b2734133716cfc80f0a138dc5719ab67616d0000b273a0fc6fd292bab2be473cbabe",
+                    "width": 60
+                }
+            ],
+            "name": "Soundtrack Videos",
+            "owner": {
+                "display_name": "alice",
+                "external_urls": {
+                    "spotify": "https://open.spotify.com/user/alice"
+                },
+                "href": "https://api.spotify.com/v1/users/alice",
+                "id": "alice",
+                "type": "user",
+                "uri": "spotify:user:alice"
+            },
+            "primary_color": null,
+            "public": true,
+            "snapshot_id": "MTY3LGNlYzMyMjU5ZTY0MDIyY2M0ZTA4ZWM5MzY4NDFhMWY0ZTdjZmI4ZTk=",
+            "tracks": {
+                "href": "https://api.spotify.com/v1/playlists/4Rd2URtKmEhvcSr8wtltfs/tracks",
+                "total": 77
+            },
+            "type": "playlist",
+            "uri": "spotify:playlist:4Rd2URtKmEhvcSr8wtltfs"
+        },
+        {
+            "collaborative": false,
+            "description": "",
+            "external_urls": {
+                "spotify": "https://open.spotify.com/playlist/3ODmycCuoBkIccAREsJjFM"
+            },
+            "href": "https://api.spotify.com/v1/playlists/3ODmycCuoBkIccAREsJjFM",
+            "id": "3ODmycCuoBkIccAREsJjFM",
+            "images": [
+                {
+                    "height": 640,
+                    "url": "https://i.scdn.co/image/ab67616d0000b2731a3d2cdfcbaabab967f3468c",
+                    "width": 640
+                }
+            ],
+            "name": "Soundtrack Suspenso",
+            "owner": {
+                "display_name": "alice",
+                "external_urls": {
+                    "spotify": "https://open.spotify.com/user/alice"
+                },
+                "href": "https://api.spotify.com/v1/users/alice",
+                "id": "alice",
+                "type": "user",
+                "uri": "spotify:user:alice"
+            },
+            "primary_color": null,
+            "public": true,
+            "snapshot_id": "NCw0MzZmN2FhZDM2YTY1MDczNWVlZjkzYjBhOGI1ZDg5ZGVkMjlkODNk",
+            "tracks": {
+                "href": "https://api.spotify.com/v1/playlists/3ODmycCuoBkIccAREsJjFM/tracks",
+                "total": 1
+            },
+            "type": "playlist",
+            "uri": "spotify:playlist:3ODmycCuoBkIccAREsJjFM"
+        }
+    ],
+    "limit": 20,
+    "next": null,
+    "offset": 0,
+    "previous": null,
+    "total": 3
+}

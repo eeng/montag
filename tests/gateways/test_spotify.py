@@ -7,6 +7,8 @@ from montag.gateways.spotify import (
     SpotifyWrongRequest,
 )
 
+AUTH_TOKEN = {"access_token": "BQDMu5", "refresh_token": "AQAXsR", "expires_in": 3600}
+
 
 def test_authorize_url_and_state():
     actual_url, state = SpotifyClient(
@@ -62,14 +64,13 @@ def test_request_access_token():
 def test_me_successful():
     me_response = resource("responses/me.json")
     http_adapter = mock_http_adapter(get=me_response)
-    auth_token = {"access_token": "ACCESS_TOKEN"}
 
-    client = SpotifyClient(auth_token=auth_token, http_adapter=http_adapter)
+    client = SpotifyClient(auth_token=AUTH_TOKEN, http_adapter=http_adapter)
     profile = client.me()
 
     http_adapter.get.assert_called_once_with(
         "https://api.spotify.com/v1/me",
-        headers={"Authorization": "Bearer ACCESS_TOKEN"},
+        headers={"Authorization": f"Bearer {AUTH_TOKEN['access_token']}"},
     )
 
     assert profile == me_response
@@ -84,9 +85,22 @@ def test_me_when_token_expired():
     response = resource("responses/token_expired.json")
     http_adapter = mock_http_adapter(get=response)
 
-    client = SpotifyClient(auth_token={"access_token": ""}, http_adapter=http_adapter)
+    client = SpotifyClient(auth_token=AUTH_TOKEN, http_adapter=http_adapter)
     with pytest.raises(SpotifyWrongRequest):
         client.me()
+
+
+def test_my_playlists():
+    response = resource("responses/my_playlists.json")
+    http_adapter = mock_http_adapter(get=response)
+    client = SpotifyClient(auth_token=AUTH_TOKEN, http_adapter=http_adapter)
+    playlists = client.my_playlists(limit=5, offset=10)
+    http_adapter.get.assert_called_once_with(
+        "https://api.spotify.com/v1/me/playlists",
+        params={"limit": 5, "offset": 10},
+        headers={"Authorization": f"Bearer {AUTH_TOKEN['access_token']}"},
+    )
+    assert playlists == response
 
 
 def resource(filename: str) -> dict:
