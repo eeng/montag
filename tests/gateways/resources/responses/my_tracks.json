@@ -41,7 +41,7 @@
                             "width": 64
                         }
                     ],
-                    "name": "Senderos De Traición - Edición Especial",
+                    "name": "Senderos De Traición",
                     "release_date": "1990",
                     "release_date_precision": "year",
                     "total_tracks": 25,
@@ -166,5 +166,5 @@
     "next": "https://api.spotify.com/v1/me/tracks?offset=2&limit=2",
     "offset": 0,
     "previous": null,
-    "total": 204
+    "total": 2
 }

@@ -5,7 +5,7 @@ from montag.gateways.spotify import (
     NotAuthorizedError,
     BadRequestError,
 )
-from tests.gateways.helpers import fake_clock, mock_http_adapter, resource
+from tests.helpers import fake_clock, mock_http_adapter, resource
 
 AUTH_TOKEN: AuthToken = {
     "access_token": "BQDMu5",
