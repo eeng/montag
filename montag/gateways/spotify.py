@@ -19,17 +19,6 @@ class AuthToken(BaseModel):
     expires_at: int
 
 
-def handle_token_expired(func):
-    @functools.wraps(func)
-    def wrapper_with_token_expiration_handling(self: "SpotifyClient", *args, **kwargs):
-        new_auth_token = self.refresh_access_token_if_needed()
-        if new_auth_token is not None:
-            self.on_token_expired(new_auth_token)
-        return func(self, *args, **kwargs)
-
-    return wrapper_with_token_expiration_handling
-
-
 @dataclass
 class SpotifyClient:
     client_id: str = os.environ["SPOTIFY_CLIENT_ID"]
@@ -90,16 +79,18 @@ class SpotifyClient:
         if self.auth_token is None:
             raise NotAuthorizedError
         if self.clock.current_timestamp() >= self.auth_token.expires_at:
-            return self.refresh_access_token()
+            new_auth_token = self.refresh_access_token()
+            self.on_token_expired(new_auth_token)
+            return new_auth_token
         return None
 
-    @handle_token_expired
     def me(self):
+        self.refresh_access_token_if_needed()
         response = self.http_adapter.get(f"{API_URL}/me", headers=self._auth_header())
         return self._parse_response(response)
 
-    @handle_token_expired
     def my_playlists(self, limit: int = 50, offset: int = 0):
+        self.refresh_access_token_if_needed()
         response = self.http_adapter.get(
             f"{API_URL}/me/playlists",
             params=dict(limit=limit, offset=offset),
@@ -107,8 +98,8 @@ class SpotifyClient:
         )
         return self._parse_response(response)
 
-    @handle_token_expired
     def my_tracks(self, limit: int = 50, offset: int = 0):
+        self.refresh_access_token_if_needed()
         response = self.http_adapter.get(
             f"{API_URL}/me/tracks",
             params=dict(limit=limit, offset=offset),
