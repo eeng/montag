@@ -1,6 +1,6 @@
-from datetime import datetime, timezone
+from datetime import datetime
 
 
 class Clock:
-    def now(self) -> datetime:
-        return datetime.now(timezone.utc)
+    def current_timestamp(self) -> int:
+        return int(datetime.timestamp(datetime.now()))

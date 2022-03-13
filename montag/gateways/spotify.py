@@ -4,7 +4,6 @@ import requests
 from dataclasses import dataclass
 from typing import Optional, TypedDict
 from urllib.parse import urlencode
-from datetime import datetime, timedelta
 from montag.gateways.http import HttpAdapter, HttpResponse
 from montag.util.clock import Clock
 
@@ -16,7 +15,7 @@ SCOPE = "user-read-private user-read-email user-library-read"
 class AuthToken(TypedDict):
     access_token: str
     refresh_token: str
-    expires_at: datetime
+    expires_at: int
 
 
 @dataclass
@@ -71,13 +70,13 @@ class SpotifyClient:
         return {
             "refresh_token": refresh_token_dict["refresh_token"],
             "access_token": json["access_token"],
-            "expires_at": self.clock.now() + timedelta(seconds=json["expires_in"]),
+            "expires_at": self.clock.current_timestamp() + json["expires_in"],
         }
 
     def refresh_access_token_if_needed(self) -> Optional[AuthToken]:
         if self.auth_token is None:
             return None
-        if self.clock.now() >= self.auth_token["expires_at"]:
+        if self.clock.current_timestamp() >= self.auth_token["expires_at"]:
             self.refresh_access_token()
         return self.auth_token
 

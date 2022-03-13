@@ -1,6 +1,5 @@
 import json
 import pytest
-from datetime import datetime
 from unittest.mock import Mock
 from montag.gateways.http import HttpAdapter, HttpResponse
 from montag.gateways.spotify import (
@@ -14,7 +13,7 @@ from montag.util.clock import Clock
 AUTH_TOKEN: AuthToken = {
     "access_token": "BQDMu5",
     "refresh_token": "AQAXsR",
-    "expires_at": datetime.now(),
+    "expires_at": 1647168435,
 }
 
 
@@ -48,7 +47,7 @@ def test_state_changes_with_every_call():
 def test_request_access_token():
     response = resource("responses/access_token.json")
     http_adapter = mock_http_adapter(post=response)
-    clock = fake_clock(datetime(2022, 3, 12, 5, 0))
+    clock = fake_clock(timestamp=1647160000)
     client = SpotifyClient(
         http_adapter=http_adapter,
         client_id="CLIENT_ID",
@@ -72,7 +71,7 @@ def test_request_access_token():
     assert auth_token == {
         "access_token": response["access_token"],
         "refresh_token": response["refresh_token"],
-        "expires_at": datetime(2022, 3, 12, 6, 0),
+        "expires_at": 1647163600,
     }
     assert client.auth_token == auth_token
 
@@ -80,7 +79,7 @@ def test_request_access_token():
 def test_refresh_access_token():
     response = resource("responses/refreshed_token.json")
     http_adapter = mock_http_adapter(post=response)
-    clock = fake_clock(datetime(2022, 3, 12, 5, 0))
+    clock = fake_clock(timestamp=1647160000)
     client = SpotifyClient(
         auth_token=AUTH_TOKEN,
         client_id="CLIENT_ID",
@@ -103,7 +102,7 @@ def test_refresh_access_token():
     assert auth_token == {
         "refresh_token": AUTH_TOKEN["refresh_token"],
         "access_token": response["access_token"],
-        "expires_at": datetime(2022, 3, 12, 6, 0),
+        "expires_at": 1647163600,
     }
     assert client.auth_token == auth_token
 
@@ -188,7 +187,7 @@ def json_response(json: dict) -> HttpResponse:
     return fake_response
 
 
-def fake_clock(dt: datetime) -> Clock:
+def fake_clock(timestamp: int) -> Clock:
     clock = Mock()
-    clock.now.return_value = datetime(2022, 3, 12, 5, 0)
+    clock.current_timestamp.return_value = timestamp
     return clock
