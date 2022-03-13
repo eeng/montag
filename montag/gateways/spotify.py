@@ -1,6 +1,5 @@
 import os
 import secrets
-import requests
 from dataclasses import dataclass
 from typing import Optional, TypedDict
 from urllib.parse import urlencode
@@ -24,7 +23,7 @@ class SpotifyClient:
     client_secret: str = os.environ["SPOTIFY_CLIENT_SECRET"]
     redirect_uri: str = os.environ["SPOTIFY_REDIRECT_URI"]
     auth_token: Optional[AuthToken] = None
-    http_adapter: HttpAdapter = requests
+    http_adapter: HttpAdapter = HttpAdapter()
     clock: Clock = Clock()
 
     def authorize_url_and_state(self) -> tuple[str, str]:
