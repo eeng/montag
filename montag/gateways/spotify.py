@@ -1,7 +1,8 @@
+import functools
 import os
 import secrets
 from dataclasses import dataclass
-from typing import Optional, TypedDict
+from typing import Callable, Optional, TypedDict
 from urllib.parse import urlencode
 from montag.gateways.http import HttpAdapter, HttpResponse
 from montag.util.clock import Clock
@@ -17,12 +18,24 @@ class AuthToken(TypedDict):
     expires_at: int
 
 
+def handle_token_expired(func):
+    @functools.wraps(func)
+    def wrapper_with_token_expiration_handling(self: "SpotifyClient", *args, **kwargs):
+        new_auth_token = self.refresh_access_token_if_needed()
+        if new_auth_token is not None:
+            self.on_token_expired(new_auth_token)
+        return func(self, *args, **kwargs)
+
+    return wrapper_with_token_expiration_handling
+
+
 @dataclass
 class SpotifyClient:
     client_id: str = os.environ["SPOTIFY_CLIENT_ID"]
     client_secret: str = os.environ["SPOTIFY_CLIENT_SECRET"]
     redirect_uri: str = os.environ["SPOTIFY_REDIRECT_URI"]
     auth_token: Optional[AuthToken] = None
+    on_token_expired: Callable[[AuthToken], None] = lambda _: None
     http_adapter: HttpAdapter = HttpAdapter()
     clock: Clock = Clock()
 
@@ -74,15 +87,17 @@ class SpotifyClient:
 
     def refresh_access_token_if_needed(self) -> Optional[AuthToken]:
         if self.auth_token is None:
-            return None
+            raise NotAuthorizedError
         if self.clock.current_timestamp() >= self.auth_token["expires_at"]:
-            self.refresh_access_token()
-        return self.auth_token
+            return self.refresh_access_token()
+        return None
 
+    @handle_token_expired
     def me(self):
         response = self.http_adapter.get(f"{API_URL}/me", headers=self._auth_header())
         return self._parse_response(response)
 
+    @handle_token_expired
     def my_playlists(self, limit: int = 50, offset: int = 0):
         response = self.http_adapter.get(
             f"{API_URL}/me/playlists",
@@ -91,6 +106,7 @@ class SpotifyClient:
         )
         return self._parse_response(response)
 
+    @handle_token_expired
     def my_tracks(self, limit: int = 50, offset: int = 0):
         response = self.http_adapter.get(
             f"{API_URL}/me/tracks",

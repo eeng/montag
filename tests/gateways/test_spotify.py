@@ -1,3 +1,6 @@
+from typing import cast
+from unittest.mock import Mock
+from callee import Dict
 import pytest
 from montag.gateways.spotify import (
     AuthToken,
@@ -5,7 +8,7 @@ from montag.gateways.spotify import (
     NotAuthorizedError,
     BadRequestError,
 )
-from tests.helpers import fake_clock, mock_http_adapter, resource
+from tests.helpers import HasEntry, fake_clock, mock_http_adapter, resource
 
 AUTH_TOKEN: AuthToken = {
     "access_token": "BQDMu5",
@@ -123,13 +126,40 @@ def test_me_requires_authorization():
         SpotifyClient().me()
 
 
-def test_token_expired():
+def test_bad_request_error():
     response = resource("responses/token_expired.json")
     http_adapter = mock_http_adapter(get=response)
 
     client = SpotifyClient(auth_token=AUTH_TOKEN, http_adapter=http_adapter)
     with pytest.raises(BadRequestError):
         client.me()
+
+
+def test_token_expiration():
+    """Should refresh the token and notify the on_token_expired callback"""
+
+    new_token_response = resource("responses/refreshed_token.json")
+    me_response = resource("responses/me.json")
+    http_adapter = mock_http_adapter(post=new_token_response, get=me_response)
+    auth_token = {**AUTH_TOKEN, "expires_at": 1647196101}
+    on_token_expired = Mock()
+    client = SpotifyClient(
+        auth_token=cast(AuthToken, auth_token),
+        http_adapter=http_adapter,
+        on_token_expired=on_token_expired,
+    )
+    client.me()
+
+    http_adapter.post.assert_called_once_with(
+        "https://accounts.spotify.com/api/token",
+        data=HasEntry("grant_type", "refresh_token"),
+    )
+    http_adapter.get.assert_called_once_with(
+        "https://api.spotify.com/v1/me", headers=Dict()
+    )
+    on_token_expired.assert_called_once_with(
+        HasEntry("access_token", new_token_response["access_token"])
+    )
 
 
 def test_my_playlists():

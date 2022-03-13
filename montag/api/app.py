@@ -1,6 +1,6 @@
 import os
 from flask import Flask, abort, redirect, request, url_for, g, session
-from montag.gateways.spotify import SpotifyClient
+from montag.gateways.spotify import AuthToken, SpotifyClient
 
 SPOTIFY_COOKIE_KEY = "spotify_auth_state"
 SPOTIFY_SESSION_KEY = "spotify_token"
@@ -29,7 +29,7 @@ def spotify_callback():
     if sent_state == received_state:
         code = request.args["code"]
         auth_token = spotify_client().request_access_token(code)
-        session[SPOTIFY_SESSION_KEY] = auth_token
+        store_auth_token(auth_token)
         return f"{auth_token}"
     else:
         abort(403, description="Something went wrong during Spotify authorization")
@@ -43,7 +43,13 @@ def spotify_profile():
 def spotify_client():
     if "spotify_client" not in g:
         auth_token = session.get(SPOTIFY_SESSION_KEY)
-        g.spotify_client = SpotifyClient(auth_token=auth_token)
-        session[SPOTIFY_SESSION_KEY] = g.spotify_client.refresh_access_token_if_needed()
-        print(">>>", session[SPOTIFY_SESSION_KEY])
+        g.spotify_client = SpotifyClient(
+            auth_token=auth_token, on_token_expired=store_auth_token
+        )
+        print(">>> using token", auth_token)
     return g.spotify_client
+
+
+def store_auth_token(auth_token: AuthToken):
+    print(">>> storing token", auth_token)
+    session[SPOTIFY_SESSION_KEY] = auth_token
