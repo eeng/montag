@@ -1,19 +1,16 @@
-import json
 import pytest
-from unittest.mock import Mock
-from montag.gateways.http import HttpAdapter, HttpResponse
 from montag.gateways.spotify import (
     AuthToken,
     SpotifyClient,
     NotAuthorizedError,
     BadRequestError,
 )
-from montag.util.clock import Clock
+from tests.gateways.helpers import fake_clock, mock_http_adapter, resource
 
 AUTH_TOKEN: AuthToken = {
     "access_token": "BQDMu5",
     "refresh_token": "AQAXsR",
-    "expires_at": 1647168435,
+    "expires_at": 9647168435,
 }
 
 
@@ -163,31 +160,3 @@ def test_my_tracks():
         headers={"Authorization": f"Bearer {AUTH_TOKEN['access_token']}"},
     )
     assert tracks == response
-
-
-def resource(filename: str) -> dict:
-    with open(f"tests/gateways/resources/{filename}") as f:
-        return json.load(f)
-
-
-def mock_http_adapter(get=None, post=None) -> HttpAdapter:
-    fake_http_adapter = Mock()
-    if get is not None:
-        fake_http_adapter.get.return_value = json_response(get)
-    if post is not None:
-        fake_http_adapter.post.return_value = json_response(post)
-    return fake_http_adapter
-
-
-def json_response(json: dict) -> HttpResponse:
-    fake_response = Mock()
-    fake_response.json.return_value = json
-    status_code = int(json["error"]["status"]) if "error" in json else 200
-    fake_response.status_code = status_code
-    return fake_response
-
-
-def fake_clock(timestamp: int) -> Clock:
-    clock = Mock()
-    clock.current_timestamp.return_value = timestamp
-    return clock
