@@ -1,8 +1,6 @@
 import json
 from unittest.mock import Mock
-
 from callee import Matcher
-
 from montag.gateways.http import HttpAdapter, HttpResponse
 from montag.util.clock import Clock
 

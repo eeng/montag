@@ -2,8 +2,9 @@ import functools
 import os
 import secrets
 from dataclasses import dataclass
-from typing import Callable, Optional, TypedDict
+from typing import Callable, Optional
 from urllib.parse import urlencode
+from pydantic import BaseModel
 from montag.gateways.http import HttpAdapter, HttpResponse
 from montag.util.clock import Clock
 
@@ -12,7 +13,7 @@ API_URL = "https://api.spotify.com/v1"
 SCOPE = "user-read-private user-read-email user-library-read"
 
 
-class AuthToken(TypedDict):
+class AuthToken(BaseModel):
     access_token: str
     refresh_token: str
     expires_at: int
@@ -69,26 +70,26 @@ class SpotifyClient:
 
         data = dict(
             grant_type="refresh_token",
-            refresh_token=self.auth_token["refresh_token"],
+            refresh_token=self.auth_token.refresh_token,
             client_id=self.client_id,
             client_secret=self.client_secret,
         )
         response = self.http_adapter.post(f"{ACCOUNTS_URL}/api/token", data=data)
         json = self._parse_response(response)
-        self.auth_token = self._extract_auth_token(json, self.auth_token)
+        self.auth_token = self._extract_auth_token(json, self.auth_token.dict())
         return self.auth_token
 
     def _extract_auth_token(self, json, refresh_token_dict) -> AuthToken:
-        return {
-            "refresh_token": refresh_token_dict["refresh_token"],
-            "access_token": json["access_token"],
-            "expires_at": self.clock.current_timestamp() + json["expires_in"],
-        }
+        return AuthToken(
+            refresh_token=refresh_token_dict["refresh_token"],
+            access_token=json["access_token"],
+            expires_at=self.clock.current_timestamp() + json["expires_in"],
+        )
 
     def refresh_access_token_if_needed(self) -> Optional[AuthToken]:
         if self.auth_token is None:
             raise NotAuthorizedError
-        if self.clock.current_timestamp() >= self.auth_token["expires_at"]:
+        if self.clock.current_timestamp() >= self.auth_token.expires_at:
             return self.refresh_access_token()
         return None
 
@@ -119,7 +120,7 @@ class SpotifyClient:
         if self.auth_token is None:
             raise NotAuthorizedError
 
-        bearer = self.auth_token["access_token"]
+        bearer = self.auth_token.access_token
         return {"Authorization": f"Bearer {bearer}"}
 
     def _parse_response(self, response: HttpResponse):

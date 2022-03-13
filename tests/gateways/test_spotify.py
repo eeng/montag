@@ -1,6 +1,5 @@
-from typing import cast
 from unittest.mock import Mock
-from callee import Dict
+from callee import Attrs, Dict
 import pytest
 from montag.gateways.spotify import (
     AuthToken,
@@ -9,12 +8,9 @@ from montag.gateways.spotify import (
     BadRequestError,
 )
 from tests.helpers import HasEntry, fake_clock, mock_http_adapter, resource
+from tests import factory
 
-AUTH_TOKEN: AuthToken = {
-    "access_token": "BQDMu5",
-    "refresh_token": "AQAXsR",
-    "expires_at": 9647168435,
-}
+AUTH_TOKEN = factory.auth_token()
 
 
 def test_authorize_url_and_state():
@@ -68,11 +64,11 @@ def test_request_access_token():
             redirect_uri="REDIRECT_URI",
         ),
     )
-    assert auth_token == {
-        "access_token": response["access_token"],
-        "refresh_token": response["refresh_token"],
-        "expires_at": 1647163600,
-    }
+    assert auth_token == AuthToken(
+        access_token=response["access_token"],
+        refresh_token=response["refresh_token"],
+        expires_at=1647163600,
+    )
     assert client.auth_token == auth_token
 
 
@@ -94,16 +90,16 @@ def test_refresh_access_token():
         "https://accounts.spotify.com/api/token",
         data=dict(
             grant_type="refresh_token",
-            refresh_token=AUTH_TOKEN["refresh_token"],
+            refresh_token=AUTH_TOKEN.refresh_token,
             client_id="CLIENT_ID",
             client_secret="CLIENT_SECRET",
         ),
     )
-    assert auth_token == {
-        "refresh_token": AUTH_TOKEN["refresh_token"],
-        "access_token": response["access_token"],
-        "expires_at": 1647163600,
-    }
+    assert auth_token == AuthToken(
+        refresh_token=AUTH_TOKEN.refresh_token,
+        access_token=response["access_token"],
+        expires_at=1647163600,
+    )
     assert client.auth_token == auth_token
 
 
@@ -116,7 +112,7 @@ def test_me():
 
     http_adapter.get.assert_called_once_with(
         "https://api.spotify.com/v1/me",
-        headers={"Authorization": f"Bearer {AUTH_TOKEN['access_token']}"},
+        headers={"Authorization": f"Bearer {AUTH_TOKEN.access_token}"},
     )
     assert profile == response
 
@@ -141,10 +137,10 @@ def test_token_expiration():
     new_token_response = resource("responses/refreshed_token.json")
     me_response = resource("responses/me.json")
     http_adapter = mock_http_adapter(post=new_token_response, get=me_response)
-    auth_token = {**AUTH_TOKEN, "expires_at": 1647196101}
+    auth_token = factory.auth_token(expires_at=1647196101)
     on_token_expired = Mock()
     client = SpotifyClient(
-        auth_token=cast(AuthToken, auth_token),
+        auth_token=auth_token,
         http_adapter=http_adapter,
         on_token_expired=on_token_expired,
     )
@@ -158,7 +154,7 @@ def test_token_expiration():
         "https://api.spotify.com/v1/me", headers=Dict()
     )
     on_token_expired.assert_called_once_with(
-        HasEntry("access_token", new_token_response["access_token"])
+        Attrs(access_token=new_token_response["access_token"])
     )
 
 
@@ -172,7 +168,7 @@ def test_my_playlists():
     http_adapter.get.assert_called_once_with(
         "https://api.spotify.com/v1/me/playlists",
         params={"limit": 5, "offset": 10},
-        headers={"Authorization": f"Bearer {AUTH_TOKEN['access_token']}"},
+        headers={"Authorization": f"Bearer {AUTH_TOKEN.access_token}"},
     )
     assert playlists == response
 
@@ -187,6 +183,6 @@ def test_my_tracks():
     http_adapter.get.assert_called_once_with(
         "https://api.spotify.com/v1/me/tracks",
         params={"limit": 5, "offset": 10},
-        headers={"Authorization": f"Bearer {AUTH_TOKEN['access_token']}"},
+        headers={"Authorization": f"Bearer {AUTH_TOKEN.access_token}"},
     )
     assert tracks == response

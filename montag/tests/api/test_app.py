@@ -2,20 +2,21 @@ import pytest
 from unittest.mock import Mock
 from flask import session
 from montag.api.app import SPOTIFY_COOKIE_KEY, SPOTIFY_SESSION_KEY, app
-from montag.gateways import spotify
+from montag.gateways.spotify import ACCOUNTS_URL
+from tests import factory
 
 
 def test_spotify_login(client):
     response = client.get("/spotify/login")
     assert response.status_code == 302
-    assert spotify.ACCOUNTS_URL in response.headers["Location"]
+    assert ACCOUNTS_URL in response.headers["Location"]
     assert "spotify_auth_state" in response.headers["Set-Cookie"]
 
 
 def test_spotify_callback_with_matching_state(client, mock_spotify_client):
     code = "SOME_CODE"
     state = "SOME_STATE"
-    token = {"access_token": "SOME_ACCESS_TOKEN"}
+    token = factory.auth_token()
 
     client.set_cookie("localhost", SPOTIFY_COOKIE_KEY, state)
     mock_spotify_client.request_access_token.return_value = token
