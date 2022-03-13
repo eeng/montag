@@ -27,7 +27,7 @@ def test_authorize_url_and_state():
         "client_id=FAKE_CLIENT_ID&"
         "redirect_uri=FAKE_REDIRECT_URL&"
         f"state={state}&"
-        "scope=user-read-private+user-read-email+user-library-read&"
+        "scope=user-read-private+user-read-email+user-library-read+playlist-read-private&"
         "response_type=code"
     )
     assert actual_url == expected_url
@@ -183,6 +183,22 @@ def test_my_tracks():
     http_adapter.get.assert_called_once_with(
         "https://api.spotify.com/v1/me/tracks",
         params={"limit": 5, "offset": 10},
+        headers={"Authorization": f"Bearer {AUTH_TOKEN.access_token}"},
+    )
+    assert tracks == response
+
+
+def test_playlist_tracks():
+    response = resource("responses/playlist_tracks.json")
+    http_adapter = mock_http_adapter(get=response)
+    client = SpotifyClient(auth_token=AUTH_TOKEN, http_adapter=http_adapter)
+    playlist_id = "6bMoQmuO8h4LuoiREgyYbZ"
+
+    tracks = client.playlist_tracks(playlist_id)
+
+    http_adapter.get.assert_called_once_with(
+        f"https://api.spotify.com/v1/playlists/{playlist_id}/tracks",
+        params={"limit": 50, "offset": 0},
         headers={"Authorization": f"Bearer {AUTH_TOKEN.access_token}"},
     )
     assert tracks == response

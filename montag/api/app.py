@@ -2,6 +2,7 @@ import os
 from typing import Optional
 from flask import Flask, abort, redirect, request, url_for, g, session
 from montag.gateways.spotify import AuthToken, SpotifyClient
+from montag.repositories.spotify import SpotifyRepo
 
 SPOTIFY_COOKIE_KEY = "spotify_auth_state"
 SPOTIFY_SESSION_KEY = "spotify_token"
@@ -41,13 +42,30 @@ def spotify_profile():
     return spotify_client().me()
 
 
+@app.route("/spotify/playlists")
+def spotify_playlists():
+    return spotify_client().my_playlists()
+
+
+@app.route("/spotify/playlists/<playlist_id>/tracks")
+def spotify_tracks(playlist_id):
+    return {
+        "tracks": [
+            track.dict() for track in spotify_repo().find_all_tracks(playlist_id)
+        ]
+    }
+
+
 def spotify_client():
     if "spotify_client" not in g:
         g.spotify_client = SpotifyClient(
             auth_token=retrieve_auth_token(), on_token_expired=store_auth_token
         )
-        print(">>> using token", g.spotify_client.auth_token)
     return g.spotify_client
+
+
+def spotify_repo():
+    return SpotifyRepo(client=spotify_client())
 
 
 def retrieve_auth_token() -> Optional[AuthToken]:
@@ -58,5 +76,4 @@ def retrieve_auth_token() -> Optional[AuthToken]:
 
 
 def store_auth_token(auth_token: AuthToken):
-    print(">>> storing token", auth_token)
     session[SPOTIFY_SESSION_KEY] = auth_token.dict()

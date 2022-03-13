@@ -10,7 +10,7 @@ from montag.util.clock import Clock
 
 ACCOUNTS_URL = "https://accounts.spotify.com"
 API_URL = "https://api.spotify.com/v1"
-SCOPE = "user-read-private user-read-email user-library-read"
+SCOPE = "user-read-private user-read-email user-library-read playlist-read-private"
 
 
 class AuthToken(BaseModel):
@@ -102,6 +102,15 @@ class SpotifyClient:
         self.refresh_access_token_if_needed()
         response = self.http_adapter.get(
             f"{API_URL}/me/tracks",
+            params=dict(limit=limit, offset=offset),
+            headers=self._auth_header(),
+        )
+        return self._parse_response(response)
+
+    def playlist_tracks(self, playlist_id: str, limit: int = 50, offset: int = 0):
+        self.refresh_access_token_if_needed()
+        response = self.http_adapter.get(
+            f"{API_URL}/playlists/{playlist_id}/tracks",
             params=dict(limit=limit, offset=offset),
             headers=self._auth_header(),
         )
