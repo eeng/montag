@@ -1,7 +1,7 @@
 import os
 from typing import Optional
-from flask import Flask, abort, redirect, request, url_for, g, session
-from montag.gateways.spotify import AuthToken, SpotifyClient
+from flask import Flask, g, redirect, request, session, url_for
+from montag.gateways.spotify import AuthToken, BadStateError, SpotifyClient
 from montag.repositories.spotify import SpotifyRepo
 
 SPOTIFY_COOKIE_KEY = "spotify_auth_state"
@@ -34,7 +34,7 @@ def spotify_callback():
         store_auth_token(auth_token)
         return f"{auth_token}"
     else:
-        abort(403, description="Something went wrong during Spotify authorization")
+        raise BadStateError(request.args)
 
 
 @app.route("/spotify/profile")

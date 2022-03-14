@@ -1,4 +1,3 @@
-import functools
 import os
 import secrets
 from dataclasses import dataclass
@@ -136,18 +135,12 @@ class SpotifyError(Exception):
 
 
 class BadRequestError(SpotifyError):
-    """Raised when the API replies with a non-200 status code"""
+    """Raised when the API replies with a non-200 status code."""
 
 
 class NotAuthorizedError(SpotifyError):
-    """Raised when the authorization flow hasn't been started yet"""
+    """Raised when the authorization flow hasn't been started yet."""
 
 
-"""
-client = SpotifyClient()
-url, _ = client.authorize_url_and_state()
-code = input(f"Go to {url} and then paste code here: ")
-auth_token = client.request_access_token(code)
-client.me()
-client.refresh_access_token()
-"""
+class BadStateError(SpotifyError):
+    """Raised when the authorization flow sent state doesn't match the received one."""
