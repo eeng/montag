@@ -7,3 +7,8 @@ class Track(BaseModel):
     uri: str
     album: str
     artists: list[str]
+
+
+class Playlist(BaseModel):
+    id: str
+    name: str

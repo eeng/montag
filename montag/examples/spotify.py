@@ -1,5 +1,6 @@
 import json
 from montag.gateways.spotify import SpotifyClient, AuthToken
+from montag.repositories.spotify import SpotifyRepo
 
 TOKEN_FILE = "tmp/spotify_token.json"
 
@@ -20,3 +21,7 @@ def restore_client() -> SpotifyClient:
     with open("tmp/spotify_token.json", "r") as f:
         auth_token = AuthToken(**json.load(f))
         return SpotifyClient(auth_token=auth_token)
+
+
+def repo() -> SpotifyRepo:
+    return SpotifyRepo(client=restore_client())

@@ -1,17 +1,16 @@
 from unittest.mock import Mock
-from montag.models import Track
+from montag.models import Playlist, Track
 from montag.repositories.spotify import SpotifyRepo
 from tests.helpers import resource
 
 
-def test_find_all_tracks_without_playlist():
+def test_find_tracks_without_playlist():
     client = Mock()
     client.my_tracks.return_value = resource("responses/my_tracks.json")
     repo = SpotifyRepo(client)
 
-    tracks = repo.find_all_tracks()
+    tracks = repo.find_tracks()
 
-    client.my_tracks.assert_called_with(limit=50, offset=0)
     assert tracks == [
         Track(
             name="Maldito duende",
@@ -26,17 +25,17 @@ def test_find_all_tracks_without_playlist():
             artists=["Seether"],
         ),
     ]
+    client.my_tracks.assert_called_with(limit=50, offset=0)
 
 
-def test_find_all_tracks_with_playlist():
+def test_find_tracks_with_playlist():
     client = Mock()
     client.playlist_tracks.return_value = resource("responses/playlist_tracks.json")
     repo = SpotifyRepo(client)
     playlist_id = "37i9dQZF1DX4E3UdUs7fUx"
 
-    tracks = repo.find_all_tracks(playlist_id=playlist_id)
+    tracks = repo.find_tracks(playlist_id=playlist_id)
 
-    client.playlist_tracks.assert_called_with(playlist_id, limit=50, offset=0)
     assert tracks == [
         Track(
             name="Maldito duende",
@@ -51,3 +50,19 @@ def test_find_all_tracks_with_playlist():
             artists=["Heroes Del Silencio"],
         ),
     ]
+    client.playlist_tracks.assert_called_with(playlist_id, limit=50, offset=0)
+
+
+def test_find_playlists():
+    client = Mock()
+    client.my_playlists.return_value = resource("responses/my_playlists.json")
+    repo = SpotifyRepo(client)
+
+    playlists = repo.find_playlists()
+
+    assert playlists == [
+        Playlist(id="5m7aOK7YN9oZy9cufeauD3", name="My Shazam Tracks"),
+        Playlist(id="4Rd2URtKmEhvcSr8wtltfs", name="Soundtracks"),
+        Playlist(id="3ODmycCuoBkIccAREsJjFM", name="Rock Classics"),
+    ]
+    client.my_playlists.assert_called_once()
