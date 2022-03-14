@@ -1,12 +1,12 @@
-from unittest.mock import Mock
+from unittest.mock import create_autospec
 from montag.models import Playlist, Track
-from montag.repositories.spotify import SpotifyRepo
+from montag.repositories.spotify import SpotifyClient, SpotifyRepo
 from tests.helpers import resource
 
 
 def test_find_tracks_without_playlist():
-    client = Mock()
-    client.my_tracks.return_value = resource("responses/my_tracks.json")
+    client = create_autospec(SpotifyClient)
+    client.liked_tracks.return_value = resource("responses/liked_tracks.json")
     repo = SpotifyRepo(client)
 
     tracks = repo.find_tracks()
@@ -25,11 +25,11 @@ def test_find_tracks_without_playlist():
             artists=["Seether"],
         ),
     ]
-    client.my_tracks.assert_called_with(limit=50, offset=0)
+    client.liked_tracks.assert_called_with(limit=50, offset=0)
 
 
 def test_find_tracks_with_playlist():
-    client = Mock()
+    client = create_autospec(SpotifyClient)
     client.playlist_tracks.return_value = resource("responses/playlist_tracks.json")
     repo = SpotifyRepo(client)
     playlist_id = "37i9dQZF1DX4E3UdUs7fUx"
@@ -54,7 +54,7 @@ def test_find_tracks_with_playlist():
 
 
 def test_find_playlists():
-    client = Mock()
+    client = create_autospec(SpotifyClient)
     client.my_playlists.return_value = resource("responses/my_playlists.json")
     repo = SpotifyRepo(client)
 

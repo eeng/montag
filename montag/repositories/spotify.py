@@ -1,12 +1,28 @@
 from dataclasses import dataclass
-from typing import Optional
-from montag.gateways.spotify import SpotifyClient
+from typing import Optional, Protocol
 from montag.models import Playlist, Track
+
+
+class SpotifyClient(Protocol):
+    def my_playlists(self) -> dict:
+        ...
+
+    def liked_tracks(self, limit: int, offset: int = 0) -> dict:
+        ...
+
+    def playlist_tracks(self, playlist_id: str, limit: int, offset: int = 0) -> dict:
+        ...
 
 
 @dataclass
 class SpotifyRepo:
     client: SpotifyClient
+
+    def find_playlists(self):
+        response = self.client.my_playlists()
+        return [
+            Playlist(id=item["id"], name=item["name"]) for item in response["items"]
+        ]
 
     def find_tracks(self, playlist_id: Optional[str] = None) -> list[Track]:
         """Returns all tracks in the specified playlist, or if None provided, gets the user's liked songs."""
@@ -34,10 +50,4 @@ class SpotifyRepo:
         if playlist_id:
             return self.client.playlist_tracks(playlist_id, **kwargs)
         else:
-            return self.client.my_tracks(**kwargs)
-
-    def find_playlists(self):
-        response = self.client.my_playlists()
-        return [
-            Playlist(id=item["id"], name=item["name"]) for item in response["items"]
-        ]
+            return self.client.liked_tracks(**kwargs)

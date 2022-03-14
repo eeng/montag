@@ -97,7 +97,7 @@ class SpotifyClient:
         )
         return self._parse_response(response)
 
-    def my_tracks(self, limit: int = 50, offset: int = 0):
+    def liked_tracks(self, limit: int = 50, offset: int = 0):
         self.refresh_access_token_if_needed()
         response = self.http_adapter.get(
             f"{API_URL}/me/tracks",

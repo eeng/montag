@@ -173,12 +173,12 @@ def test_my_playlists():
     assert playlists == response
 
 
-def test_my_tracks():
-    response = resource("responses/my_tracks.json")
+def test_liked_tracks():
+    response = resource("responses/liked_tracks.json")
     http_adapter = mock_http_adapter(get=response)
     client = SpotifyClient(auth_token=AUTH_TOKEN, http_adapter=http_adapter)
 
-    tracks = client.my_tracks(limit=5, offset=10)
+    tracks = client.liked_tracks(limit=5, offset=10)
 
     http_adapter.get.assert_called_once_with(
         "https://api.spotify.com/v1/me/tracks",
