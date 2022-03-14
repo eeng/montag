@@ -6,7 +6,7 @@ from montag.util.clock import Clock
 
 
 def resource(filename: str) -> dict:
-    with open(f"tests/gateways/resources/{filename}") as f:
+    with open(f"tests/resources/{filename}") as f:
         return json.load(f)
 
 

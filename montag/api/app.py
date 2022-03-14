@@ -50,9 +50,7 @@ def spotify_playlists():
 @app.route("/spotify/playlists/<playlist_id>/tracks")
 def spotify_tracks(playlist_id):
     return {
-        "tracks": [
-            track.dict() for track in spotify_repo().find_all_tracks(playlist_id)
-        ]
+        "tracks": [track.dict() for track in spotify_repo().find_tracks(playlist_id)]
     }
 
 
