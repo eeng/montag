@@ -1,5 +1,5 @@
 import json
-from unittest.mock import Mock
+from unittest.mock import Mock, create_autospec
 from callee import Matcher
 from montag.gateways.http import HttpAdapter, HttpResponse
 from montag.util.clock import Clock
@@ -10,8 +10,16 @@ def resource(filename: str) -> dict:
         return json.load(f)
 
 
+def mock(cls, **methods_to_stub) -> Mock:
+    """Allows to create a mock and stub its methods in one line."""
+    m = create_autospec(cls)
+    for (method, return_value) in methods_to_stub.items():
+        getattr(m, method).return_value = return_value
+    return m
+
+
 def mock_http_adapter(get=None, post=None) -> HttpAdapter:
-    http_adapter = Mock()
+    http_adapter = mock(HttpAdapter)
     if get is not None:
         http_adapter.get.return_value = fake_json_response(get)
     if post is not None:
@@ -20,17 +28,14 @@ def mock_http_adapter(get=None, post=None) -> HttpAdapter:
 
 
 def fake_json_response(json: dict) -> HttpResponse:
-    response = Mock()
-    response.json.return_value = json
+    response = mock(HttpResponse, json=json)
     status_code = int(json["error"]["status"]) if "error" in json else 200
     response.status_code = status_code
     return response
 
 
 def fake_clock(timestamp: int) -> Clock:
-    clock = Mock()
-    clock.current_timestamp.return_value = timestamp
-    return clock
+    return mock(Clock, current_timestamp=timestamp)
 
 
 class HasEntry(Matcher):

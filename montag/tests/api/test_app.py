@@ -1,8 +1,8 @@
 import pytest
-from unittest.mock import Mock
 from flask import session
 from montag.api.app import SPOTIFY_COOKIE_KEY, SPOTIFY_SESSION_KEY, app
-from montag.gateways.spotify import ACCOUNTS_URL, BadStateError
+from montag.gateways.spotify import ACCOUNTS_URL, BadStateError, SpotifyClient
+from tests.helpers import mock
 from tests import factory
 
 
@@ -46,6 +46,6 @@ def client():
 @pytest.fixture
 def mock_spotify_client():
     with app.app_context() as app_context:
-        mock = Mock()
-        app_context.g.spotify_client = mock
-        yield mock
+        client = mock(SpotifyClient)
+        app_context.g.spotify_client = client
+        yield client

@@ -6,7 +6,7 @@ TOKEN_FILE = "tmp/spotify_token.json"
 
 
 def run_auth_flow() -> SpotifyClient:
-    """Do the authorization flow to obtain an access token."""
+    """Does the authorization flow to obtain an access token."""
     client = SpotifyClient()
     url, _ = client.authorize_url_and_state()
     code = input(f"Open {url} and then paste code here:\n")
