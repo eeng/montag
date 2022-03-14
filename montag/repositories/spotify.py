@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from typing import Optional
 from montag.gateways.spotify import SpotifyClient
-from montag.models.track import Track
+from montag.models import Track
 
 
 @dataclass

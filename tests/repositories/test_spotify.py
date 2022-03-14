@@ -1,5 +1,5 @@
 from unittest.mock import Mock
-from montag.models.track import Track
+from montag.models import Track
 from montag.repositories.spotify import SpotifyRepo
 from tests.helpers import resource
 

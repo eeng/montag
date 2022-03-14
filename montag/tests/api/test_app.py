@@ -2,7 +2,7 @@ import pytest
 from unittest.mock import Mock
 from flask import session
 from montag.api.app import SPOTIFY_COOKIE_KEY, SPOTIFY_SESSION_KEY, app
-from montag.gateways.spotify import ACCOUNTS_URL
+from montag.gateways.spotify import ACCOUNTS_URL, BadStateError
 from tests import factory
 
 
@@ -29,11 +29,10 @@ def test_spotify_callback_with_matching_state(client, mock_spotify_client):
     assert response.status_code == 200
 
 
-def test_spotify_callback_with_wrong_state(client, mock_spotify_client):
+def test_spotify_callback_with_wrong_state(client):
     client.set_cookie("localhost", SPOTIFY_COOKIE_KEY, "sent-state")
-    response = client.get("/spotify/callback", query_string={"state": "received-state"})
-    mock_spotify_client.request_access_token.assert_not_called()
-    assert response.status_code == 403
+    with pytest.raises(BadStateError):
+        client.get("/spotify/callback", query_string={"state": "received-state"})
 
 
 @pytest.fixture
