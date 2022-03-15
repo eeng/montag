@@ -5,7 +5,7 @@ from montag.repositories import MusicRepository
 
 
 class YouTubeMusicClient(Protocol):
-    def my_playlists(self) -> dict:
+    def my_playlists(self) -> list[dict]:
         ...
 
 
