@@ -1,4 +1,4 @@
-from montag.gateways.spotify import AuthToken
+from montag.adapters.spotify import AuthToken
 import secrets
 
 

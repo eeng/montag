@@ -19,7 +19,7 @@ class SpotifyClient(Protocol):
 class SpotifyRepo(MusicRepository):
     client: SpotifyClient
 
-    def find_playlists(self):
+    def find_playlists(self) -> list[Playlist]:
         response = self.client.my_playlists()
         other_playlists = [
             Playlist(id=item["id"], name=item["name"]) for item in response["items"]

@@ -13,7 +13,7 @@ class YouTubeMusicClient(Protocol):
 class YouTubeMusicRepo(MusicRepository):
     client: YouTubeMusicClient
 
-    def find_playlists(self):
+    def find_playlists(self) -> list[Playlist]:
         response = self.client.my_playlists()
         return [
             Playlist(id=item["playlistId"], name=item["title"]) for item in response
