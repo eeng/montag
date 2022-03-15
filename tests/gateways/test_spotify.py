@@ -41,7 +41,7 @@ def test_state_changes_with_every_call():
 
 
 def test_request_access_token():
-    response = resource("responses/access_token.json")
+    response = resource("spotify/access_token.json")
     http_adapter = mock_http_adapter(post=response)
     clock = fake_clock(timestamp=1647160000)
     client = SpotifyClient(
@@ -73,7 +73,7 @@ def test_request_access_token():
 
 
 def test_refresh_access_token():
-    response = resource("responses/refreshed_token.json")
+    response = resource("spotify/refreshed_token.json")
     http_adapter = mock_http_adapter(post=response)
     clock = fake_clock(timestamp=1647160000)
     client = SpotifyClient(
@@ -104,7 +104,7 @@ def test_refresh_access_token():
 
 
 def test_me():
-    response = resource("responses/me.json")
+    response = resource("spotify/me.json")
     http_adapter = mock_http_adapter(get=response)
     client = SpotifyClient(auth_token=AUTH_TOKEN, http_adapter=http_adapter)
 
@@ -123,7 +123,7 @@ def test_me_requires_authorization():
 
 
 def test_bad_request_error():
-    response = resource("responses/token_expired.json")
+    response = resource("spotify/token_expired.json")
     http_adapter = mock_http_adapter(get=response)
 
     client = SpotifyClient(auth_token=AUTH_TOKEN, http_adapter=http_adapter)
@@ -134,8 +134,8 @@ def test_bad_request_error():
 def test_token_expiration():
     """Should refresh the token and notify the on_token_expired callback"""
 
-    new_token_response = resource("responses/refreshed_token.json")
-    me_response = resource("responses/me.json")
+    new_token_response = resource("spotify/refreshed_token.json")
+    me_response = resource("spotify/me.json")
     http_adapter = mock_http_adapter(post=new_token_response, get=me_response)
     auth_token = factory.auth_token(expires_at=1647196101)
     on_token_expired = Mock()
@@ -159,7 +159,7 @@ def test_token_expiration():
 
 
 def test_my_playlists():
-    response = resource("responses/my_playlists.json")
+    response = resource("spotify/my_playlists.json")
     http_adapter = mock_http_adapter(get=response)
     client = SpotifyClient(auth_token=AUTH_TOKEN, http_adapter=http_adapter)
 
@@ -174,7 +174,7 @@ def test_my_playlists():
 
 
 def test_liked_tracks():
-    response = resource("responses/liked_tracks.json")
+    response = resource("spotify/liked_tracks.json")
     http_adapter = mock_http_adapter(get=response)
     client = SpotifyClient(auth_token=AUTH_TOKEN, http_adapter=http_adapter)
 
@@ -189,7 +189,7 @@ def test_liked_tracks():
 
 
 def test_playlist_tracks():
-    response = resource("responses/playlist_tracks.json")
+    response = resource("spotify/playlist_tracks.json")
     http_adapter = mock_http_adapter(get=response)
     client = SpotifyClient(auth_token=AUTH_TOKEN, http_adapter=http_adapter)
     playlist_id = "6bMoQmuO8h4LuoiREgyYbZ"

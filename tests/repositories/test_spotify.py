@@ -4,7 +4,7 @@ from tests.helpers import mock, resource
 
 
 def test_find_tracks_without_playlist():
-    client = mock(SpotifyClient, liked_tracks=resource("responses/liked_tracks.json"))
+    client = mock(SpotifyClient, liked_tracks=resource("spotify/liked_tracks.json"))
     repo = SpotifyRepo(client)
 
     tracks = repo.find_tracks()
@@ -28,7 +28,7 @@ def test_find_tracks_without_playlist():
 
 def test_find_tracks_with_playlist():
     client = mock(
-        SpotifyClient, playlist_tracks=resource("responses/playlist_tracks.json")
+        SpotifyClient, playlist_tracks=resource("spotify/playlist_tracks.json")
     )
     repo = SpotifyRepo(client)
     playlist_id = "37i9dQZF1DX4E3UdUs7fUx"
@@ -53,14 +53,14 @@ def test_find_tracks_with_playlist():
 
 
 def test_find_playlists():
-    client = mock(SpotifyClient, my_playlists=resource("responses/my_playlists.json"))
+    client = mock(SpotifyClient, my_playlists=resource("spotify/my_playlists.json"))
     repo = SpotifyRepo(client)
 
     playlists = repo.find_playlists()
 
     assert playlists == [
-        Playlist(id="5m7aOK7YN9oZy9cufeauD3", name="My Shazam Tracks"),
-        Playlist(id="4Rd2URtKmEhvcSr8wtltfs", name="Soundtracks"),
-        Playlist(id="3ODmycCuoBkIccAREsJjFM", name="Rock Classics"),
+        Playlist(name="My Shazam Tracks", id="5m7aOK7YN9oZy9cufeauD3"),
+        Playlist(name="Soundtracks", id="4Rd2URtKmEhvcSr8wtltfs"),
+        Playlist(name="Rock Classics", id="3ODmycCuoBkIccAREsJjFM"),
     ]
     client.my_playlists.assert_called_once()

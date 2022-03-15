@@ -1,6 +1,7 @@
 from dataclasses import dataclass
 from typing import Optional, Protocol
 from montag.models import Playlist, Track
+from montag.repositories import MusicRepository
 
 
 class SpotifyClient(Protocol):
@@ -15,7 +16,7 @@ class SpotifyClient(Protocol):
 
 
 @dataclass
-class SpotifyRepo:
+class SpotifyRepo(MusicRepository):
     client: SpotifyClient
 
     def find_playlists(self):

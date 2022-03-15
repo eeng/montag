@@ -4,6 +4,7 @@ from dataclasses import dataclass
 from typing import Callable, Optional
 from urllib.parse import urlencode
 from pydantic import BaseModel
+from montag.repositories.spotify import SpotifyClient as SpotifyClientProtocol
 from montag.gateways.http import HttpAdapter, HttpResponse
 from montag.util.clock import Clock
 
@@ -19,7 +20,7 @@ class AuthToken(BaseModel):
 
 
 @dataclass
-class SpotifyClient:
+class SpotifyClient(SpotifyClientProtocol):
     client_id: str = os.environ["SPOTIFY_CLIENT_ID"]
     client_secret: str = os.environ["SPOTIFY_CLIENT_SECRET"]
     redirect_uri: str = os.environ["SPOTIFY_REDIRECT_URI"]

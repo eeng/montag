@@ -604,10 +604,24 @@ python-versions = ">=3.6"
 [package.extras]
 watchdog = ["watchdog"]
 
+[[package]]
+name = "ytmusicapi"
+version = "0.21.0"
+description = "Unofficial API for YouTube Music"
+category = "main"
+optional = false
+python-versions = ">=3.6"
+
+[package.dependencies]
+requests = ">=2.22"
+
+[package.extras]
+dev = ["pre-commit", "flake8", "yapf", "coverage", "sphinx", "sphinx-rtd-theme"]
+
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.9"
-content-hash = "1a6e2aefb7092a93cb764168b5c9c7d43ba31f14f0ad7717ed95659759a05fec"
+content-hash = "eadbb3d9e6ae46a93472d817b70e28033cf3913b5f1fbde457e1a1c3b665a112"
 
 [metadata.files]
 appnope = [
@@ -949,4 +963,8 @@ wcwidth = [
 werkzeug = [
     {file = "Werkzeug-2.0.3-py3-none-any.whl", hash = "sha256:1421ebfc7648a39a5c58c601b154165d05cf47a3cd0ccb70857cbdacf6c8f2b8"},
     {file = "Werkzeug-2.0.3.tar.gz", hash = "sha256:b863f8ff057c522164b6067c9e28b041161b4be5ba4d0daceeaa50a163822d3c"},
+]
+ytmusicapi = [
+    {file = "ytmusicapi-0.21.0-py3-none-any.whl", hash = "sha256:29d8d44e1911458041882a453b05c37021ff850757c648f93a45d1775dddbae2"},
+    {file = "ytmusicapi-0.21.0.tar.gz", hash = "sha256:26cb481dceb54c54048111ebe783780e8aba30bd04708703193109fed6eb0b60"},
 ]
