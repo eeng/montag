@@ -1,20 +1,15 @@
 from dataclasses import dataclass
-from typing import Protocol
+from ytmusicapi import YTMusic
 from montag.models import Playlist
 from montag.repositories import MusicRepository
 
 
-class YouTubeMusicClient(Protocol):
-    def my_playlists(self) -> list[dict]:
-        ...
-
-
 @dataclass
 class YouTubeMusicRepo(MusicRepository):
-    client: YouTubeMusicClient
+    client: YTMusic
 
     def find_playlists(self) -> list[Playlist]:
-        response = self.client.my_playlists()
+        response = self.client.get_library_playlists()
         return [
             Playlist(id=item["playlistId"], name=item["title"]) for item in response
         ]

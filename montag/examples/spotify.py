@@ -16,7 +16,7 @@ def run_auth_flow() -> SpotifyClient:
     return client
 
 
-def restore_client() -> SpotifyClient:
+def client() -> SpotifyClient:
     """Loads the access token from the file system and initializes the client with it."""
     with open("tmp/spotify_token.json", "r") as f:
         auth_token = AuthToken(**json.load(f))
@@ -24,4 +24,4 @@ def restore_client() -> SpotifyClient:
 
 
 def repo() -> SpotifyRepo:
-    return SpotifyRepo(client=restore_client())
+    return SpotifyRepo(client=client())
