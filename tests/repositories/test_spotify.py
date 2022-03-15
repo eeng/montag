@@ -1,5 +1,6 @@
+from montag.clients.spotify import SpotifyClient
 from montag.models import Playlist, Track
-from montag.repositories.spotify import SpotifyClient, SpotifyRepo
+from montag.repositories.spotify import SpotifyRepo
 from tests.helpers import mock, resource
 
 

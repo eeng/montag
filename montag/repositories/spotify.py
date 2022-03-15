@@ -1,18 +1,9 @@
 from dataclasses import dataclass
-from typing import Protocol
+from montag.clients.spotify import SpotifyClient
 from montag.models import Playlist, Track
 from montag.repositories import MusicRepository
 
-
-class SpotifyClient(Protocol):
-    def my_playlists(self) -> dict:
-        ...
-
-    def liked_tracks(self, limit: int, offset: int = 0) -> dict:
-        ...
-
-    def playlist_tracks(self, playlist_id: str, limit: int, offset: int = 0) -> dict:
-        ...
+LIKED_SONGS_ID = "LS"
 
 
 @dataclass
@@ -24,7 +15,7 @@ class SpotifyRepo(MusicRepository):
         other_playlists = [
             Playlist(id=item["id"], name=item["name"]) for item in response["items"]
         ]
-        liked_songs_playlist = Playlist(id="LS", name="Liked Songs")
+        liked_songs_playlist = Playlist(id=LIKED_SONGS_ID, name="Liked Songs")
         return [liked_songs_playlist, *other_playlists]
 
     def find_tracks(self, playlist_id: str) -> list[Track]:
@@ -34,11 +25,13 @@ class SpotifyRepo(MusicRepository):
         return [
             track
             for offset in range(0, total + 1, limit)
-            for track in self.find_tracks_batch(playlist_id, limit=limit, offset=offset)
+            for track in self._find_tracks_batch(
+                playlist_id=playlist_id, limit=limit, offset=offset
+            )
         ]
 
-    def find_tracks_batch(self, playlist_id=None, **kargs) -> list[Track]:
-        response = self._fetch_liked_or_playlist_tracks(playlist_id, **kargs)
+    def _find_tracks_batch(self, **kargs) -> list[Track]:
+        response = self._fetch_liked_or_playlist_tracks(**kargs)
         return [
             Track(
                 name=item["track"]["name"],
@@ -50,7 +43,7 @@ class SpotifyRepo(MusicRepository):
         ]
 
     def _fetch_liked_or_playlist_tracks(self, playlist_id, **kwargs):
-        if playlist_id == "LS":
+        if playlist_id == LIKED_SONGS_ID:
             return self.client.liked_tracks(**kwargs)
         else:
             return self.client.playlist_tracks(playlist_id, **kwargs)
