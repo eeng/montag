@@ -3,11 +3,11 @@ from montag.repositories.spotify import SpotifyClient, SpotifyRepo
 from tests.helpers import mock, resource
 
 
-def test_find_tracks_without_playlist():
+def test_find_tracks_in_the_liked_songs_playlist():
     client = mock(SpotifyClient, liked_tracks=resource("spotify/liked_tracks.json"))
     repo = SpotifyRepo(client)
 
-    tracks = repo.find_tracks()
+    tracks = repo.find_tracks(playlist_id="LS")
 
     assert tracks == [
         Track(
@@ -26,7 +26,7 @@ def test_find_tracks_without_playlist():
     client.liked_tracks.assert_called_with(limit=50, offset=0)
 
 
-def test_find_tracks_with_playlist():
+def test_find_tracks_in_another_playlist():
     client = mock(
         SpotifyClient, playlist_tracks=resource("spotify/playlist_tracks.json")
     )
@@ -59,6 +59,7 @@ def test_find_playlists():
     playlists = repo.find_playlists()
 
     assert playlists == [
+        Playlist(name="Liked Songs", id="LS"),
         Playlist(name="My Shazam Tracks", id="5m7aOK7YN9oZy9cufeauD3"),
         Playlist(name="Soundtracks", id="4Rd2URtKmEhvcSr8wtltfs"),
         Playlist(name="Rock Classics", id="3ODmycCuoBkIccAREsJjFM"),
