@@ -1,7 +1,7 @@
 import json
 from unittest.mock import Mock, create_autospec
 from callee import Matcher
-from montag.adapters.http import HttpAdapter, HttpResponse
+from montag.clients.http import HttpAdapter, HttpResponse
 from montag.util.clock import Clock
 
 

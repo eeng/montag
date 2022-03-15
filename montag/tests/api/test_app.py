@@ -1,7 +1,7 @@
 import pytest
 from flask import session
 from montag.api.app import SPOTIFY_COOKIE_KEY, SPOTIFY_SESSION_KEY, app
-from montag.adapters.spotify import ACCOUNTS_URL, BadStateError, SpotifyClient
+from montag.clients.spotify import ACCOUNTS_URL, BadStateError, SpotifyClient
 from tests.helpers import mock
 from tests import factory
 

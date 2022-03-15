@@ -1,5 +1,5 @@
 import json
-from montag.adapters.spotify import SpotifyClient, AuthToken
+from montag.clients.spotify import SpotifyClient, AuthToken
 from montag.repositories.spotify import SpotifyRepo
 
 TOKEN_FILE = "tmp/spotify_token.json"

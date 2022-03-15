@@ -1,7 +1,7 @@
 import os
 from typing import Optional
 from flask import Flask, g, redirect, request, session, url_for
-from montag.adapters.spotify import AuthToken, BadStateError, SpotifyClient
+from montag.clients.spotify import AuthToken, BadStateError, SpotifyClient
 from montag.repositories.spotify import SpotifyRepo
 
 SPOTIFY_COOKIE_KEY = "spotify_auth_state"

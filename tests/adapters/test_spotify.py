@@ -1,7 +1,7 @@
 from unittest.mock import Mock
 from callee import Attrs, Dict
 import pytest
-from montag.adapters.spotify import (
+from montag.clients.spotify import (
     AuthToken,
     SpotifyClient,
     NotAuthorizedError,
