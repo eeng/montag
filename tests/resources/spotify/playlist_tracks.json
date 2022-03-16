@@ -66,7 +66,7 @@
                         },
                         "href": "https://api.spotify.com/v1/artists/3qAPxVwIQRBuz5ImPUxpZT",
                         "id": "3qAPxVwIQRBuz5ImPUxpZT",
-                        "name": "Heroes Del Silencio",
+                        "name": "Los Enanitos Verdes",
                         "type": "artist",
                         "uri": "spotify:artist:3qAPxVwIQRBuz5ImPUxpZT"
                     }
@@ -85,7 +85,7 @@
                 "href": "https://api.spotify.com/v1/tracks/7vcDJCAO356RYkCfiUozmE",
                 "id": "7vcDJCAO356RYkCfiUozmE",
                 "is_local": false,
-                "name": "Maldito duende",
+                "name": "Lamento Boliviano",
                 "popularity": 71,
                 "preview_url": "https://p.scdn.co/mp3-preview/ffa750674f734acbc81d294be362f98680d79351?cid=1b3eeebcf674464d9c53a98d627d3e70",
                 "track": true,

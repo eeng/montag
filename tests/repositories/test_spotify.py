@@ -2,6 +2,7 @@ from montag.clients.spotify import SpotifyClient
 from montag.domain import Playlist, Track
 from montag.repositories.spotify import SpotifyRepo
 from tests.helpers import mock, resource
+from tests.matchers import has_attrs
 
 
 def test_find_tracks_in_the_liked_songs_playlist():
@@ -36,20 +37,10 @@ def test_find_tracks_in_another_playlist():
 
     tracks = repo.find_tracks(playlist_id=playlist_id)
 
-    assert tracks == [
-        Track(
-            name="Maldito duende",
-            uri="spotify:track:7vcDJCAO356RYkCfiUozmE",
-            album="Senderos De Traición",
-            artists=["Heroes Del Silencio"],
-        ),
-        Track(
-            name="La chispa adecuada",
-            uri="spotify:track:4vkSJSyPddHwL7v3l1cuRf",
-            album="Avalancha",
-            artists=["Heroes Del Silencio"],
-        ),
-    ]
+    assert [
+        has_attrs(name="Lamento Boliviano"),
+        has_attrs(name="La chispa adecuada"),
+    ] == tracks
     client.playlist_tracks.assert_called_with(playlist_id, limit=50, offset=0)
 
 

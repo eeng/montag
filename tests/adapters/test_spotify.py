@@ -1,5 +1,4 @@
 from unittest.mock import Mock
-from callee import Attrs, Dict
 import pytest
 from montag.clients.spotify import (
     AuthToken,
@@ -7,7 +6,8 @@ from montag.clients.spotify import (
     NotAuthorizedError,
     BadRequestError,
 )
-from tests.helpers import HasEntry, fake_clock, mock_http_adapter, resource
+from tests.helpers import fake_clock, mock_http_adapter, resource
+from tests.matchers import has_attrs, has_entries, instance_of
 from tests import factory
 
 AUTH_TOKEN = factory.auth_token()
@@ -148,13 +148,13 @@ def test_token_expiration():
 
     http_adapter.post.assert_called_once_with(
         "https://accounts.spotify.com/api/token",
-        data=HasEntry("grant_type", "refresh_token"),
+        data=has_entries(grant_type="refresh_token"),
     )
     http_adapter.get.assert_called_once_with(
-        "https://api.spotify.com/v1/me", headers=Dict()
+        "https://api.spotify.com/v1/me", headers=instance_of(dict)
     )
     on_token_expired.assert_called_once_with(
-        Attrs(access_token=new_token_response["access_token"])
+        has_attrs(access_token=new_token_response["access_token"])
     )
 
 

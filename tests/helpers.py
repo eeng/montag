@@ -1,6 +1,5 @@
 import json
 from unittest.mock import Mock, create_autospec
-from callee import Matcher
 from montag.clients.http import HttpAdapter, HttpResponse
 from montag.util.clock import Clock
 
@@ -36,14 +35,3 @@ def fake_json_response(json: dict) -> HttpResponse:
 
 def fake_clock(timestamp: int) -> Clock:
     return mock(Clock, current_timestamp=timestamp)
-
-
-class HasEntry(Matcher):
-    """Matches a dict contains the specified key/value entry."""
-
-    def __init__(self, key, value):
-        self.key = key
-        self.value = value
-
-    def match(self, a_dict):
-        return a_dict.get(self.key) == self.value
