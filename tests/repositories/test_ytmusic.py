@@ -1,4 +1,4 @@
-from montag.models import Playlist
+from montag.domain import Playlist
 from montag.repositories.ytmusic import YouTubeMusicRepo
 from ytmusicapi import YTMusic
 from tests.helpers import mock, resource

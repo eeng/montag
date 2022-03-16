@@ -1,5 +1,5 @@
 from typing import Protocol
-from montag.models import Playlist
+from montag.domain import Playlist
 
 
 class MusicRepository(Protocol):
