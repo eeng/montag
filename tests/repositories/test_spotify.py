@@ -5,7 +5,7 @@ from tests.helpers import mock, resource
 from tests.matchers import has_attrs
 
 
-def test_find_tracks_in_the_liked_songs_playlist():
+def test_find_tracks_in_liked_songs_playlist():
     client = mock(SpotifyClient, liked_tracks=resource("spotify/liked_tracks.json"))
     repo = SpotifyRepo(client)
 
@@ -13,14 +13,14 @@ def test_find_tracks_in_the_liked_songs_playlist():
 
     assert tracks == [
         Track(
+            id="7vcDJCAO356RYkCfiUozmE",
             name="Maldito duende",
-            uri="spotify:track:7vcDJCAO356RYkCfiUozmE",
             album="Senderos De Traición",
             artists=["Heroes Del Silencio"],
         ),
         Track(
+            id="2tkL5ggXp1EJ6ZlRagQJBA",
             name="Sell My Soul",
-            uri="spotify:track:2tkL5ggXp1EJ6ZlRagQJBA",
             album="Poison The Parish",
             artists=["Seether"],
         ),

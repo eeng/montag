@@ -19,7 +19,7 @@ class SpotifyRepo(MusicRepository):
         return [liked_songs_playlist, *other_playlists]
 
     def find_tracks(self, playlist_id: str) -> list[Track]:
-        """Returns all tracks in the specified playlist. Use playlist_id=LS to get the liked songs"""
+        """Returns all tracks in the specified playlist. Use playlist_id='LS' to get the liked songs"""
         total = self._fetch_liked_or_playlist_tracks(playlist_id, limit=1)["total"]
         limit = 50
         return [
@@ -34,8 +34,8 @@ class SpotifyRepo(MusicRepository):
         response = self._fetch_liked_or_playlist_tracks(**kargs)
         return [
             Track(
+                id=item["track"]["id"],
                 name=item["track"]["name"],
-                uri=item["track"]["uri"],
                 album=item["track"]["album"]["name"],
                 artists=[artist["name"] for artist in item["track"]["artists"]],
             )

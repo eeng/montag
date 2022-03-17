@@ -25,3 +25,6 @@ def client() -> SpotifyClient:
 
 def repo() -> SpotifyRepo:
     return SpotifyRepo(client=client())
+
+
+# tracks = repo().find_tracks("LS")

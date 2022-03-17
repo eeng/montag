@@ -37,8 +37,7 @@ def test_spotify_callback_with_wrong_state(client):
 
 @pytest.fixture
 def client():
-    app.config["TESTING"] = True
-    app.config["SECRET_KEY"] = "test_key"
+    app.config.update(TESTING=True, SECRET_KEY="test_key")
     with app.test_client() as client:
         yield client
 

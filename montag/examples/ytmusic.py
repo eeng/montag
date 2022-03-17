@@ -9,3 +9,6 @@ def client():
 
 def repo():
     return YouTubeMusicRepo(client())
+
+
+# tracks = repo().find_tracks("LM")
