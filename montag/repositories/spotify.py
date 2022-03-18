@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+
 from montag.clients.spotify import SpotifyClient
 from montag.domain import Playlist, Track
 from montag.repositories import MusicRepository
