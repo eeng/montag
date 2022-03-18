@@ -18,9 +18,11 @@ class YouTubeMusicRepo(MusicRepository):
         response = self.client.get_playlist(playlistId=playlist_id)
         return self._track_from_json(response["tracks"])
 
-    def search_tracks_matching(self, other: Track) -> list[Track]:
-        response = self.client.search(other.name, filter="songs", ignore_spelling=True)
-        return self._track_from_json(response)
+    def search_tracks_matching(self, other: Track, limit=10) -> list[Track]:
+        q = f"{other.name} {other.artists[0]}"
+        response = self.client.search(q, filter="songs", limit=limit)
+        # Slicing here since YTMusic seems to ignore the limit param
+        return self._track_from_json(response[0:limit])
 
     def _track_from_json(self, tracks_json: list[dict]):
         return [

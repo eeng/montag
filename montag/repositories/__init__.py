@@ -11,6 +11,6 @@ class MusicRepository(Protocol):
         """Returns all tracks in the specified playlist."""
         ...
 
-    def search_tracks_matching(self, other: Track) -> list[Track]:
-        """Searches for tracks that match the other as best as possible."""
+    def search_tracks_matching(self, other: Track, limit=10) -> list[Track]:
+        """Searches for tracks that match the one specified as best as possible."""
         ...

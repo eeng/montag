@@ -12,10 +12,10 @@ def auth_token(expires_at=None):
     )
 
 
-def track(name="The Name", album="The Album", artist="The Artist"):
+def track(name="The Name", album="The Album", artists=["The Artist"]):
     return Track(
         id=secrets.token_hex(5),
         name=name,
         album=album,
-        artists=[artist],
+        artists=artists,
     )

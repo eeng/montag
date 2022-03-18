@@ -49,5 +49,15 @@ class SpotifyRepo(MusicRepository):
         else:
             return self.client.playlist_tracks(playlist_id, **kwargs)
 
-    def search_tracks_matching(self, other: Track) -> list[Track]:
-        raise NotImplementedError
+    def search_tracks_matching(self, other: Track, limit=10) -> list[Track]:
+        q = f"track:{other.name} artist:{other.artists[0]}"
+        response = self.client.search(q, type="track", limit=limit)
+        return [
+            Track(
+                id=item["id"],
+                name=item["name"],
+                album=item["album"]["name"],
+                artists=[artist["name"] for artist in item["artists"]],
+            )
+            for item in response["tracks"]["items"]
+        ]

@@ -38,10 +38,12 @@ def test_search_tracks_matching():
     client = mock(YTMusic, search=resource("ytmusic/search.json"))
     repo = YouTubeMusicRepo(client)
 
-    tracks = repo.search_tracks_matching(factory.track(name="The Reason"))
+    tracks = repo.search_tracks_matching(
+        factory.track(name="The Reason", artists=["Hoobastank"])
+    )
 
     client.search.assert_called_once_with(
-        "The Reason", filter="songs", ignore_spelling=True
+        "The Reason Hoobastank", filter="songs", limit=10
     )
     assert [
         has_attrs(name="The Reason", id="qQ0zxuWFxrY"),
