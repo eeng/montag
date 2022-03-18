@@ -1,0 +1,74 @@
+[
+    {
+        "category": "Songs",
+        "resultType": "song",
+        "title": "The Reason",
+        "album": {
+            "name": "The Reason (15th Anniversary Deluxe)",
+            "id": "MPREb_sLOXrJaGzqZ"
+        },
+        "feedbackTokens": {
+            "add": "AB9zfpJWiCGiP6eIClaak-sDn--oKgRNcxMtufzhEpG2i65NtVrFKbQfTajDNvqwNoVWVF1ZSdD26NJMPf_iVYawQqiET5drRQ",
+            "remove": "AB9zfpLcQ6kc38f0YHRRrFWZWoNwJMNI0REMqacmhEsROhzLJw-jk0DWlCodAvUvv--Pwz35e33rkRCSeLKTMKHGfdEBu6f3aQ"
+        },
+        "videoId": "qQ0zxuWFxrY",
+        "duration": "3:53",
+        "year": null,
+        "artists": [
+            {
+                "name": "Hoobastank",
+                "id": "UCApYZt0aLG30DTt0g4yKLmw"
+            }
+        ],
+        "duration_seconds": 233,
+        "isExplicit": false,
+        "thumbnails": [
+            {
+                "url": "https://lh3.googleusercontent.com/vLiu5kS7qbRnV2m37odLMAipXeQFDlO2RTIxj0aQWmpsP1Ai6VdEWFB7pDVn3m0cAIhAADGy3FTnjNxb=w60-h60-l90-rj",
+                "width": 60,
+                "height": 60
+            },
+            {
+                "url": "https://lh3.googleusercontent.com/vLiu5kS7qbRnV2m37odLMAipXeQFDlO2RTIxj0aQWmpsP1Ai6VdEWFB7pDVn3m0cAIhAADGy3FTnjNxb=w120-h120-l90-rj",
+                "width": 120,
+                "height": 120
+            }
+        ]
+    },
+    {
+        "category": "Songs",
+        "resultType": "song",
+        "title": "You Are The Reason",
+        "album": {
+            "name": "Only Human (Deluxe)",
+            "id": "MPREb_wGIibFdlJjt"
+        },
+        "feedbackTokens": {
+            "add": "AB9zfpIxIw3e8P6i5y1j4ZI-ljj0y8HIDNPKQKmzuhZvFseTeM0zlAPt-Q3dCoyJMwYtAQK3h-Z-irandcVx3BH2qyUnhEzPqQ",
+            "remove": "AB9zfpJ70f-PgZbBFryXzyW8jGI0HVnb8c0jKrMMs-m72aflZfWkobRH1kAqo-sbV77RwpiPXBkQfpabgvQbF9TFONWeQQqw-Q"
+        },
+        "videoId": "2Kiob5f9A1g",
+        "duration": "3:24",
+        "year": null,
+        "artists": [
+            {
+                "name": "Calum Scott",
+                "id": "UCuPY6msZGySMzTpKLjyeO8g"
+            }
+        ],
+        "duration_seconds": 204,
+        "isExplicit": false,
+        "thumbnails": [
+            {
+                "url": "https://lh3.googleusercontent.com/4MhCNDu-7eH1nNjQZAAsrqDmITTo4eS9oNMmsXxLJAR_3aiXrdIRDq63Q6qxShMlqjYnwPYMDf73MTgozg=w60-h60-l90-rj",
+                "width": 60,
+                "height": 60
+            },
+            {
+                "url": "https://lh3.googleusercontent.com/4MhCNDu-7eH1nNjQZAAsrqDmITTo4eS9oNMmsXxLJAR_3aiXrdIRDq63Q6qxShMlqjYnwPYMDf73MTgozg=w120-h120-l90-rj",
+                "width": 120,
+                "height": 120
+            }
+        ]
+    }
+]

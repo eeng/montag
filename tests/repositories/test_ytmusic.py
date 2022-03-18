@@ -1,7 +1,9 @@
 from montag.domain import Playlist, Track
 from montag.repositories.ytmusic import YouTubeMusicRepo
-from ytmusicapi import YTMusic
+from tests import factory
 from tests.helpers import mock, resource
+from tests.matchers import has_attrs, instance_of
+from ytmusicapi import YTMusic
 
 
 def test_find_playlists():
@@ -25,8 +27,23 @@ def test_find_tracks_in_playlist():
 
     playlists = repo.find_tracks(playlist_id="LM")
 
+    client.get_playlist.assert_called_with(playlistId="LM")
     assert playlists == [
         Track(id="qG6_d9tpR84", name="Zombie", album="Disobey", artists=["Bad Wolves"]),
         Track(id="6tsW4ik73ac", name="No More", album=None, artists=["Disturbed"]),
     ]
-    client.get_playlist.assert_called_with(playlistId="LM")
+
+
+def test_search_tracks_matching():
+    client = mock(YTMusic, search=resource("ytmusic/search.json"))
+    repo = YouTubeMusicRepo(client)
+
+    tracks = repo.search_tracks_matching(factory.track(name="The Reason"))
+
+    client.search.assert_called_once_with(
+        "The Reason", filter="songs", ignore_spelling=True
+    )
+    assert [
+        has_attrs(name="The Reason", id="qQ0zxuWFxrY"),
+        has_attrs(name="You Are The Reason", id="2Kiob5f9A1g"),
+    ] == tracks

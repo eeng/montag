@@ -48,3 +48,6 @@ class SpotifyRepo(MusicRepository):
             return self.client.liked_tracks(**kwargs)
         else:
             return self.client.playlist_tracks(playlist_id, **kwargs)
+
+    def search_tracks_matching(self, other: Track) -> list[Track]:
+        raise NotImplementedError

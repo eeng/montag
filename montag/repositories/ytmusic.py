@@ -16,6 +16,13 @@ class YouTubeMusicRepo(MusicRepository):
 
     def find_tracks(self, playlist_id: str) -> list[Track]:
         response = self.client.get_playlist(playlistId=playlist_id)
+        return self._track_from_json(response["tracks"])
+
+    def search_tracks_matching(self, other: Track) -> list[Track]:
+        response = self.client.search(other.name, filter="songs", ignore_spelling=True)
+        return self._track_from_json(response)
+
+    def _track_from_json(self, tracks_json: list[dict]):
         return [
             Track(
                 id=item["videoId"],
@@ -23,5 +30,5 @@ class YouTubeMusicRepo(MusicRepository):
                 album=(item.get("album") and item["album"]["name"]),
                 artists=[artist["name"] for artist in item["artists"]],
             )
-            for item in response["tracks"]
+            for item in tracks_json
         ]
