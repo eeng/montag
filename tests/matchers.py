@@ -7,16 +7,16 @@ class Matcher:
 
 
 class instance_of(Matcher):
-    """Matches any object which is an instance of `type_`."""
+    """Matches any object which is an instance of `expected_type`."""
 
-    def __init__(self, type_):
-        self.type = type_
+    def __init__(self, expected_type):
+        self.expected_type = expected_type
 
     def __eq__(self, other):
-        return isinstance(other, self.type)
+        return isinstance(other, self.expected_type)
 
     def __repr__(self):
-        return f"<instance of {self.type}>"
+        return f"<instance of {self.expected_type}>"
 
 
 class has_attrs(Matcher):

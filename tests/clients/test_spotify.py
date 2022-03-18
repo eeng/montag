@@ -198,7 +198,22 @@ def test_playlist_tracks():
 
     http_adapter.get.assert_called_once_with(
         f"https://api.spotify.com/v1/playlists/{playlist_id}/tracks",
-        params={"limit": 50, "offset": 0},
+        params={"limit": 20, "offset": 0},
+        headers={"Authorization": f"Bearer {AUTH_TOKEN.access_token}"},
+    )
+    assert tracks == response
+
+
+def test_search():
+    response = resource("spotify/search.json")
+    http_adapter = mock_http_adapter(get=response)
+    client = SpotifyClient(auth_token=AUTH_TOKEN, http_adapter=http_adapter)
+
+    tracks = client.search("Disturbed", type="artist")
+
+    http_adapter.get.assert_called_once_with(
+        f"https://api.spotify.com/v1/search",
+        params={"q": "Disturbed", "type": "artist", "limit": 20, "offset": 0},
         headers={"Authorization": f"Bearer {AUTH_TOKEN.access_token}"},
     )
     assert tracks == response

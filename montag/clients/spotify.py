@@ -88,7 +88,7 @@ class SpotifyClient:
         response = self.http_adapter.get(f"{API_URL}/me", headers=self._auth_header())
         return self._parse_response(response)
 
-    def my_playlists(self, limit: int = 50, offset: int = 0):
+    def my_playlists(self, limit: int = 20, offset: int = 0):
         self.refresh_access_token_if_needed()
         response = self.http_adapter.get(
             f"{API_URL}/me/playlists",
@@ -97,20 +97,24 @@ class SpotifyClient:
         )
         return self._parse_response(response)
 
-    def liked_tracks(self, limit: int = 50, offset: int = 0):
-        self.refresh_access_token_if_needed()
-        response = self.http_adapter.get(
-            f"{API_URL}/me/tracks",
-            params=dict(limit=limit, offset=offset),
-            headers=self._auth_header(),
-        )
-        return self._parse_response(response)
+    def liked_tracks(self, limit: int = 20, offset: int = 0):
+        return self._authorized_api_get("/me/tracks", limit=limit, offset=offset)
 
-    def playlist_tracks(self, playlist_id: str, limit: int = 50, offset: int = 0):
+    def playlist_tracks(self, playlist_id: str, limit: int = 20, offset: int = 0):
+        return self._authorized_api_get(
+            f"/playlists/{playlist_id}/tracks", limit=limit, offset=offset
+        )
+
+    def search(self, query: str, type: str, limit: int = 20, offset: int = 0):
+        return self._authorized_api_get(
+            "/search", q=query, type=type, limit=limit, offset=offset
+        )
+
+    def _authorized_api_get(self, path: str, **params):
         self.refresh_access_token_if_needed()
         response = self.http_adapter.get(
-            f"{API_URL}/playlists/{playlist_id}/tracks",
-            params=dict(limit=limit, offset=offset),
+            API_URL + path,
+            params=params,
             headers=self._auth_header(),
         )
         return self._parse_response(response)
