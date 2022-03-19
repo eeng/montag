@@ -34,11 +34,11 @@ def test_find_tracks_in_playlist():
     ]
 
 
-def test_search_tracks_matching():
+def test_search_matching_tracks():
     client = mock(YTMusic, search=resource("ytmusic/search.json"))
     repo = YouTubeMusicRepo(client)
 
-    tracks = repo.search_tracks_matching(
+    tracks = repo.search_matching_tracks(
         factory.track(name="The Reason", artists=["Hoobastank"])
     )
 

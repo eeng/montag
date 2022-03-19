@@ -1,6 +1,9 @@
+from dataclasses import dataclass
 import json
 
 from montag.clients.spotify import AuthToken, SpotifyClient
+from montag.domain import Provider
+from montag.repositories import MusicRepository, spotify
 from montag.repositories.spotify import SpotifyRepo
 from montag.repositories.ytmusic import YouTubeMusicRepo
 from ytmusicapi import YTMusic
@@ -19,20 +22,35 @@ def run_spotify_auth_flow() -> SpotifyClient:
     return client
 
 
-def spotify_client() -> SpotifyClient:
+def build_spotify_client() -> SpotifyClient:
     """Loads the access token from the file system and initializes the client with it."""
     with open(SPOTIFY_TOKEN_FILE, "r") as f:
         auth_token = AuthToken(**json.load(f))
         return SpotifyClient(auth_token=auth_token)
 
 
-def spotify_repo() -> SpotifyRepo:
-    return SpotifyRepo(client=spotify_client())
+@dataclass
+class System:
+    spotify_client: SpotifyClient
+    spotify_repo: SpotifyRepo
+    ytmusic_client: YTMusic
+    ytmusic_repo: YouTubeMusicRepo
+    repos: dict[Provider, MusicRepository]
 
 
-def ytmusic_client():
-    return YTMusic("tmp/ytmusic_auth.json")
-
-
-def ytmusic_repo():
-    return YouTubeMusicRepo(ytmusic_client())
+def build_system() -> System:
+    spotify_client = build_spotify_client()
+    spotify_repo = SpotifyRepo(client=spotify_client)
+    ytmusic_client = YTMusic("tmp/ytmusic_auth.json")
+    ytmusic_repo = YouTubeMusicRepo(ytmusic_client)
+    repos = {
+        Provider.SPOTIFY: spotify_repo,
+        Provider.YT_MUSIC: ytmusic_repo,
+    }
+    return System(
+        spotify_client=spotify_client,
+        spotify_repo=spotify_repo,
+        ytmusic_client=ytmusic_client,
+        ytmusic_repo=ytmusic_repo,
+        repos=repos,
+    )

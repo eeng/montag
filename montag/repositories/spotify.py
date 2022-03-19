@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 
 from montag.clients.spotify import SpotifyClient
-from montag.domain import Playlist, Track
+from montag.domain import Playlist, PlaylistId, Track
 from montag.repositories import MusicRepository
 
 LIKED_SONGS_ID = "LS"
@@ -19,7 +19,7 @@ class SpotifyRepo(MusicRepository):
         liked_songs_playlist = Playlist(id=LIKED_SONGS_ID, name="Liked Songs")
         return [liked_songs_playlist, *other_playlists]
 
-    def find_tracks(self, playlist_id: str) -> list[Track]:
+    def find_tracks(self, playlist_id: PlaylistId) -> list[Track]:
         """Returns all tracks in the specified playlist. Use playlist_id='LS' to get the liked songs"""
         total = self._fetch_liked_or_playlist_tracks(playlist_id, limit=1)["total"]
         limit = 50
@@ -49,7 +49,7 @@ class SpotifyRepo(MusicRepository):
         else:
             return self.client.playlist_tracks(playlist_id, **kwargs)
 
-    def search_tracks_matching(self, other: Track, limit=10) -> list[Track]:
+    def search_matching_tracks(self, other: Track, limit=10) -> list[Track]:
         q = f"track:{other.name} artist:{other.artists[0]}"
         response = self.client.search(q, type="track", limit=limit)
         return [

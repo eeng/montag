@@ -7,7 +7,7 @@ from montag.domain import Track
 def auth_token(expires_at=None):
     return AuthToken(
         access_token=secrets.token_hex(3),
-        refresh_token="AQAXsR",
+        refresh_token=secrets.token_hex(3),
         expires_at=expires_at or 9647168435,
     )
 
@@ -19,3 +19,7 @@ def track(name="The Name", album="The Album", artists=["The Artist"]):
         album=album,
         artists=artists,
     )
+
+
+def tracks(qty: int, **kwargs) -> list[Track]:
+    return [track(**kwargs) for _ in range(qty)]

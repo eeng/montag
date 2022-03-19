@@ -60,11 +60,11 @@ def test_find_playlists():
     ]
 
 
-def test_search_tracks_matching():
+def test_search_matching_tracks():
     client = mock(SpotifyClient, search=resource("spotify/search.json"))
     repo = SpotifyRepo(client)
 
-    tracks = repo.search_tracks_matching(
+    tracks = repo.search_matching_tracks(
         factory.track(name="The Reason", artists=["Hoobastank"])
     )
 

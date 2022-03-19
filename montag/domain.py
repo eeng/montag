@@ -1,14 +1,24 @@
+from enum import Enum
 from typing import Optional
+
 from pydantic import BaseModel
+
+TrackId = str
+PlaylistId = str
 
 
 class Track(BaseModel):
-    id: str
+    id: TrackId
     name: str
     album: Optional[str]
     artists: list[str]
 
 
 class Playlist(BaseModel):
-    id: str
+    id: PlaylistId
     name: str
+
+
+class Provider(Enum):
+    SPOTIFY = "Spotify"
+    YT_MUSIC = "YouTubeMusic"
