@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import Generic, TypeVar, Union
+from typing import Generic, Protocol, TypeVar, Union
 
 
 SuccessValue = TypeVar("SuccessValue")
@@ -21,3 +21,8 @@ class Error:
 
 
 Response = Union[Ok[SuccessValue], Error]
+
+
+class UseCase(Protocol):
+    def execute(self, request: object) -> Response:
+        ...

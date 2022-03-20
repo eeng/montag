@@ -50,7 +50,7 @@ def test_search_tracks_matching_the_ones_in_the_src_playlist(
         src_provider=Provider.SPOTIFY,
         dst_provider=Provider.YT_MUSIC,
     )
-    response = use_case.run(request)
+    response = use_case.execute(request)
 
     assert response.value == [
         TrackSuggestions(
@@ -91,7 +91,7 @@ def test_when_a_track_already_exists_in_dst_playlist(
         src_provider=Provider.SPOTIFY,
         dst_provider=Provider.YT_MUSIC,
     )
-    response = use_case.run(request)
+    response = use_case.execute(request)
 
     assert response.value == [
         TrackSuggestions(

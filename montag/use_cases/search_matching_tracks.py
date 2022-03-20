@@ -2,7 +2,7 @@ from dataclasses import dataclass
 
 from montag.domain import PlaylistId, Provider, Track, TrackSuggestions
 from montag.repositories.music_repo import MusicRepo
-from montag.use_cases.types import Ok, Response
+from montag.use_cases.types import Ok, Response, UseCase
 from pydantic import BaseModel
 
 
@@ -18,10 +18,10 @@ class NotFoundError(Exception):
 
 
 @dataclass
-class SearchMatchingTracks:
+class SearchMatchingTracks(UseCase):
     repos: dict[Provider, MusicRepo]
 
-    def run(
+    def execute(
         self, request: SearchMatchingTracksRequest
     ) -> Response[list[TrackSuggestions]]:
         src_repo = self.repos[request.src_provider]
