@@ -1,14 +1,15 @@
 from unittest.mock import Mock
+
 import pytest
 from montag.clients.spotify_client import (
     AuthToken,
-    SpotifyClient,
-    NotAuthorizedError,
     BadRequestError,
+    NotAuthorizedError,
+    SpotifyClient,
 )
+from tests import factory
 from tests.helpers import fake_clock, mock_http_adapter, resource
 from tests.matchers import has_attrs, has_entries, instance_of
-from tests import factory
 
 AUTH_TOKEN = factory.auth_token()
 
@@ -20,24 +21,17 @@ def test_authorize_url_and_state():
         redirect_uri="FAKE_REDIRECT_URL",
     )
 
-    actual_url, state = client.authorize_url_and_state()
+    actual_url = client.authorize_url("THE_STATE")
 
     expected_url = (
         "https://accounts.spotify.com/authorize?"
         "client_id=FAKE_CLIENT_ID&"
         "redirect_uri=FAKE_REDIRECT_URL&"
-        f"state={state}&"
+        f"state=THE_STATE&"
         "scope=user-read-private+user-read-email+user-library-read+playlist-read-private&"
         "response_type=code"
     )
     assert actual_url == expected_url
-
-
-def test_state_changes_with_every_call():
-    client = SpotifyClient()
-    _, state1 = client.authorize_url_and_state()
-    _, state2 = client.authorize_url_and_state()
-    assert state1 != state2
 
 
 def test_request_access_token():

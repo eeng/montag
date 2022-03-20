@@ -28,8 +28,7 @@ class SpotifyClient:
     http_adapter: HttpAdapter = HttpAdapter()
     clock: Clock = Clock()
 
-    def authorize_url_and_state(self) -> tuple[str, str]:
-        state = secrets.token_hex(8)
+    def authorize_url(self, state: str = "") -> str:
         params = dict(
             client_id=self.client_id,
             redirect_uri=self.redirect_uri,
@@ -37,7 +36,7 @@ class SpotifyClient:
             scope=SCOPE,
             response_type="code",
         )
-        return (f"{ACCOUNTS_URL}/authorize?{urlencode(params)}", state)
+        return f"{ACCOUNTS_URL}/authorize?{urlencode(params)}"
 
     def request_access_token(self, code: str) -> AuthToken:
         data = dict(

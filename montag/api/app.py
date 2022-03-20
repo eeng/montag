@@ -1,4 +1,5 @@
 import os
+import secrets
 from typing import Optional
 from flask import Flask, g, redirect, request, session, url_for
 from montag.clients.spotify_client import AuthToken, BadStateError, SpotifyClient
@@ -18,7 +19,8 @@ def index():
 
 @app.route("/spotify/login")
 def spotify_login():
-    url, state = spotify_client().authorize_url_and_state()
+    state = secrets.token_hex(8)
+    url = spotify_client().authorize_url(state)
     response = redirect(url)
     response.set_cookie(SPOTIFY_COOKIE_KEY, state)
     return response

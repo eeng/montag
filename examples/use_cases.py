@@ -15,7 +15,7 @@ SPOTIFY_TOKEN_FILE = "tmp/spotify_token.json"
 def run_spotify_auth_flow():
     """Runs the authorization flow to obtain an access token and stores in in the file system."""
     client = SpotifyClient()
-    url, _ = client.authorize_url_and_state()
+    url = client.authorize_url()
     code = input(f"Open {url} and then paste code here:\n")
     auth_token = client.request_access_token(code)
     with open(SPOTIFY_TOKEN_FILE, "w") as f:
