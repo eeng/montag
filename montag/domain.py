@@ -24,11 +24,6 @@ class Playlist(BaseModel):
     is_liked: bool = False
 
 
-class Provider(Enum):
-    SPOTIFY = "Spotify"
-    YT_MUSIC = "YouTubeMusic"
-
-
 class TrackSuggestions(BaseModel):
     # Track found in source playlist
     target: Track
@@ -38,3 +33,8 @@ class TrackSuggestions(BaseModel):
 
     # TrackIds of suggestions that already exist in the destination playlist
     already_present: list[TrackId]
+
+
+class Provider(Enum):
+    SPOTIFY = "Spotify"
+    YT_MUSIC = "YouTubeMusic"
