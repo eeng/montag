@@ -12,7 +12,12 @@ class YouTubeMusicRepo(MusicRepository):
     def find_playlists(self) -> list[Playlist]:
         response = self.client.get_library_playlists()
         return [
-            Playlist(id=item["playlistId"], name=item["title"]) for item in response
+            Playlist(
+                id=item["playlistId"],
+                name=item["title"],
+                is_liked=item["playlistId"] == "LM",
+            )
+            for item in response
         ]
 
     def find_tracks(self, playlist_id: PlaylistId) -> list[Track]:

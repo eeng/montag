@@ -25,5 +25,5 @@ def tracks(qty: int, **kwargs) -> list[Track]:
     return [track(**kwargs) for _ in range(qty)]
 
 
-def playlist(name="The Playlist"):
-    return Playlist(id=secrets.token_hex(5), name=name)
+def playlist(name="The Playlist", is_liked=False):
+    return Playlist(id=secrets.token_hex(5), name=name, is_liked=is_liked)

@@ -16,7 +16,9 @@ class SpotifyRepo(MusicRepository):
         other_playlists = [
             Playlist(id=item["id"], name=item["name"]) for item in response["items"]
         ]
-        liked_songs_playlist = Playlist(id=LIKED_SONGS_ID, name="Liked Songs")
+        liked_songs_playlist = Playlist(
+            id=LIKED_SONGS_ID, name="Liked Songs", is_liked=True
+        )
         return [liked_songs_playlist, *other_playlists]
 
     def find_tracks(self, playlist_id: PlaylistId) -> list[Track]:

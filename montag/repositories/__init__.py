@@ -8,7 +8,7 @@ class MusicRepository(Protocol):
         """Returns all the user's playlists."""
         ...
 
-    def find_playlist_by_id(self, playlist_id: PlaylistId) -> Playlist:
+    def find_playlist_by_id(self, playlist_id: PlaylistId) -> Optional[Playlist]:
         return find_by(lambda p: p.id == playlist_id, self.find_playlists())
 
     def find_tracks(self, playlist_id: PlaylistId) -> list[Track]:

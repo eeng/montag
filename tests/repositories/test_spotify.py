@@ -53,10 +53,10 @@ def test_find_playlists():
 
     client.my_playlists.assert_called_once()
     assert playlists == [
-        Playlist(name="Liked Songs", id="LS"),
-        Playlist(name="My Shazam Tracks", id="5m7aOK7YN9oZy9cufeauD3"),
-        Playlist(name="Soundtracks", id="4Rd2URtKmEhvcSr8wtltfs"),
-        Playlist(name="Rock Classics", id="3ODmycCuoBkIccAREsJjFM"),
+        Playlist(name="Liked Songs", id="LS", is_liked=True),
+        Playlist(name="My Shazam Tracks", id="5m7aOK7YN9oZy9cufeauD3", is_liked=False),
+        Playlist(name="Soundtracks", id="4Rd2URtKmEhvcSr8wtltfs", is_liked=False),
+        Playlist(name="Rock Classics", id="3ODmycCuoBkIccAREsJjFM", is_liked=False),
     ]
 
 

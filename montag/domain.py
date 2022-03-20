@@ -18,6 +18,11 @@ class Playlist(BaseModel):
     id: PlaylistId
     name: str
 
+    # YouTube Music treats the liked songs a special playlist with id=LM.
+    # Spotify however, doesn't treat the Liked Songs as a playlist,
+    # so I'll create one to unify the behavior and mark both of them with this flag.
+    is_liked: bool = False
+
 
 class Provider(Enum):
     SPOTIFY = "Spotify"
@@ -31,5 +36,5 @@ class TrackSuggestions(BaseModel):
     # List of tracks matching the target suggested by the dst provider
     suggestions: list[Track]
 
-    # TrackIds of suggestions that are already in the user's library
-    in_library: list[TrackId]
+    # TrackIds of suggestions that already exist in the destination playlist
+    already_present: list[TrackId]

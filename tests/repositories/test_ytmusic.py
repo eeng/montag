@@ -15,9 +15,17 @@ def test_find_playlists():
     playlists = repo.find_playlists()
 
     assert playlists == [
-        Playlist(name="Your Likes", id="LM"),
-        Playlist(name="Test Playlist 1", id="PLVUD6HCAOnsHaSO5FwX-tyiEy7XpWmx5M"),
-        Playlist(name="Chill Mix", id="RDTMAK5uy_k4EXFD03ox0jMzIP4NNPhl2wbxA1Wa9OM"),
+        Playlist(name="Your Likes", id="LM", is_liked=True),
+        Playlist(
+            name="Test Playlist 1",
+            id="PLVUD6HCAOnsHaSO5FwX-tyiEy7XpWmx5M",
+            is_liked=False,
+        ),
+        Playlist(
+            name="Chill Mix",
+            id="RDTMAK5uy_k4EXFD03ox0jMzIP4NNPhl2wbxA1Wa9OM",
+            is_liked=False,
+        ),
     ]
 
 
