@@ -2,16 +2,16 @@ from dataclasses import dataclass
 from typing import Generic, Protocol, TypeVar, Union
 
 
-SuccessValue = TypeVar("SuccessValue")
+T = TypeVar("T")
 
 
 @dataclass
-class Ok(Generic[SuccessValue]):
-    value: SuccessValue
+class Success(Generic[T]):
+    value: T
 
 
 @dataclass
-class Error:
+class Failure:
     type: str
     msg: str
 
@@ -20,7 +20,7 @@ class Error:
         return {"type": self.type, "msg": self.msg}
 
 
-Response = Union[Ok[SuccessValue], Error]
+Response = Union[Success[T], Failure]
 
 
 class UseCase(Protocol):

@@ -1,38 +1,16 @@
 from unittest.mock import call
 
-import pytest
 from montag.domain import Provider
-from montag.repositories.music_repo import MusicRepo
 from montag.use_cases.search_matching_tracks import (
     SearchMatchingTracks,
     SearchMatchingTracksRequest,
     TrackSuggestions,
 )
 from tests import factory
-from tests.helpers import mock
-
-
-@pytest.fixture
-def spotify_repo():
-    return mock(MusicRepo)
-
-
-@pytest.fixture
-def ytmusic_repo():
-    return mock(MusicRepo)
-
-
-@pytest.fixture
-def use_case(spotify_repo, ytmusic_repo):
-    repos: dict[Provider, MusicRepo] = {
-        Provider.SPOTIFY: spotify_repo,
-        Provider.YT_MUSIC: ytmusic_repo,
-    }
-    return SearchMatchingTracks(repos)
 
 
 def test_search_tracks_matching_the_ones_in_the_src_playlist(
-    use_case, spotify_repo, ytmusic_repo
+    repos, spotify_repo, ytmusic_repo
 ):
     playlist_id = "PLVUD"
     track1, track2 = factory.track(name="T1"), factory.track(name="T2")
@@ -50,7 +28,7 @@ def test_search_tracks_matching_the_ones_in_the_src_playlist(
         src_provider=Provider.SPOTIFY,
         dst_provider=Provider.YT_MUSIC,
     )
-    response = use_case.execute(request)
+    response = SearchMatchingTracks(repos).execute(request)
 
     assert response.value == [
         TrackSuggestions(
@@ -66,9 +44,7 @@ def test_search_tracks_matching_the_ones_in_the_src_playlist(
     )
 
 
-def test_when_a_track_already_exists_in_dst_playlist(
-    use_case, spotify_repo, ytmusic_repo
-):
+def test_when_a_track_already_exists_in_dst_playlist(repos, spotify_repo, ytmusic_repo):
     spotify_playlist = factory.playlist(name="Classics")
     ytmusic_playlist = factory.playlist(name="Classics")
 
@@ -91,7 +67,7 @@ def test_when_a_track_already_exists_in_dst_playlist(
         src_provider=Provider.SPOTIFY,
         dst_provider=Provider.YT_MUSIC,
     )
-    response = use_case.execute(request)
+    response = SearchMatchingTracks(repos).execute(request)
 
     assert response.value == [
         TrackSuggestions(
@@ -99,3 +75,6 @@ def test_when_a_track_already_exists_in_dst_playlist(
         )
     ]
     ytmusic_repo.find_tracks.assert_called_once_with(ytmusic_playlist.id)
+
+
+# TODO Error handling

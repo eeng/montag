@@ -22,8 +22,16 @@ def track(name="The Name", album="The Album", artists=["The Artist"]):
 
 
 def tracks(qty: int, **kwargs) -> list[Track]:
-    return [track(**kwargs) for _ in range(qty)]
+    return repeat(qty, track, **kwargs)
 
 
 def playlist(name="The Playlist", is_liked=False):
     return Playlist(id=secrets.token_hex(5), name=name, is_liked=is_liked)
+
+
+def playlists(qty: int, **kwargs) -> list[Playlist]:
+    return repeat(qty, playlist, **kwargs)
+
+
+def repeat(times, fun, **kwargs):
+    return [fun(**kwargs) for _ in range(times)]

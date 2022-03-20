@@ -2,7 +2,7 @@ from dataclasses import dataclass
 
 from montag.domain import PlaylistId, Provider, Track, TrackSuggestions
 from montag.repositories.music_repo import MusicRepo
-from montag.use_cases.types import Ok, Response, UseCase
+from montag.use_cases.types import Success, Response, UseCase
 from pydantic import BaseModel
 
 
@@ -37,7 +37,7 @@ class SearchMatchingTracks(UseCase):
             )
             for src_track in src_repo.find_tracks(request.src_playlist_id)
         ]
-        return Ok(tracks_with_suggestions)
+        return Success(tracks_with_suggestions)
 
 
 def _find_existing_tracks_in_dst_playlist(
