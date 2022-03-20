@@ -1,17 +1,9 @@
 from dataclasses import dataclass
-from typing import Optional
-from montag.domain import (
-    Playlist,
-    PlaylistId,
-    Provider,
-    Track,
-    TrackSuggestions,
-)
-from montag.repositories import MusicRepository
-from pydantic import BaseModel
 
-from montag.use_cases.types import Response, Ok
-from montag.util.collections import find_by
+from montag.domain import PlaylistId, Provider, Track, TrackSuggestions
+from montag.repositories.types import MusicRepository
+from montag.use_cases.types import Ok, Response
+from pydantic import BaseModel
 
 
 class SearchMatchingTracksRequest(BaseModel):
@@ -40,7 +32,7 @@ class SearchMatchingTracks:
         )
 
         tracks_with_suggestions = [
-            _build_track_suggestions_for(
+            _search_suggestions_for(
                 src_track, dst_repo, existing_tracks, request.max_suggestions
             )
             for src_track in src_repo.find_tracks(request.src_playlist_id)
@@ -54,20 +46,13 @@ def _find_existing_tracks_in_dst_playlist(
     src_playlist = src_repo.find_playlist_by_id(src_playlist_id)
     if not src_playlist:
         raise NotFoundError(src_playlist_id)
-    dst_playlist = find_corresponding_playlist(src_playlist, dst_repo.find_playlists())
+
+    dst_playlist = dst_repo.find_playlist_like(src_playlist)
+
     return dst_repo.find_tracks(dst_playlist.id) if dst_playlist else []
 
 
-def find_corresponding_playlist(
-    src_playlist: Playlist, dst_playlists: list[Playlist]
-) -> Optional[Playlist]:
-    def is_liked_or_has_same_name(p: Playlist):
-        return p.is_liked if src_playlist.is_liked else src_playlist.name == p.name
-
-    return find_by(is_liked_or_has_same_name, dst_playlists)
-
-
-def _build_track_suggestions_for(
+def _search_suggestions_for(
     src_track: Track,
     dst_repo: MusicRepository,
     existing_tracks: list[Track],

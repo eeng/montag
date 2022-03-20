@@ -2,7 +2,7 @@ from dataclasses import dataclass
 
 from montag.clients.spotify import SpotifyClient
 from montag.domain import Playlist, PlaylistId, Track
-from montag.repositories import MusicRepository
+from montag.repositories.types import MusicRepository
 
 LIKED_SONGS_ID = "LS"
 
@@ -51,8 +51,8 @@ class SpotifyRepo(MusicRepository):
         else:
             return self.client.playlist_tracks(playlist_id, **kwargs)
 
-    def search_matching_tracks(self, other: Track, limit=10) -> list[Track]:
-        q = f"track:{other.name} artist:{other.artists[0]}"
+    def search_matching_tracks(self, target: Track, limit=10) -> list[Track]:
+        q = f"track:{target.name} artist:{target.artists[0]}"
         response = self.client.search(q, type="track", limit=limit)
         return [
             Track(

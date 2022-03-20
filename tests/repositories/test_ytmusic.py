@@ -2,7 +2,7 @@ from montag.domain import Playlist, Track
 from montag.repositories.ytmusic import YouTubeMusicRepo
 from tests import factory
 from tests.helpers import mock, resource
-from tests.matchers import has_attrs, instance_of
+from tests.matchers import has_attrs
 from ytmusicapi import YTMusic
 
 

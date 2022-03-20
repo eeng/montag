@@ -3,8 +3,9 @@ import json
 
 from montag.clients.spotify import AuthToken, SpotifyClient
 from montag.domain import Provider
-from montag.repositories import MusicRepository, spotify
+from montag.repositories import spotify
 from montag.repositories.spotify import SpotifyRepo
+from montag.repositories.types import MusicRepository
 from montag.repositories.ytmusic import YouTubeMusicRepo
 from ytmusicapi import YTMusic
 

@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 
 from montag.domain import Playlist, PlaylistId, Track
-from montag.repositories import MusicRepository
+from montag.repositories.types import MusicRepository
 from ytmusicapi import YTMusic
 
 
@@ -24,8 +24,8 @@ class YouTubeMusicRepo(MusicRepository):
         response = self.client.get_playlist(playlistId=playlist_id)
         return self._track_from_json(response["tracks"])
 
-    def search_matching_tracks(self, other: Track, limit=10) -> list[Track]:
-        q = f"{other.name} {other.artists[0]}"
+    def search_matching_tracks(self, target: Track, limit=10) -> list[Track]:
+        q = f"{target.name} {target.artists[0]}"
         response = self.client.search(q, filter="songs", limit=limit)
         # Slicing here since YTMusic seems to ignore the limit param
         return self._track_from_json(response[0:limit])

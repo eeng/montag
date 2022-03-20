@@ -1,13 +1,12 @@
 from unittest.mock import call
 
 import pytest
-from montag.domain import Provider, Track
-from montag.repositories import MusicRepository
+from montag.domain import Provider
+from montag.repositories.types import MusicRepository
 from montag.use_cases.search_matching_tracks import (
     SearchMatchingTracks,
     SearchMatchingTracksRequest,
     TrackSuggestions,
-    find_corresponding_playlist,
 )
 from tests import factory
 from tests.helpers import mock
@@ -83,7 +82,7 @@ def test_when_a_track_already_exists_in_dst_playlist(
     spotify_repo.find_playlist_by_id.return_value = spotify_playlist
     spotify_repo.find_tracks.return_value = [src_track]
 
-    ytmusic_repo.find_playlists.return_value = [ytmusic_playlist]
+    ytmusic_repo.find_playlist_like.return_value = ytmusic_playlist
     ytmusic_repo.find_tracks.return_value = [dst_t1, dst_t3]
     ytmusic_repo.search_matching_tracks.return_value = [dst_t1, dst_t2]
 
@@ -100,19 +99,3 @@ def test_when_a_track_already_exists_in_dst_playlist(
         )
     ]
     ytmusic_repo.find_tracks.assert_called_once_with(ytmusic_playlist.id)
-
-
-def test_find_corresponding_playlist():
-    your_likes, classics, nineties_rock = dst_playlists = [
-        factory.playlist(name="Your Likes", is_liked=True),
-        factory.playlist(name="Classics"),
-        factory.playlist(name="90s Rock"),
-    ]
-
-    def do_find(src_playlist):
-        return find_corresponding_playlist(src_playlist, dst_playlists)
-
-    assert do_find(factory.playlist(name="Liked Songs", is_liked=True)) == your_likes
-    assert do_find(factory.playlist(name="Classics")) == classics
-    assert do_find(factory.playlist(name="90s Rock")) == nineties_rock
-    assert do_find(factory.playlist(name="Other")) == None
