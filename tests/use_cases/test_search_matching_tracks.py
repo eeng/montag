@@ -1,11 +1,12 @@
 from unittest.mock import call
 
 import pytest
-from montag.domain import Provider
+from montag.domain import Provider, Track
 from montag.repositories import MusicRepository
 from montag.use_cases.search_matching_tracks import (
     SearchMatchingTracks,
     SearchMatchingTracksRequest,
+    TrackSuggestions,
 )
 from tests import factory
 from tests.helpers import mock
@@ -30,7 +31,9 @@ def use_case(spotify_repo, ytmusic_repo):
     return SearchMatchingTracks(repos)
 
 
-def test_search_tracks_matching_the_src_ones(use_case, spotify_repo, ytmusic_repo):
+def test_search_tracks_matching_the_ones_in_the_src_playlist(
+    use_case, spotify_repo, ytmusic_repo
+):
     playlist_id = "PLVUD"
     track1, track2 = factory.track(name="T1"), factory.track(name="T2")
     track1_suggestions = factory.tracks(2, name="For T1")
@@ -50,10 +53,45 @@ def test_search_tracks_matching_the_src_ones(use_case, spotify_repo, ytmusic_rep
     response = use_case.run(request)
 
     assert response.value == [
-        (track1, track1_suggestions),
-        (track2, track2_suggestions),
+        TrackSuggestions(target=track1, suggestions=track1_suggestions, in_library=[]),
+        TrackSuggestions(target=track2, suggestions=track2_suggestions, in_library=[]),
     ]
     spotify_repo.find_tracks.assert_called_once_with(playlist_id)
     ytmusic_repo.search_matching_tracks.assert_has_calls(
         [call(track1, limit=5), call(track2, limit=5)]
     )
+
+
+def test_when_a_track_already_exists_in_dst_playlist(
+    use_case, spotify_repo, ytmusic_repo
+):
+    spotify_playlist = factory.playlist(name="Classics")
+    ytmusic_playlist = factory.playlist(name="Classics")
+
+    src_track = factory.track(name="T1")
+    dst_t1, dst_t2, dst_t3 = [
+        factory.track(name="S1"),
+        factory.track(name="S2"),
+        factory.track(name="S3"),
+    ]
+
+    spotify_repo.find_playlist_by_id.return_value = spotify_playlist
+    spotify_repo.find_tracks.return_value = [src_track]
+
+    ytmusic_repo.find_playlists.return_value = [ytmusic_playlist]
+    ytmusic_repo.find_tracks.return_value = [dst_t1, dst_t3]
+    ytmusic_repo.search_matching_tracks.return_value = [dst_t1, dst_t2]
+
+    request = SearchMatchingTracksRequest(
+        src_playlist_id=spotify_playlist.id,
+        src_provider=Provider.SPOTIFY,
+        dst_provider=Provider.YT_MUSIC,
+    )
+    response = use_case.run(request)
+
+    assert response.value == [
+        TrackSuggestions(
+            target=src_track, suggestions=[dst_t1, dst_t2], in_library=[dst_t1.id]
+        )
+    ]
+    ytmusic_repo.find_tracks.assert_called_once_with(ytmusic_playlist.id)

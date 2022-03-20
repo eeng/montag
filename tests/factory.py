@@ -1,7 +1,7 @@
 from montag.clients.spotify import AuthToken
 import secrets
 
-from montag.domain import Track
+from montag.domain import Playlist, Track
 
 
 def auth_token(expires_at=None):
@@ -23,3 +23,7 @@ def track(name="The Name", album="The Album", artists=["The Artist"]):
 
 def tracks(qty: int, **kwargs) -> list[Track]:
     return [track(**kwargs) for _ in range(qty)]
+
+
+def playlist(name="The Playlist"):
+    return Playlist(id=secrets.token_hex(5), name=name)
