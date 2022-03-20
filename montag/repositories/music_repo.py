@@ -3,7 +3,7 @@ from montag.domain import Playlist, PlaylistId, Track
 from montag.util.collections import find_by
 
 
-class MusicRepository(Protocol):
+class MusicRepo(Protocol):
     def find_playlists(self) -> list[Playlist]:
         """Returns all the user's playlists."""
         ...

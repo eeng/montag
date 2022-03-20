@@ -2,7 +2,7 @@ from unittest.mock import call
 
 import pytest
 from montag.domain import Provider
-from montag.repositories.types import MusicRepository
+from montag.repositories.music_repo import MusicRepo
 from montag.use_cases.search_matching_tracks import (
     SearchMatchingTracks,
     SearchMatchingTracksRequest,
@@ -14,17 +14,17 @@ from tests.helpers import mock
 
 @pytest.fixture
 def spotify_repo():
-    return mock(MusicRepository)
+    return mock(MusicRepo)
 
 
 @pytest.fixture
 def ytmusic_repo():
-    return mock(MusicRepository)
+    return mock(MusicRepo)
 
 
 @pytest.fixture
 def use_case(spotify_repo, ytmusic_repo):
-    repos: dict[Provider, MusicRepository] = {
+    repos: dict[Provider, MusicRepo] = {
         Provider.SPOTIFY: spotify_repo,
         Provider.YT_MUSIC: ytmusic_repo,
     }

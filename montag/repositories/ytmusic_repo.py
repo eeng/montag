@@ -1,12 +1,12 @@
 from dataclasses import dataclass
 
 from montag.domain import Playlist, PlaylistId, Track
-from montag.repositories.types import MusicRepository
+from montag.repositories.music_repo import MusicRepo
 from ytmusicapi import YTMusic
 
 
 @dataclass
-class YouTubeMusicRepo(MusicRepository):
+class YouTubeMusicRepo(MusicRepo):
     client: YTMusic
 
     def find_playlists(self) -> list[Playlist]:

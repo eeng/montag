@@ -1,11 +1,11 @@
 from dataclasses import dataclass
 from montag.domain import Playlist
-from montag.repositories.types import MusicRepository
+from montag.repositories.music_repo import MusicRepo
 from tests import factory
 
 
 @dataclass
-class FakeRepo(MusicRepository):  # type: ignore
+class FakeRepo(MusicRepo):  # type: ignore
     playlists: list[Playlist]
 
     def find_playlists(self) -> list[Playlist]:

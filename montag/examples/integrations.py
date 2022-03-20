@@ -1,12 +1,11 @@
 from dataclasses import dataclass
 import json
 
-from montag.clients.spotify import AuthToken, SpotifyClient
+from montag.clients.spotify_client import AuthToken, SpotifyClient
 from montag.domain import Provider
-from montag.repositories import spotify
-from montag.repositories.spotify import SpotifyRepo
-from montag.repositories.types import MusicRepository
-from montag.repositories.ytmusic import YouTubeMusicRepo
+from montag.repositories.spotify_repo import SpotifyRepo
+from montag.repositories.music_repo import MusicRepo
+from montag.repositories.ytmusic_repo import YouTubeMusicRepo
 from ytmusicapi import YTMusic
 
 SPOTIFY_TOKEN_FILE = "tmp/spotify_token.json"
@@ -36,7 +35,7 @@ class System:
     spotify_repo: SpotifyRepo
     ytmusic_client: YTMusic
     ytmusic_repo: YouTubeMusicRepo
-    repos: dict[Provider, MusicRepository]
+    repos: dict[Provider, MusicRepo]
 
 
 def build_system() -> System:

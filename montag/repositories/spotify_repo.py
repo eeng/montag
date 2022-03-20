@@ -1,14 +1,14 @@
 from dataclasses import dataclass
 
-from montag.clients.spotify import SpotifyClient
+from montag.clients.spotify_client import SpotifyClient
 from montag.domain import Playlist, PlaylistId, Track
-from montag.repositories.types import MusicRepository
+from montag.repositories.music_repo import MusicRepo
 
 LIKED_SONGS_ID = "LS"
 
 
 @dataclass
-class SpotifyRepo(MusicRepository):
+class SpotifyRepo(MusicRepo):
     client: SpotifyClient
 
     def find_playlists(self) -> list[Playlist]:

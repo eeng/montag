@@ -1,4 +1,4 @@
-from montag.clients.spotify import AuthToken
+from montag.clients.spotify_client import AuthToken
 import secrets
 
 from montag.domain import Playlist, Track

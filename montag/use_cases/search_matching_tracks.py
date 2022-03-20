@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 
 from montag.domain import PlaylistId, Provider, Track, TrackSuggestions
-from montag.repositories.types import MusicRepository
+from montag.repositories.music_repo import MusicRepo
 from montag.use_cases.types import Ok, Response
 from pydantic import BaseModel
 
@@ -19,7 +19,7 @@ class NotFoundError(Exception):
 
 @dataclass
 class SearchMatchingTracks:
-    repos: dict[Provider, MusicRepository]
+    repos: dict[Provider, MusicRepo]
 
     def run(
         self, request: SearchMatchingTracksRequest
@@ -41,7 +41,7 @@ class SearchMatchingTracks:
 
 
 def _find_existing_tracks_in_dst_playlist(
-    src_playlist_id: PlaylistId, src_repo: MusicRepository, dst_repo: MusicRepository
+    src_playlist_id: PlaylistId, src_repo: MusicRepo, dst_repo: MusicRepo
 ):
     src_playlist = src_repo.find_playlist_by_id(src_playlist_id)
     if not src_playlist:
@@ -54,7 +54,7 @@ def _find_existing_tracks_in_dst_playlist(
 
 def _search_suggestions_for(
     src_track: Track,
-    dst_repo: MusicRepository,
+    dst_repo: MusicRepo,
     existing_tracks: list[Track],
     max_suggestions: int,
 ):

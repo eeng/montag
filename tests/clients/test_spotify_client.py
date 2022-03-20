@@ -1,6 +1,6 @@
 from unittest.mock import Mock
 import pytest
-from montag.clients.spotify import (
+from montag.clients.spotify_client import (
     AuthToken,
     SpotifyClient,
     NotAuthorizedError,
