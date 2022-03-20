@@ -43,8 +43,8 @@ def test_search_tracks_matching_the_src_ones(use_case, spotify_repo, ytmusic_rep
     ]
 
     request = SearchMatchingTracksRequest(
+        src_playlist_id=playlist_id,
         src_provider=Provider.SPOTIFY,
-        src_playlist_ids=[playlist_id],
         dst_provider=Provider.YT_MUSIC,
     )
     response = use_case.run(request)

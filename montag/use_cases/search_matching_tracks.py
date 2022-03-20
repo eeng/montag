@@ -7,8 +7,8 @@ from montag.use_cases.types import Response, Ok
 
 
 class SearchMatchingTracksRequest(BaseModel):
+    src_playlist_id: PlaylistId
     src_provider: Provider
-    src_playlist_ids: list[PlaylistId]
     dst_provider: Provider
 
 
@@ -25,7 +25,6 @@ class SearchMatchingTracks:
 
         tracks_with_suggestions = [
             (src_track, dst_repo.search_matching_tracks(src_track, limit=5))
-            for src_playlist_id in request.src_playlist_ids
-            for src_track in src_repo.find_tracks(src_playlist_id)
+            for src_track in src_repo.find_tracks(request.src_playlist_id)
         ]
         return Ok(tracks_with_suggestions)
