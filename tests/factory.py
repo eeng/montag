@@ -1,7 +1,7 @@
 from montag.clients.spotify_client import AuthToken
 import secrets
 
-from montag.domain import Playlist, Track
+from montag.domain.entities import Playlist, Track
 
 
 def auth_token(expires_at=None):

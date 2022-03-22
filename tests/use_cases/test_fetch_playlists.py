@@ -1,4 +1,4 @@
-from montag.domain import Provider
+from montag.domain.entities import Provider
 from montag.use_cases.fetch_playlists import FetchPlaylists
 from montag.use_cases.types import Failure, Success
 from tests import factory

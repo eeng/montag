@@ -3,7 +3,7 @@ from dataclasses import dataclass
 from ytmusicapi import YTMusic
 
 from montag.clients.spotify_client import AuthToken, SpotifyClient
-from montag.domain import Provider
+from montag.domain.entities import Provider
 from montag.repositories.music_repo import MusicRepo
 from montag.repositories.spotify_repo import SpotifyRepo
 from montag.repositories.ytmusic_repo import YouTubeMusicRepo

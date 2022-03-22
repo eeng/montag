@@ -1,9 +1,9 @@
 from dataclasses import dataclass
 
-from montag.domain import PlaylistId, Provider, Track, TrackSuggestions
+from montag.domain.entities import PlaylistId, Provider, Track, TrackSuggestions
 from montag.repositories.music_repo import MusicRepo
-from montag.use_cases import error_handling
-from montag.use_cases.errors import NotFoundError
+from montag.use_cases.decorators import error_handling
+from montag.domain.errors import NotFoundError
 from montag.use_cases.types import Response, Success, UseCase
 from pydantic import BaseModel
 

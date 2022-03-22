@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 
 from montag.clients.spotify_client import SpotifyClient
-from montag.domain import Playlist, PlaylistId, Track
+from montag.domain.entities import Playlist, PlaylistId, Track
 from montag.repositories.music_repo import MusicRepo
 
 LIKED_SONGS_ID = "LS"

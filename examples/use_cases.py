@@ -1,7 +1,7 @@
 import json
 
 from montag.clients.spotify_client import AuthToken, SpotifyClient
-from montag.domain import Provider
+from montag.domain.entities import Provider
 from montag.system import System
 from montag.use_cases.fetch_playlists import FetchPlaylists
 from montag.use_cases.search_matching_tracks import (

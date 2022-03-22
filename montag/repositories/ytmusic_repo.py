@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 
-from montag.domain import Playlist, PlaylistId, Track
+from montag.domain.entities import Playlist, PlaylistId, Track
 from montag.repositories.music_repo import MusicRepo
 from ytmusicapi import YTMusic
 

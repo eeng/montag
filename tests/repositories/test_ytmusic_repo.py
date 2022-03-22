@@ -1,4 +1,4 @@
-from montag.domain import Playlist, Track
+from montag.domain.entities import Playlist, Track
 from montag.repositories.ytmusic_repo import YouTubeMusicRepo
 from tests import factory
 from tests.helpers import mock, resource

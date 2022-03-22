@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from montag.domain import Playlist
+from montag.domain.entities import Playlist
 from montag.repositories.music_repo import MusicRepo
 from tests import factory
 

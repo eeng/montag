@@ -1,5 +1,5 @@
 from typing import Optional, Protocol
-from montag.domain import Playlist, PlaylistId, Track
+from montag.domain.entities import Playlist, PlaylistId, Track
 from montag.util.collections import find_by
 
 

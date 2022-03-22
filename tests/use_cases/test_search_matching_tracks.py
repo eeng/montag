@@ -1,6 +1,6 @@
 from unittest.mock import call
 
-from montag.domain import Provider
+from montag.domain.entities import Provider
 from montag.use_cases.search_matching_tracks import (
     SearchMatchingTracks,
     SearchMatchingTracksRequest,
