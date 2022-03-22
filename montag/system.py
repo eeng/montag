@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from typing import Callable
 
 from ytmusicapi import YTMusic
 
@@ -18,8 +19,14 @@ class System:
     repos: dict[Provider, MusicRepo]
 
     @classmethod
-    def build(cls, spotify_auth_token: AuthToken):
-        spotify_client = SpotifyClient(auth_token=spotify_auth_token)
+    def build(
+        cls,
+        spotify_auth_token: AuthToken,
+        spotify_on_token_expired: Callable[[AuthToken], None],
+    ):
+        spotify_client = SpotifyClient(
+            auth_token=spotify_auth_token, on_token_expired=spotify_on_token_expired
+        )
         spotify_repo = SpotifyRepo(client=spotify_client)
         ytmusic_client = YTMusic("tmp/ytmusic_auth.json")
         ytmusic_repo = YouTubeMusicRepo(ytmusic_client)

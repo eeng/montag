@@ -12,24 +12,30 @@ from montag.use_cases.search_matching_tracks import (
 SPOTIFY_TOKEN_FILE = "tmp/spotify_token.json"
 
 
+def write_spotify_auth_token(auth_token: AuthToken):
+    with open(SPOTIFY_TOKEN_FILE, "w") as f:
+        json.dump(auth_token.dict(), f)
+
+
+def read_spotify_auth_token() -> AuthToken:
+    with open(SPOTIFY_TOKEN_FILE, "r") as f:
+        return AuthToken(**json.load(f))
+
+
 def run_spotify_auth_flow():
     """Runs the authorization flow to obtain an access token and stores in in the file system."""
     client = SpotifyClient()
     url = client.authorize_url()
     code = input(f"Open {url} and then paste code here:\n")
     auth_token = client.request_access_token(code)
-    with open(SPOTIFY_TOKEN_FILE, "w") as f:
-        json.dump(auth_token.dict(), f)
-
-
-def read_spotify_auth_token() -> AuthToken:
-    """Loads the access token from the file system."""
-    with open(SPOTIFY_TOKEN_FILE, "r") as f:
-        return AuthToken(**json.load(f))
+    write_spotify_auth_token(auth_token)
 
 
 def system():
-    return System.build(read_spotify_auth_token())
+    return System.build(
+        spotify_auth_token=read_spotify_auth_token(),
+        spotify_on_token_expired=write_spotify_auth_token,
+    )
 
 
 def examples():
