@@ -47,7 +47,7 @@ def _find_existing_tracks_in_dst_playlist(
     if not src_playlist:
         raise NotFoundError(src_playlist_id)
 
-    dst_playlist = dst_repo.find_playlist_like(src_playlist)
+    dst_playlist = dst_repo.find_mirror_playlist(src_playlist)
 
     return dst_repo.find_tracks(dst_playlist.id) if dst_playlist else []
 

@@ -12,7 +12,7 @@ class FakeRepo(MusicRepo):  # type: ignore
         return self.playlists
 
 
-def test_find_playlist_like():
+def test_find_mirror_playlist():
     your_likes, classics, nineties_rock = dst_playlists = [
         factory.playlist(name="Your Likes", is_liked=True),
         factory.playlist(name="Classics"),
@@ -20,7 +20,7 @@ def test_find_playlist_like():
     ]
 
     def do_find(src_playlist):
-        return FakeRepo(dst_playlists).find_playlist_like(src_playlist)
+        return FakeRepo(dst_playlists).find_mirror_playlist(src_playlist)
 
     assert do_find(factory.playlist(name="Liked Songs", is_liked=True)) == your_likes
     assert do_find(factory.playlist(name="Classics")) == classics

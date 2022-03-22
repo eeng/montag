@@ -19,7 +19,7 @@ class MusicRepo(Protocol):
     def find_playlist_by_id(self, playlist_id: PlaylistId) -> Optional[Playlist]:
         return find_by(lambda p: p.id == playlist_id, self.find_playlists())
 
-    def find_playlist_like(self, other: Playlist) -> Optional[Playlist]:
+    def find_mirror_playlist(self, other: Playlist) -> Optional[Playlist]:
         def is_liked_or_has_same_name(p: Playlist):
             return p.is_liked if other.is_liked else other.name == p.name
 

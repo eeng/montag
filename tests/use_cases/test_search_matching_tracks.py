@@ -58,7 +58,7 @@ def test_when_a_track_already_exists_in_dst_playlist(repos, spotify_repo, ytmusi
     spotify_repo.find_playlist_by_id.return_value = spotify_playlist
     spotify_repo.find_tracks.return_value = [src_track]
 
-    ytmusic_repo.find_playlist_like.return_value = ytmusic_playlist
+    ytmusic_repo.find_mirror_playlist.return_value = ytmusic_playlist
     ytmusic_repo.find_tracks.return_value = [dst_t1, dst_t3]
     ytmusic_repo.search_matching_tracks.return_value = [dst_t1, dst_t2]
 
