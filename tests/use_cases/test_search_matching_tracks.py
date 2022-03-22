@@ -6,6 +6,7 @@ from montag.use_cases.search_matching_tracks import (
     SearchMatchingTracksRequest,
     TrackSuggestions,
 )
+from montag.use_cases.types import Failure, Success
 from tests import factory
 
 
@@ -30,14 +31,12 @@ def test_search_tracks_matching_the_ones_in_the_src_playlist(
     )
     response = SearchMatchingTracks(repos).execute(request)
 
-    assert response.value == [
-        TrackSuggestions(
-            target=track1, suggestions=track1_suggestions, already_present=[]
-        ),
-        TrackSuggestions(
-            target=track2, suggestions=track2_suggestions, already_present=[]
-        ),
-    ]
+    assert response == Success(
+        [
+            TrackSuggestions(target=track1, suggestions=track1_suggestions),
+            TrackSuggestions(target=track2, suggestions=track2_suggestions),
+        ]
+    )
     spotify_repo.find_tracks.assert_called_once_with(playlist_id)
     ytmusic_repo.search_matching_tracks.assert_has_calls(
         [call(track1, limit=5), call(track2, limit=5)]
@@ -69,12 +68,26 @@ def test_when_a_track_already_exists_in_dst_playlist(repos, spotify_repo, ytmusi
     )
     response = SearchMatchingTracks(repos).execute(request)
 
-    assert response.value == [
-        TrackSuggestions(
-            target=src_track, suggestions=[dst_t1, dst_t2], already_present=[dst_t1.id]
-        )
-    ]
+    assert response == Success(
+        [
+            TrackSuggestions(
+                target=src_track,
+                suggestions=[dst_t1, dst_t2],
+                already_present=[dst_t1.id],
+            )
+        ]
+    )
     ytmusic_repo.find_tracks.assert_called_once_with(ytmusic_playlist.id)
 
 
-# TODO Error handling
+def test_when_src_playlist_do_not_exists(repos, spotify_repo):
+    spotify_repo.find_playlist_by_id.return_value = None
+    request = SearchMatchingTracksRequest(
+        src_playlist_id="inexistent",
+        src_provider=Provider.SPOTIFY,
+        dst_provider=Provider.YT_MUSIC,
+    )
+
+    response = SearchMatchingTracks(repos).execute(request)
+
+    assert response == Failure("Could not find a playlist with ID 'inexistent'.")

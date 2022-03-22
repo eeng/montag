@@ -32,7 +32,7 @@ class TrackSuggestions(BaseModel):
     suggestions: list[Track]
 
     # TrackIds of suggestions that already exist in the destination playlist
-    already_present: list[TrackId]
+    already_present: list[TrackId] = []
 
 
 class Provider(Enum):

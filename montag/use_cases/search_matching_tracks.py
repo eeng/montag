@@ -2,7 +2,9 @@ from dataclasses import dataclass
 
 from montag.domain import PlaylistId, Provider, Track, TrackSuggestions
 from montag.repositories.music_repo import MusicRepo
-from montag.use_cases.types import Success, Response, UseCase
+from montag.use_cases import error_handling
+from montag.use_cases.errors import NotFoundError
+from montag.use_cases.types import Response, Success, UseCase
 from pydantic import BaseModel
 
 
@@ -13,14 +15,11 @@ class SearchMatchingTracksRequest(BaseModel):
     max_suggestions: int = 5
 
 
-class NotFoundError(Exception):
-    """Raised when an entity does not exists."""
-
-
 @dataclass
 class SearchMatchingTracks(UseCase):
     repos: dict[Provider, MusicRepo]
 
+    @error_handling
     def execute(
         self, request: SearchMatchingTracksRequest
     ) -> Response[list[TrackSuggestions]]:
@@ -45,13 +44,14 @@ def _find_existing_tracks_in_dst_playlist(
 ):
     src_playlist = src_repo.find_playlist_by_id(src_playlist_id)
     if not src_playlist:
-        raise NotFoundError(src_playlist_id)
+        raise NotFoundError(f"Could not find a playlist with ID '{src_playlist_id}'.")
 
     dst_playlist = dst_repo.find_mirror_playlist(src_playlist)
 
     return dst_repo.find_tracks(dst_playlist.id) if dst_playlist else []
 
 
+# TODO move this to the domain?
 def _search_suggestions_for(
     src_track: Track,
     dst_repo: MusicRepo,
