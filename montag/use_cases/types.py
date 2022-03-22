@@ -12,12 +12,11 @@ class Success(Generic[T]):
 
 @dataclass
 class Failure:
-    type: str
     msg: str
 
     @property
     def value(self):
-        return {"type": self.type, "msg": self.msg}
+        return {"error": self.msg}
 
 
 Response = Union[Success[T], Failure]

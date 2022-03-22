@@ -1,5 +1,6 @@
 from montag.domain import Provider
 from montag.use_cases.fetch_playlists import FetchPlaylists
+from montag.use_cases.types import Failure, Success
 from tests import factory
 
 
@@ -9,7 +10,12 @@ def test_fetch_playlists(repos, spotify_repo):
 
     response = FetchPlaylists(repos).execute(Provider.SPOTIFY)
 
-    assert response.value == expected_playlists
+    assert response == Success(expected_playlists)
 
 
-# TODO Error handling
+def test_error_handling_with_unexpected_errors(repos, spotify_repo):
+    spotify_repo.find_playlists.side_effect = ValueError("some message")
+
+    response = FetchPlaylists(repos).execute(Provider.SPOTIFY)
+
+    assert response == Failure("some message")

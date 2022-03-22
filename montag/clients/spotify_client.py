@@ -145,5 +145,6 @@ class NotAuthorizedError(SpotifyError):
     """Raised when the authorization flow hasn't been started yet."""
 
 
+# TODO doesn't belong here
 class BadStateError(SpotifyError):
     """Raised when the authorization flow sent state doesn't match the received one."""
