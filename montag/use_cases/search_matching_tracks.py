@@ -1,6 +1,13 @@
 from dataclasses import dataclass
+from typing import Optional
 
-from montag.domain.entities import PlaylistId, Provider, Track, TrackSuggestions
+from montag.domain.entities import (
+    Playlist,
+    PlaylistId,
+    Provider,
+    Track,
+    TrackSuggestions,
+)
 from montag.repositories.music_repo import MusicRepo
 from montag.use_cases.decorators import error_handling
 from montag.domain.errors import NotFoundError
@@ -26,9 +33,10 @@ class SearchMatchingTracks(UseCase):
         src_repo = self.repos[request.src_provider]
         dst_repo = self.repos[request.dst_provider]
 
-        existing_tracks = _find_existing_tracks_in_dst_playlist(
+        dst_playlist = fetch_mirror_playlist(
             request.src_playlist_id, src_repo, dst_repo
         )
+        existing_tracks = dst_repo.find_tracks(dst_playlist.id) if dst_playlist else []
 
         tracks_with_suggestions = [
             _search_suggestions_for(
@@ -39,16 +47,14 @@ class SearchMatchingTracks(UseCase):
         return Success(tracks_with_suggestions)
 
 
-def _find_existing_tracks_in_dst_playlist(
+def fetch_mirror_playlist(
     src_playlist_id: PlaylistId, src_repo: MusicRepo, dst_repo: MusicRepo
-):
+) -> Optional[Playlist]:
     src_playlist = src_repo.find_playlist_by_id(src_playlist_id)
-    if not src_playlist:
+    if src_playlist:
+        return dst_repo.find_mirror_playlist(src_playlist)
+    else:
         raise NotFoundError(f"Could not find a playlist with ID '{src_playlist_id}'.")
-
-    dst_playlist = dst_repo.find_mirror_playlist(src_playlist)
-
-    return dst_repo.find_tracks(dst_playlist.id) if dst_playlist else []
 
 
 # TODO move this to the domain?
