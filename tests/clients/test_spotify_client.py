@@ -28,7 +28,7 @@ def test_authorize_url_and_state():
         "client_id=FAKE_CLIENT_ID&"
         "redirect_uri=FAKE_REDIRECT_URL&"
         f"state=THE_STATE&"
-        "scope=user-read-private+user-read-email+user-library-read+playlist-read-private&"
+        "scope=user-read-private+user-read-email+user-library-read+playlist-read-private+playlist-modify-private&"
         "response_type=code"
     )
     assert actual_url == expected_url
@@ -107,6 +107,7 @@ def test_me():
     http_adapter.get.assert_called_once_with(
         "https://api.spotify.com/v1/me",
         headers={"Authorization": f"Bearer {AUTH_TOKEN.access_token}"},
+        params={},
     )
     assert profile == response
 
@@ -145,7 +146,7 @@ def test_token_expiration():
         data=has_entries(grant_type="refresh_token"),
     )
     http_adapter.get.assert_called_once_with(
-        "https://api.spotify.com/v1/me", headers=instance_of(dict)
+        "https://api.spotify.com/v1/me", headers=instance_of(dict), params={}
     )
     on_token_expired.assert_called_once_with(
         has_attrs(access_token=new_token_response["access_token"])
@@ -211,3 +212,18 @@ def test_search():
         headers={"Authorization": f"Bearer {AUTH_TOKEN.access_token}"},
     )
     assert tracks == response
+
+
+def test_create_playlist():
+    response = resource("spotify/create_playlist.json")
+    http_adapter = mock_http_adapter(post=response, status_code=201)
+    client = SpotifyClient(auth_token=AUTH_TOKEN, http_adapter=http_adapter)
+
+    playlist = client.create_playlist(name="New Playlist")
+
+    http_adapter.post.assert_called_once_with(
+        "https://api.spotify.com/v1/me/playlists",
+        json={"name": "New Playlist", "public": False},
+        headers={"Authorization": f"Bearer {AUTH_TOKEN.access_token}"},
+    )
+    assert playlist == response

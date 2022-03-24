@@ -40,3 +40,14 @@ class YouTubeMusicRepo(MusicRepo):
             )
             for item in tracks_json
         ]
+
+    def create_playlist(self, name: str) -> PlaylistId:
+        response = self.client.create_playlist(name, description="")
+        if isinstance(response, str):
+            return response
+        else:
+            raise YTMusicError(response)
+
+
+class YTMusicError(Exception):
+    """Base class for all YTMusic errors"""

@@ -9,7 +9,7 @@ from montag.util.clock import Clock
 
 ACCOUNTS_URL = "https://accounts.spotify.com"
 API_URL = "https://api.spotify.com/v1"
-SCOPE = "user-read-private user-read-email user-library-read playlist-read-private"
+SCOPE = "user-read-private user-read-email user-library-read playlist-read-private playlist-modify-private"
 
 
 class AuthToken(BaseModel):
@@ -83,18 +83,10 @@ class SpotifyClient:
         return None
 
     def me(self):
-        self.refresh_access_token_if_needed()
-        response = self.http_adapter.get(f"{API_URL}/me", headers=self._auth_header())
-        return self._parse_response(response)
+        return self._authorized_api_get("/me")
 
     def my_playlists(self, limit: int = 20, offset: int = 0):
-        self.refresh_access_token_if_needed()
-        response = self.http_adapter.get(
-            f"{API_URL}/me/playlists",
-            params=dict(limit=limit, offset=offset),
-            headers=self._auth_header(),
-        )
-        return self._parse_response(response)
+        return self._authorized_api_get("/me/playlists", limit=limit, offset=offset)
 
     def liked_tracks(self, limit: int = 20, offset: int = 0):
         return self._authorized_api_get("/me/tracks", limit=limit, offset=offset)
@@ -109,11 +101,23 @@ class SpotifyClient:
             "/search", q=query, type=type, limit=limit, offset=offset
         )
 
+    def create_playlist(self, name: str):
+        return self._authorized_api_post("/me/playlists", name=name, public=False)
+
     def _authorized_api_get(self, path: str, **params):
         self.refresh_access_token_if_needed()
         response = self.http_adapter.get(
             API_URL + path,
             params=params,
+            headers=self._auth_header(),
+        )
+        return self._parse_response(response)
+
+    def _authorized_api_post(self, path: str, **json):
+        self.refresh_access_token_if_needed()
+        response = self.http_adapter.post(
+            API_URL + path,
+            json=json,
             headers=self._auth_header(),
         )
         return self._parse_response(response)
@@ -127,7 +131,7 @@ class SpotifyClient:
 
     def _parse_response(self, response: HttpResponse):
         json = response.json()
-        if response.status_code == 200:
+        if 200 <= response.status_code <= 299:
             return json
         else:
             raise BadRequestError(json)

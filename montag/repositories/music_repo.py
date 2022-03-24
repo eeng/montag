@@ -16,6 +16,10 @@ class MusicRepo(Protocol):
         """Searches for tracks that match the one specified as best as possible."""
         ...
 
+    def create_playlist(self, name: str) -> PlaylistId:
+        """Creates a new playlist for the current user, and returns its ID"""
+        ...
+
     def find_playlist_by_id(self, playlist_id: PlaylistId) -> Optional[Playlist]:
         return find_by(lambda p: p.id == playlist_id, self.find_playlists())
 

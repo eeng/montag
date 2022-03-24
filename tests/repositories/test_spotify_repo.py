@@ -75,3 +75,15 @@ def test_search_matching_tracks():
         has_attrs(name="The Reason 1", id="77loZpT5Y5PRP1S451P9Yz"),
         has_attrs(name="The Reason 2", id="3e96gL2t9JYdzlVvJP3TFx"),
     ] == tracks
+
+
+def test_create_playlist():
+    response = resource("spotify/create_playlist.json")
+    client = mock(SpotifyClient, create_playlist=response)
+    repo = SpotifyRepo(client)
+
+    playlist_id = repo.create_playlist("Classics")
+
+    client.create_playlist.assert_called_with("Classics")
+
+    assert playlist_id == response["id"]

@@ -1,5 +1,7 @@
 import json
+from typing import Optional
 from unittest.mock import Mock, create_autospec
+
 from montag.clients.http import HttpAdapter, HttpResponse
 from montag.util.clock import Clock
 
@@ -17,19 +19,20 @@ def mock(cls, **methods_to_stub) -> Mock:
     return m
 
 
-def mock_http_adapter(get=None, post=None) -> HttpAdapter:
+def mock_http_adapter(get=None, post=None, status_code=None) -> HttpAdapter:
     http_adapter = mock(HttpAdapter)
     if get is not None:
-        http_adapter.get.return_value = fake_json_response(get)
+        http_adapter.get.return_value = fake_json_response(get, status_code)
     if post is not None:
-        http_adapter.post.return_value = fake_json_response(post)
+        http_adapter.post.return_value = fake_json_response(post, status_code)
     return http_adapter
 
 
-def fake_json_response(json: dict) -> HttpResponse:
+def fake_json_response(json: dict, status_code: Optional[int] = None) -> HttpResponse:
     response = mock(HttpResponse, json=json)
-    status_code = int(json["error"]["status"]) if "error" in json else 200
-    response.status_code = status_code
+    response.status_code = status_code or (
+        int(json["error"]["status"]) if "error" in json else 200
+    )
     return response
 
 

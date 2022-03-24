@@ -57,3 +57,13 @@ def test_search_matching_tracks():
         has_attrs(name="The Reason", id="qQ0zxuWFxrY"),
         has_attrs(name="You Are The Reason", id="2Kiob5f9A1g"),
     ] == tracks
+
+
+def test_create_playlist():
+    client = mock(YTMusic, create_playlist="PLVUD6HCA")
+    repo = YouTubeMusicRepo(client)
+
+    playlist_id = repo.create_playlist("Classics")
+
+    assert playlist_id == "PLVUD6HCA"
+    client.create_playlist.assert_called_once_with("Classics", "")
