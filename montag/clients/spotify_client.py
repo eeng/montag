@@ -98,13 +98,15 @@ class SpotifyClient:
     def liked_tracks(self, limit: int = 20, offset: int = 0):
         return self._authorized_api_get("/me/tracks", limit=limit, offset=offset)
 
-    def add_liked_tracks(self, track_ids: list[str]):
-        return self._authorized_api_put("/me/tracks", ids=track_ids)
+    def add_liked_tracks(self, track_ids: list[str]) -> None:
+        self._authorized_api_put("/me/tracks", ids=track_ids)
 
     def playlist_tracks(self, playlist_id: str, limit: int = 20, offset: int = 0):
         return self._authorized_api_get(
             f"/playlists/{playlist_id}/tracks", limit=limit, offset=offset
         )
+
+    # TODO def add_playlist_tracks needed for repo add_tracks
 
     def search(self, query: str, type: str, limit: int = 20, offset: int = 0):
         return self._authorized_api_get(
@@ -132,6 +134,15 @@ class SpotifyClient:
         )
         return self._parse_response(response)
 
+    def _authorized_api_put(self, path: str, **json):
+        self.refresh_access_token_if_needed()
+        response = self.http_adapter.put(
+            API_URL + path,
+            json=json,
+            headers=self._auth_header(),
+        )
+        return self._parse_response(response, decode_json_on_success=False)
+
     def _auth_header(self):
         if self.auth_token is None:
             raise NotAuthorizedError
@@ -139,12 +150,11 @@ class SpotifyClient:
         bearer = self.auth_token.access_token
         return {"Authorization": f"Bearer {bearer}"}
 
-    def _parse_response(self, response: HttpResponse):
-        json = response.json()
+    def _parse_response(self, response: HttpResponse, decode_json_on_success=True):
         if 200 <= response.status_code <= 299:
-            return json
+            return response.json() if decode_json_on_success else {}
         else:
-            raise BadRequestError(json)
+            raise BadRequestError(response.json())
 
 
 class SpotifyError(Exception):

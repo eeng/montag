@@ -1,5 +1,5 @@
 import json
-from typing import Optional
+from typing import Optional, Union
 from unittest.mock import Mock, create_autospec
 
 from montag.clients.http import HttpAdapter, HttpResponse
@@ -19,20 +19,33 @@ def mock(cls, **methods_to_stub) -> Mock:
     return m
 
 
-def mock_http_adapter(get=None, post=None, status_code=None) -> HttpAdapter:
+def mock_http_adapter(get=None, post=None, put=None, status_code=None) -> HttpAdapter:
     http_adapter = mock(HttpAdapter)
     if get is not None:
-        http_adapter.get.return_value = fake_json_response(get, status_code)
+        http_adapter.get.return_value = fake_response(get, status_code)
     if post is not None:
-        http_adapter.post.return_value = fake_json_response(post, status_code)
+        http_adapter.post.return_value = fake_response(post, status_code)
+    if put is not None:
+        http_adapter.put.return_value = fake_response(put, status_code)
     return http_adapter
 
 
-def fake_json_response(json: dict, status_code: Optional[int] = None) -> HttpResponse:
-    response = mock(HttpResponse, json=json)
-    response.status_code = status_code or (
-        int(json["error"]["status"]) if "error" in json else 200
-    )
+# TODO i think there's a cleaner way with multiple dispatch
+def fake_response(
+    body=Union[dict, str], status_code: Optional[int] = None
+) -> HttpResponse:
+    response = mock(HttpResponse)
+    if isinstance(body, dict):
+        response.json.return_value = body
+        # TODO this probably would not work with other non-Spotify response. Make tests pass the status
+        response.status_code = status_code or (
+            int(body["error"]["status"]) if "error" in body else 200
+        )
+        return response
+    else:
+        response.text = body
+        response.json.side_effect = ValueError("Fake RequestsJSONDecodeError")
+        response.status_code = status_code or 200
     return response
 
 

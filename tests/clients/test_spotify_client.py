@@ -227,3 +227,17 @@ def test_create_playlist():
         headers={"Authorization": f"Bearer {AUTH_TOKEN.access_token}"},
     )
     assert playlist == response
+
+
+def test_add_liked_tracks():
+    http_adapter = mock_http_adapter(put="")
+    client = SpotifyClient(auth_token=AUTH_TOKEN, http_adapter=http_adapter)
+
+    response = client.add_liked_tracks(["t1", "t2"])
+
+    assert response == None
+    http_adapter.put.assert_called_once_with(
+        "https://api.spotify.com/v1/me/tracks",
+        json={"ids": ["t1", "t2"]},
+        headers={"Authorization": f"Bearer {AUTH_TOKEN.access_token}"},
+    )
