@@ -64,5 +64,6 @@ class SpotifyRepo(MusicRepo):
             for item in response["tracks"]["items"]
         ]
 
-    def create_playlist(self, name: str) -> PlaylistId:
-        return self.client.create_playlist(name)["id"]
+    def create_playlist(self, name: str) -> Playlist:
+        response = self.client.create_playlist(name)
+        return Playlist(id=response["id"], name=response["name"])

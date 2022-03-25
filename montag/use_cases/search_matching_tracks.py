@@ -1,39 +1,28 @@
 from dataclasses import dataclass
-from typing import Optional
 
-from montag.domain.entities import (
-    Playlist,
-    PlaylistId,
-    Provider,
-    Track,
-    TrackSuggestions,
-)
+from montag.domain.entities import PlaylistId, Provider, Track, TrackSuggestions
 from montag.repositories.music_repo import MusicRepo
-from montag.use_cases.decorators import error_handling
-from montag.domain.errors import NotFoundError
+from montag.use_cases.support import error_handling, fetch_mirror_playlist
 from montag.use_cases.types import Response, Success, UseCase
 from pydantic import BaseModel
-
-
-class SearchMatchingTracksRequest(BaseModel):
-    src_playlist_id: PlaylistId
-    src_provider: Provider
-    dst_provider: Provider
-    max_suggestions: int = 5
 
 
 @dataclass
 class SearchMatchingTracks(UseCase):
     repos: dict[Provider, MusicRepo]
 
+    class Request(BaseModel):
+        src_provider: Provider
+        dst_provider: Provider
+        src_playlist_id: PlaylistId
+        max_suggestions: int = 5
+
     @error_handling
-    def execute(
-        self, request: SearchMatchingTracksRequest
-    ) -> Response[list[TrackSuggestions]]:
+    def execute(self, request: Request) -> Response[list[TrackSuggestions]]:
         src_repo = self.repos[request.src_provider]
         dst_repo = self.repos[request.dst_provider]
 
-        dst_playlist = fetch_mirror_playlist(
+        _, dst_playlist = fetch_mirror_playlist(
             request.src_playlist_id, src_repo, dst_repo
         )
         existing_tracks = dst_repo.find_tracks(dst_playlist.id) if dst_playlist else []
@@ -45,16 +34,6 @@ class SearchMatchingTracks(UseCase):
             for src_track in src_repo.find_tracks(request.src_playlist_id)
         ]
         return Success(tracks_with_suggestions)
-
-
-def fetch_mirror_playlist(
-    src_playlist_id: PlaylistId, src_repo: MusicRepo, dst_repo: MusicRepo
-) -> Optional[Playlist]:
-    src_playlist = src_repo.find_playlist_by_id(src_playlist_id)
-    if src_playlist:
-        return dst_repo.find_mirror_playlist(src_playlist)
-    else:
-        raise NotFoundError(f"Could not find a playlist with ID '{src_playlist_id}'.")
 
 
 # TODO move this to the domain?

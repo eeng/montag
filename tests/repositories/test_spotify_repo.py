@@ -82,8 +82,7 @@ def test_create_playlist():
     client = mock(SpotifyClient, create_playlist=response)
     repo = SpotifyRepo(client)
 
-    playlist_id = repo.create_playlist("Classics")
+    playlist = repo.create_playlist("Classics")
 
     client.create_playlist.assert_called_with("Classics")
-
-    assert playlist_id == response["id"]
+    assert playlist == Playlist(id=response["id"], name=response["name"])

@@ -3,7 +3,6 @@ from unittest.mock import call
 from montag.domain.entities import Provider
 from montag.use_cases.search_matching_tracks import (
     SearchMatchingTracks,
-    SearchMatchingTracksRequest,
     TrackSuggestions,
 )
 from montag.use_cases.types import Failure, Success
@@ -24,7 +23,7 @@ def test_search_tracks_matching_the_ones_in_the_src_playlist(
         track2_suggestions,
     ]
 
-    request = SearchMatchingTracksRequest(
+    request = SearchMatchingTracks.Request(
         src_playlist_id=playlist_id,
         src_provider=Provider.SPOTIFY,
         dst_provider=Provider.YT_MUSIC,
@@ -61,7 +60,7 @@ def test_when_a_track_already_exists_in_dst_playlist(repos, spotify_repo, ytmusi
     ytmusic_repo.find_tracks.return_value = [dst_t1, dst_t3]
     ytmusic_repo.search_matching_tracks.return_value = [dst_t1, dst_t2]
 
-    request = SearchMatchingTracksRequest(
+    request = SearchMatchingTracks.Request(
         src_playlist_id=spotify_playlist.id,
         src_provider=Provider.SPOTIFY,
         dst_provider=Provider.YT_MUSIC,
@@ -82,7 +81,7 @@ def test_when_a_track_already_exists_in_dst_playlist(repos, spotify_repo, ytmusi
 
 def test_when_src_playlist_do_not_exists(repos, spotify_repo):
     spotify_repo.find_playlist_by_id.return_value = None
-    request = SearchMatchingTracksRequest(
+    request = SearchMatchingTracks.Request(
         src_playlist_id="inexistent",
         src_provider=Provider.SPOTIFY,
         dst_provider=Provider.YT_MUSIC,

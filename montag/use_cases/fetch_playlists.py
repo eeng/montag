@@ -2,7 +2,7 @@ from dataclasses import dataclass
 
 from montag.domain.entities import Playlist, Provider
 from montag.repositories.music_repo import MusicRepo
-from montag.use_cases.decorators import error_handling
+from montag.use_cases.support import error_handling
 from montag.use_cases.types import Response, Success, UseCase
 
 

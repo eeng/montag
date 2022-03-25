@@ -60,10 +60,16 @@ def test_search_matching_tracks():
 
 
 def test_create_playlist():
-    client = mock(YTMusic, create_playlist="PLVUD6HCA")
+    playlist_id = "RDTMAK5uy_k4EXFD03ox0jMzIP4NNPhl2wbxA1Wa9OM"
+    playlist_name = "Chill Mix"
+    client = mock(
+        YTMusic,
+        create_playlist=playlist_id,
+        get_library_playlists=resource("ytmusic/get_library_playlists.json"),
+    )
     repo = YouTubeMusicRepo(client)
 
-    playlist_id = repo.create_playlist("Classics")
+    playlist = repo.create_playlist(playlist_name)
 
-    assert playlist_id == "PLVUD6HCA"
-    client.create_playlist.assert_called_once_with("Classics", "")
+    client.create_playlist.assert_called_once_with(playlist_name, "")
+    assert playlist == Playlist(id=playlist_id, name=playlist_name)

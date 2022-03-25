@@ -4,10 +4,8 @@ from montag.clients.spotify_client import AuthToken, SpotifyClient
 from montag.domain.entities import Provider
 from montag.system import System
 from montag.use_cases.fetch_playlists import FetchPlaylists
-from montag.use_cases.search_matching_tracks import (
-    SearchMatchingTracks,
-    SearchMatchingTracksRequest,
-)
+from montag.use_cases.search_matching_tracks import SearchMatchingTracks
+
 
 SPOTIFY_TOKEN_FILE = "tmp/spotify_token.json"
 
@@ -41,7 +39,7 @@ def system():
 def examples():
     FetchPlaylists(system().repos).execute(Provider.SPOTIFY)
 
-    request = SearchMatchingTracksRequest(
+    request = SearchMatchingTracks.Request(
         src_playlist_id="6bMoQmuO8h4LuoiREgyYbZ",
         src_provider=Provider.SPOTIFY,
         dst_provider=Provider.YT_MUSIC,

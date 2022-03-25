@@ -41,10 +41,13 @@ class YouTubeMusicRepo(MusicRepo):
             for item in tracks_json
         ]
 
-    def create_playlist(self, name: str) -> PlaylistId:
+    def create_playlist(self, name: str) -> Playlist:
         response = self.client.create_playlist(name, description="")
         if isinstance(response, str):
-            return response
+            playlist = self.find_playlist_by_id(response)
+            if not playlist:
+                raise YTMusicError("Created playlist not found? This is unexpected")
+            return playlist
         else:
             raise YTMusicError(response)
 

@@ -1,5 +1,5 @@
 from typing import Optional, Protocol
-from montag.domain.entities import Playlist, PlaylistId, Track
+from montag.domain.entities import Playlist, PlaylistId, Track, TrackId
 from montag.util.collections import find_by
 
 
@@ -16,8 +16,14 @@ class MusicRepo(Protocol):
         """Searches for tracks that match the one specified as best as possible."""
         ...
 
-    def create_playlist(self, name: str) -> PlaylistId:
-        """Creates a new playlist for the current user, and returns its ID"""
+    def create_playlist(self, name: str) -> Playlist:
+        """Creates a new playlist for the current user, and returns it"""
+        ...
+
+    def add_tracks(
+        self, playlist_id: PlaylistId, track_ids: list[TrackId]
+    ) -> PlaylistId:
+        """Adds the specified tracks to the playlist."""
         ...
 
     def find_playlist_by_id(self, playlist_id: PlaylistId) -> Optional[Playlist]:
