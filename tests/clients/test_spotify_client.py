@@ -28,7 +28,7 @@ def test_authorize_url_and_state():
         "client_id=FAKE_CLIENT_ID&"
         "redirect_uri=FAKE_REDIRECT_URL&"
         f"state=THE_STATE&"
-        "scope=user-read-private+user-read-email+user-library-read+playlist-read-private+playlist-modify-private&"
+        "scope=user-read-private+user-read-email+user-library-read+user-library-modify+playlist-read-private+playlist-modify-private&"
         "response_type=code"
     )
     assert actual_url == expected_url

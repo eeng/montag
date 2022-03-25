@@ -9,7 +9,14 @@ from montag.util.clock import Clock
 
 ACCOUNTS_URL = "https://accounts.spotify.com"
 API_URL = "https://api.spotify.com/v1"
-SCOPE = "user-read-private user-read-email user-library-read playlist-read-private playlist-modify-private"
+SCOPES = [
+    "user-read-private",
+    "user-read-email",
+    "user-library-read",
+    "user-library-modify",
+    "playlist-read-private",
+    "playlist-modify-private",
+]
 
 
 class AuthToken(BaseModel):
@@ -33,7 +40,7 @@ class SpotifyClient:
             client_id=self.client_id,
             redirect_uri=self.redirect_uri,
             state=state,
-            scope=SCOPE,
+            scope=" ".join(SCOPES),
             response_type="code",
         )
         return f"{ACCOUNTS_URL}/authorize?{urlencode(params)}"
@@ -90,6 +97,9 @@ class SpotifyClient:
 
     def liked_tracks(self, limit: int = 20, offset: int = 0):
         return self._authorized_api_get("/me/tracks", limit=limit, offset=offset)
+
+    def add_liked_tracks(self, track_ids: list[str]):
+        return self._authorized_api_put("/me/tracks", ids=track_ids)
 
     def playlist_tracks(self, playlist_id: str, limit: int = 20, offset: int = 0):
         return self._authorized_api_get(
