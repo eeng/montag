@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 
-from montag.domain.entities import Playlist, PlaylistId, Track
+from montag.domain.entities import Playlist, PlaylistId, Track, TrackId
 from montag.repositories.music_repo import MusicRepo
 from ytmusicapi import YTMusic
 
@@ -51,6 +51,13 @@ class YouTubeMusicRepo(MusicRepo):
         else:
             raise YTMusicError(response)
 
+    def add_tracks(self, playlist_id: PlaylistId, track_ids: list[TrackId]) -> None:
+        response = self.client.add_playlist_items(playlist_id, track_ids)
+        if isinstance(response, dict) and "SUCCEEDED" in response["status"]:
+            pass
+        else:
+            raise YTMusicError(response)
+
 
 class YTMusicError(Exception):
-    """Base class for all YTMusic errors"""
+    """Used for all YTMusic library errors."""

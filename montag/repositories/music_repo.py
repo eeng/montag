@@ -20,9 +20,7 @@ class MusicRepo(Protocol):
         """Creates a new playlist for the current user, and returns it"""
         ...
 
-    def add_tracks(
-        self, playlist_id: PlaylistId, track_ids: list[TrackId]
-    ) -> PlaylistId:
+    def add_tracks(self, playlist_id: PlaylistId, track_ids: list[TrackId]) -> None:
         """Adds the specified tracks to the playlist."""
         ...
 

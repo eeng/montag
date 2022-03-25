@@ -1,5 +1,6 @@
+import pytest
 from montag.domain.entities import Playlist, Track
-from montag.repositories.ytmusic_repo import YouTubeMusicRepo
+from montag.repositories.ytmusic_repo import YTMusicError, YouTubeMusicRepo
 from tests import factory
 from tests.helpers import mock, resource
 from tests.matchers import has_attrs
@@ -73,3 +74,26 @@ def test_create_playlist():
 
     client.create_playlist.assert_called_once_with(playlist_name, "")
     assert playlist == Playlist(id=playlist_id, name=playlist_name)
+
+
+def test_add_tracks_success():
+    playlist_id = "pl"
+    track_ids = ["t1", "t2"]
+    client = mock(
+        YTMusic, add_playlist_items=resource("ytmusic/add_playlist_items_success.json")
+    )
+    repo = YouTubeMusicRepo(client)
+
+    repo.add_tracks(playlist_id, track_ids)
+
+    client.add_playlist_items.assert_called_once_with(playlist_id, track_ids)
+
+
+def test_add_tracks_failure():
+    client = mock(
+        YTMusic, add_playlist_items=resource("ytmusic/add_playlist_items_failure.json")
+    )
+    repo = YouTubeMusicRepo(client)
+
+    with pytest.raises(YTMusicError):
+        repo.add_tracks("p", ["t"])

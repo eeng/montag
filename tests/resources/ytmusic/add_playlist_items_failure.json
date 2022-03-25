@@ -1,0 +1,103 @@
+{
+    "responseContext": {
+        "serviceTrackingParams": [
+            {
+                "service": "CSI",
+                "params": [
+                    {
+                        "key": "c",
+                        "value": "WEB_REMIX"
+                    },
+                    {
+                        "key": "cver",
+                        "value": "0.1"
+                    },
+                    {
+                        "key": "yt_li",
+                        "value": "1"
+                    },
+                    {
+                        "key": "EditPlaylist_rid",
+                        "value": "0x5e3a89ab3cc20dc6"
+                    }
+                ]
+            },
+            {
+                "service": "GFEEDBACK",
+                "params": [
+                    {
+                        "key": "logged_in",
+                        "value": "1"
+                    },
+                    {
+                        "key": "e",
+                        "value": "24180015,24138064,24169726,23946420,24001373,24174214,23966208,24004644,24077241,23882685,24176755,24185349,23735347,24120820,24007246,24183272,24036947,24002025,24077266,24154616,23744176,24187043,24175488,23918597,24080738,24135310,24177978,24177193,24131400,24106839,39321475,24085811,24110902,24179789,24145515,24082661,24189899,23940248,23998056,24180089,24034168,23983296,24165080,24162650,23804281,24002022,24185065,1714246,23934970,24138442,24140247"
+                    }
+                ]
+            },
+            {
+                "service": "ECATCHER",
+                "params": [
+                    {
+                        "key": "client.version",
+                        "value": "0.1"
+                    },
+                    {
+                        "key": "client.name",
+                        "value": "WEB_REMIX"
+                    },
+                    {
+                        "key": "client.fexp",
+                        "value": "24180015,24138064,24169726,23946420,24001373,24174214,23966208,24004644,24077241,23882685,24176755,24185349,23735347,24120820,24007246,24183272,24036947,24002025,24077266,24154616,23744176,24187043,24175488,23918597,24080738,24135310,24177978,24177193,24131400,24106839,39321475,24085811,24110902,24179789,24145515,24082661,24189899,23940248,23998056,24180089,24034168,23983296,24165080,24162650,23804281,24002022,24185065,1714246,23934970,24138442,24140247"
+                    }
+                ]
+            }
+        ]
+    },
+    "status": "STATUS_FAILED",
+    "actions": [
+        {
+            "clickTrackingParams": "CAAQ2s0EIhMIqZz7tZni9gIVhhsGAB2QUgWI",
+            "addToToastAction": {
+                "item": {
+                    "notificationActionRenderer": {
+                        "responseText": {
+                            "runs": [
+                                {
+                                    "text": "This song is already in the playlist"
+                                }
+                            ]
+                        },
+                        "actionButton": {
+                            "buttonRenderer": {
+                                "text": {
+                                    "runs": [
+                                        {
+                                            "text": "Add anyway"
+                                        }
+                                    ]
+                                },
+                                "trackingParams": "CAIQ8FsiEwipnPu1meL2AhWGGwYAHZBSBYg=",
+                                "command": {
+                                    "clickTrackingParams": "CAIQ8FsiEwipnPu1meL2AhWGGwYAHZBSBYg=",
+                                    "playlistEditEndpoint": {
+                                        "playlistId": "PLVUD6HCAOnsHaSO5FwX-tyiEy7XpWmx5M",
+                                        "actions": [
+                                            {
+                                                "addedVideoId": "qG6_d9tpR84",
+                                                "action": "ACTION_ADD_VIDEO",
+                                                "dedupeOption": "DEDUPE_OPTION_SKIP"
+                                            }
+                                        ]
+                                    }
+                                }
+                            }
+                        },
+                        "trackingParams": "CAEQuWoiEwipnPu1meL2AhWGGwYAHZBSBYg="
+                    }
+                }
+            }
+        }
+    ],
+    "trackingParams": "CAAQ2s0EIhMIqZz7tZni9gIVhhsGAB2QUgWI"
+}
