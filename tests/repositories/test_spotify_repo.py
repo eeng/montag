@@ -1,6 +1,6 @@
 from montag.clients.spotify_client import SpotifyClient
 from montag.domain.entities import Playlist, Track
-from montag.repositories.spotify_repo import SpotifyRepo
+from montag.repositories.spotify_repo import LIKED_SONGS_ID, SpotifyRepo
 from tests import factory
 from tests.helpers import mock, resource
 from tests.matchers import has_attrs
@@ -86,3 +86,26 @@ def test_create_playlist():
 
     client.create_playlist.assert_called_with("Classics")
     assert playlist == Playlist(id=response["id"], name=response["name"])
+
+
+def test_add_tracks_to_liked_playlist():
+    client = mock(SpotifyClient)
+    repo = SpotifyRepo(client)
+    track_ids = ["t1", "t2"]
+
+    result = repo.add_tracks(LIKED_SONGS_ID, track_ids)
+
+    client.add_liked_tracks.assert_called_once_with(track_ids)
+    assert result == None
+
+
+def test_add_tracks_to_other_playlist():
+    client = mock(SpotifyClient)
+    repo = SpotifyRepo(client)
+    playlist_id = "u33hs5"
+    track_ids = ["t1", "t2"]
+
+    result = repo.add_tracks(playlist_id, track_ids)
+
+    client.add_playlist_tracks.assert_called_once_with(playlist_id, track_ids)
+    assert result == None

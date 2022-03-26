@@ -1,3 +1,4 @@
+from types import SimpleNamespace
 from unittest.mock import Mock
 
 import pytest
@@ -11,7 +12,13 @@ from tests import factory
 from tests.helpers import fake_clock, mock_http_adapter, resource
 from tests.matchers import has_attrs, has_entries, instance_of
 
-AUTH_TOKEN = factory.auth_token()
+
+@pytest.fixture
+def auth():
+    token = factory.auth_token()
+    return SimpleNamespace(
+        token=token, header={"Authorization": f"Bearer {token.access_token}"}
+    )
 
 
 def test_authorize_url_and_state():
@@ -66,12 +73,12 @@ def test_request_access_token():
     assert client.auth_token == auth_token
 
 
-def test_refresh_access_token():
+def test_refresh_access_token(auth):
     response = resource("spotify/refreshed_token.json")
     http_adapter = mock_http_adapter(post=response)
     clock = fake_clock(timestamp=1647160000)
     client = SpotifyClient(
-        auth_token=AUTH_TOKEN,
+        auth_token=auth.token,
         client_id="CLIENT_ID",
         client_secret="CLIENT_SECRET",
         http_adapter=http_adapter,
@@ -84,29 +91,29 @@ def test_refresh_access_token():
         "https://accounts.spotify.com/api/token",
         data=dict(
             grant_type="refresh_token",
-            refresh_token=AUTH_TOKEN.refresh_token,
+            refresh_token=auth.token.refresh_token,
             client_id="CLIENT_ID",
             client_secret="CLIENT_SECRET",
         ),
     )
     assert auth_token == AuthToken(
-        refresh_token=AUTH_TOKEN.refresh_token,
+        refresh_token=auth.token.refresh_token,
         access_token=response["access_token"],
         expires_at=1647163600,
     )
     assert client.auth_token == auth_token
 
 
-def test_me():
+def test_me(auth):
     response = resource("spotify/me.json")
     http_adapter = mock_http_adapter(get=response)
-    client = SpotifyClient(auth_token=AUTH_TOKEN, http_adapter=http_adapter)
+    client = SpotifyClient(auth_token=auth.token, http_adapter=http_adapter)
 
     profile = client.me()
 
     http_adapter.get.assert_called_once_with(
         "https://api.spotify.com/v1/me",
-        headers={"Authorization": f"Bearer {AUTH_TOKEN.access_token}"},
+        headers=auth.header,
         params={},
     )
     assert profile == response
@@ -117,11 +124,11 @@ def test_me_requires_authorization():
         SpotifyClient().me()
 
 
-def test_bad_request_error():
+def test_bad_request_error(auth):
     response = resource("spotify/token_expired.json")
     http_adapter = mock_http_adapter(get=response)
 
-    client = SpotifyClient(auth_token=AUTH_TOKEN, http_adapter=http_adapter)
+    client = SpotifyClient(auth_token=auth.token, http_adapter=http_adapter)
     with pytest.raises(BadRequestError):
         client.me()
 
@@ -153,40 +160,40 @@ def test_token_expiration():
     )
 
 
-def test_my_playlists():
+def test_my_playlists(auth):
     response = resource("spotify/my_playlists.json")
     http_adapter = mock_http_adapter(get=response)
-    client = SpotifyClient(auth_token=AUTH_TOKEN, http_adapter=http_adapter)
+    client = SpotifyClient(auth_token=auth.token, http_adapter=http_adapter)
 
     playlists = client.my_playlists(limit=5, offset=10)
 
     http_adapter.get.assert_called_once_with(
         "https://api.spotify.com/v1/me/playlists",
         params={"limit": 5, "offset": 10},
-        headers={"Authorization": f"Bearer {AUTH_TOKEN.access_token}"},
+        headers=auth.header,
     )
     assert playlists == response
 
 
-def test_liked_tracks():
+def test_liked_tracks(auth):
     response = resource("spotify/liked_tracks.json")
     http_adapter = mock_http_adapter(get=response)
-    client = SpotifyClient(auth_token=AUTH_TOKEN, http_adapter=http_adapter)
+    client = SpotifyClient(auth_token=auth.token, http_adapter=http_adapter)
 
     tracks = client.liked_tracks(limit=5, offset=10)
 
     http_adapter.get.assert_called_once_with(
         "https://api.spotify.com/v1/me/tracks",
         params={"limit": 5, "offset": 10},
-        headers={"Authorization": f"Bearer {AUTH_TOKEN.access_token}"},
+        headers=auth.header,
     )
     assert tracks == response
 
 
-def test_playlist_tracks():
+def test_playlist_tracks(auth):
     response = resource("spotify/playlist_tracks.json")
     http_adapter = mock_http_adapter(get=response)
-    client = SpotifyClient(auth_token=AUTH_TOKEN, http_adapter=http_adapter)
+    client = SpotifyClient(auth_token=auth.token, http_adapter=http_adapter)
     playlist_id = "6bMoQmuO8h4LuoiREgyYbZ"
 
     tracks = client.playlist_tracks(playlist_id)
@@ -194,50 +201,66 @@ def test_playlist_tracks():
     http_adapter.get.assert_called_once_with(
         f"https://api.spotify.com/v1/playlists/{playlist_id}/tracks",
         params={"limit": 20, "offset": 0},
-        headers={"Authorization": f"Bearer {AUTH_TOKEN.access_token}"},
+        headers=auth.header,
     )
     assert tracks == response
 
 
-def test_search():
+def test_search(auth):
     response = resource("spotify/search.json")
     http_adapter = mock_http_adapter(get=response)
-    client = SpotifyClient(auth_token=AUTH_TOKEN, http_adapter=http_adapter)
+    client = SpotifyClient(auth_token=auth.token, http_adapter=http_adapter)
 
     tracks = client.search("Disturbed", type="artist")
 
     http_adapter.get.assert_called_once_with(
         f"https://api.spotify.com/v1/search",
         params={"q": "Disturbed", "type": "artist", "limit": 20, "offset": 0},
-        headers={"Authorization": f"Bearer {AUTH_TOKEN.access_token}"},
+        headers=auth.header,
     )
     assert tracks == response
 
 
-def test_create_playlist():
+def test_create_playlist(auth):
     response = resource("spotify/create_playlist.json")
     http_adapter = mock_http_adapter(post=response, status_code=201)
-    client = SpotifyClient(auth_token=AUTH_TOKEN, http_adapter=http_adapter)
+    client = SpotifyClient(auth_token=auth.token, http_adapter=http_adapter)
 
     playlist = client.create_playlist(name="New Playlist")
 
     http_adapter.post.assert_called_once_with(
         "https://api.spotify.com/v1/me/playlists",
         json={"name": "New Playlist", "public": False},
-        headers={"Authorization": f"Bearer {AUTH_TOKEN.access_token}"},
+        headers=auth.header,
     )
     assert playlist == response
 
 
-def test_add_liked_tracks():
+def test_add_liked_tracks(auth):
     http_adapter = mock_http_adapter(put="")
-    client = SpotifyClient(auth_token=AUTH_TOKEN, http_adapter=http_adapter)
+    client = SpotifyClient(auth_token=auth.token, http_adapter=http_adapter)
 
     response = client.add_liked_tracks(["t1", "t2"])
 
-    assert response == None
     http_adapter.put.assert_called_once_with(
         "https://api.spotify.com/v1/me/tracks",
         json={"ids": ["t1", "t2"]},
-        headers={"Authorization": f"Bearer {AUTH_TOKEN.access_token}"},
+        headers=auth.header,
     )
+    assert response == None
+
+
+def test_add_playlist_tracks(auth):
+    playlist_id = "we34qe"
+    track_ids = ["t1", "t2"]
+    http_adapter = mock_http_adapter(post=resource("spotify/add_playlist_tracks.json"))
+    client = SpotifyClient(auth_token=auth.token, http_adapter=http_adapter)
+
+    response = client.add_playlist_tracks(playlist_id, track_ids)
+
+    http_adapter.post.assert_called_once_with(
+        f"https://api.spotify.com/v1/playlists/{playlist_id}/tracks",
+        json={"uris": "spotify:track:t1,spotify:track:t2"},
+        headers=auth.header,
+    )
+    assert response == None

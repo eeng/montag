@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 
 from montag.clients.spotify_client import SpotifyClient
-from montag.domain.entities import Playlist, PlaylistId, Track
+from montag.domain.entities import Playlist, PlaylistId, Track, TrackId
 from montag.repositories.music_repo import MusicRepo
 
 LIKED_SONGS_ID = "LS"
@@ -67,3 +67,9 @@ class SpotifyRepo(MusicRepo):
     def create_playlist(self, name: str) -> Playlist:
         response = self.client.create_playlist(name)
         return Playlist(id=response["id"], name=response["name"])
+
+    def add_tracks(self, playlist_id: PlaylistId, track_ids: list[TrackId]) -> None:
+        if playlist_id == LIKED_SONGS_ID:
+            self.client.add_liked_tracks(track_ids)
+        else:
+            self.client.add_playlist_tracks(playlist_id, track_ids)
