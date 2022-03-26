@@ -1,4 +1,3 @@
-import os
 import secrets
 from typing import Optional
 from flask import Flask, g, redirect, request, session, url_for
@@ -52,16 +51,12 @@ def spotify_playlists():
 
 @app.route("/spotify/playlists/<playlist_id>/tracks")
 def spotify_tracks(playlist_id):
-    return {
-        "tracks": [track.dict() for track in spotify_repo().find_tracks(playlist_id)]
-    }
+    return {"tracks": [track.dict() for track in spotify_repo().find_tracks(playlist_id)]}
 
 
 def spotify_client():
     if "spotify_client" not in g:
-        g.spotify_client = SpotifyClient(
-            auth_token=retrieve_auth_token(), on_token_expired=store_auth_token
-        )
+        g.spotify_client = SpotifyClient(auth_token=retrieve_auth_token(), on_token_expired=store_auth_token)
     return g.spotify_client
 
 
