@@ -3,13 +3,14 @@ import secrets
 from typing import Optional
 from flask import Flask, g, redirect, request, session, url_for
 from montag.clients.spotify_client import AuthToken, BadStateError, SpotifyClient
+from montag.config import Config
 from montag.repositories.spotify_repo import SpotifyRepo
 
 SPOTIFY_COOKIE_KEY = "spotify_auth_state"
 SPOTIFY_SESSION_KEY = "spotify_token"
 
 app = Flask(__name__)
-app.secret_key = os.environ["FLASK_SECRET_KEY"]
+app.secret_key = Config.flask_secret_key
 
 
 @app.route("/")
