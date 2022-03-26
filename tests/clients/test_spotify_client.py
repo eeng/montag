@@ -260,7 +260,7 @@ def test_add_playlist_tracks(auth):
 
     http_adapter.post.assert_called_once_with(
         f"https://api.spotify.com/v1/playlists/{playlist_id}/tracks",
-        json={"uris": "spotify:track:t1,spotify:track:t2"},
+        json={"uris": ["spotify:track:t1", "spotify:track:t2"]},
         headers=auth.header,
     )
     assert response == None

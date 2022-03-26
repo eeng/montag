@@ -109,7 +109,7 @@ class SpotifyClient:
         self._authorized_api_put("/me/tracks", ids=track_ids)
 
     def add_playlist_tracks(self, playlist_id: str, track_ids: list[str]) -> None:
-        track_uris = ",".join([f"spotify:track:{id}" for id in track_ids])
+        track_uris = [f"spotify:track:{id}" for id in track_ids]
         self._authorized_api_post(f"/playlists/{playlist_id}/tracks", uris=track_uris)
 
     def search(self, query: str, type: str, limit: int = 20, offset: int = 0) -> dict:
