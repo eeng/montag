@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 
-from montag.domain.entities import PlaylistId, Provider, TrackId
+from montag.domain.entities import Playlist, PlaylistId, Provider, TrackId
 from montag.repositories.music_repo import MusicRepo
 from montag.use_cases.support import error_handling, fetch_mirror_playlist
 from montag.use_cases.types import Response, Success, UseCase
@@ -18,7 +18,7 @@ class AddTracksToMirrorPlaylist(UseCase):
         dst_track_ids: list[TrackId]
 
     @error_handling
-    def execute(self, request: Request) -> Response[None]:
+    def execute(self, request: Request) -> Response[Playlist]:
         src_repo = self.repos[request.src_provider]
         dst_repo = self.repos[request.dst_provider]
 
@@ -26,8 +26,8 @@ class AddTracksToMirrorPlaylist(UseCase):
             request.src_playlist_id, src_repo, dst_repo
         )
         if not dst_playlist:
-            dst_playlist = src_repo.create_playlist(src_playlist.name)
+            dst_playlist = dst_repo.create_playlist(src_playlist.name)
 
         dst_repo.add_tracks(dst_playlist.id, request.dst_track_ids)
 
-        return Success(None)
+        return Success(dst_playlist)

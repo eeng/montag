@@ -3,6 +3,7 @@ import json
 from montag.clients.spotify_client import AuthToken, SpotifyClient
 from montag.domain.entities import Provider
 from montag.system import System
+from montag.use_cases.add_tracks_to_mirror_playlist import AddTracksToMirrorPlaylist
 from montag.use_cases.fetch_playlists import FetchPlaylists
 from montag.use_cases.search_matching_tracks import SearchMatchingTracks
 
@@ -40,8 +41,16 @@ def examples():
     FetchPlaylists(system().repos).execute(Provider.SPOTIFY)
 
     request = SearchMatchingTracks.Request(
-        src_playlist_id="6bMoQmuO8h4LuoiREgyYbZ",
         src_provider=Provider.SPOTIFY,
         dst_provider=Provider.YT_MUSIC,
+        src_playlist_id="6bMoQmuO8h4LuoiREgyYbZ",
     )
     SearchMatchingTracks(system().repos).execute(request)
+
+    request = AddTracksToMirrorPlaylist.Request(
+        src_provider=Provider.SPOTIFY,
+        dst_provider=Provider.YT_MUSIC,
+        src_playlist_id="6bMoQmuO8h4LuoiREgyYbZ",
+        dst_track_ids=["f4kXLlFEFTw", "qQ0zxuWFxrY"],
+    )
+    AddTracksToMirrorPlaylist(system().repos).execute(request)
