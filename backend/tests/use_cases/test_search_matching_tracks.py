@@ -9,9 +9,7 @@ from montag.use_cases.types import Failure, Success
 from tests import factory
 
 
-def test_search_tracks_matching_the_ones_in_the_src_playlist(
-    repos, spotify_repo, ytmusic_repo
-):
+def test_search_tracks_matching_the_ones_in_the_src_playlist(repos, spotify_repo, ytmusic_repo):
     playlist_id = "PLVUD"
     track1, track2 = factory.track(name="T1"), factory.track(name="T2")
     track1_suggestions = factory.tracks(2, name="For T1")
@@ -37,9 +35,7 @@ def test_search_tracks_matching_the_ones_in_the_src_playlist(
         ]
     )
     spotify_repo.find_tracks.assert_called_once_with(playlist_id)
-    ytmusic_repo.search_matching_tracks.assert_has_calls(
-        [call(track1, limit=5), call(track2, limit=5)]
-    )
+    ytmusic_repo.search_matching_tracks.assert_has_calls([call(track1, limit=5), call(track2, limit=5)])
 
 
 def test_when_a_track_already_exists_in_dst_playlist(repos, spotify_repo, ytmusic_repo):

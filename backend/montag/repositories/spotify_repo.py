@@ -13,12 +13,8 @@ class SpotifyRepo(MusicRepo):
 
     def find_playlists(self) -> list[Playlist]:
         response = self.client.my_playlists()
-        other_playlists = [
-            Playlist(id=item["id"], name=item["name"]) for item in response["items"]
-        ]
-        liked_songs_playlist = Playlist(
-            id=LIKED_SONGS_ID, name="Liked Songs", is_liked=True
-        )
+        other_playlists = [Playlist(id=item["id"], name=item["name"]) for item in response["items"]]
+        liked_songs_playlist = Playlist(id=LIKED_SONGS_ID, name="Liked Songs", is_liked=True)
         return [liked_songs_playlist, *other_playlists]
 
     def find_tracks(self, playlist_id: PlaylistId) -> list[Track]:
@@ -28,9 +24,7 @@ class SpotifyRepo(MusicRepo):
         return [
             track
             for offset in range(0, total + 1, limit)
-            for track in self._find_tracks_batch(
-                playlist_id=playlist_id, limit=limit, offset=offset
-            )
+            for track in self._find_tracks_batch(playlist_id=playlist_id, limit=limit, offset=offset)
         ]
 
     def _find_tracks_batch(self, **kargs) -> list[Track]:

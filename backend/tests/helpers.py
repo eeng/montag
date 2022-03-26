@@ -31,16 +31,12 @@ def mock_http_adapter(get=None, post=None, put=None, status_code=None) -> HttpAd
 
 
 # TODO i think there's a cleaner way with multiple dispatch
-def fake_response(
-    body=Union[dict, str], status_code: Optional[int] = None
-) -> HttpResponse:
+def fake_response(body=Union[dict, str], status_code: Optional[int] = None) -> HttpResponse:
     response = mock(HttpResponse)
     if isinstance(body, dict):
         response.json.return_value = body
         # TODO this probably would not work with other non-Spotify response. Make tests pass the status
-        response.status_code = status_code or (
-            int(body["error"]["status"]) if "error" in body else 200
-        )
+        response.status_code = status_code or (int(body["error"]["status"]) if "error" in body else 200)
         return response
     else:
         response.text = body

@@ -16,9 +16,7 @@ from tests.matchers import has_attrs, has_entries, instance_of
 @pytest.fixture
 def auth():
     token = factory.auth_token()
-    return SimpleNamespace(
-        token=token, header={"Authorization": f"Bearer {token.access_token}"}
-    )
+    return SimpleNamespace(token=token, header={"Authorization": f"Bearer {token.access_token}"})
 
 
 def test_authorize_url_and_state():
@@ -152,12 +150,8 @@ def test_token_expiration():
         "https://accounts.spotify.com/api/token",
         data=has_entries(grant_type="refresh_token"),
     )
-    http_adapter.get.assert_called_once_with(
-        "https://api.spotify.com/v1/me", headers=instance_of(dict), params={}
-    )
-    on_token_expired.assert_called_once_with(
-        has_attrs(access_token=new_token_response["access_token"])
-    )
+    http_adapter.get.assert_called_once_with("https://api.spotify.com/v1/me", headers=instance_of(dict), params={})
+    on_token_expired.assert_called_once_with(has_attrs(access_token=new_token_response["access_token"]))
 
 
 def test_my_playlists(auth):

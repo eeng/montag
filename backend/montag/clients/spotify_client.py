@@ -98,12 +98,8 @@ class SpotifyClient:
     def liked_tracks(self, limit: int = 20, offset: int = 0) -> dict:
         return self._authorized_api_get("/me/tracks", limit=limit, offset=offset)
 
-    def playlist_tracks(
-        self, playlist_id: str, limit: int = 20, offset: int = 0
-    ) -> dict:
-        return self._authorized_api_get(
-            f"/playlists/{playlist_id}/tracks", limit=limit, offset=offset
-        )
+    def playlist_tracks(self, playlist_id: str, limit: int = 20, offset: int = 0) -> dict:
+        return self._authorized_api_get(f"/playlists/{playlist_id}/tracks", limit=limit, offset=offset)
 
     def add_liked_tracks(self, track_ids: list[str]) -> None:
         self._authorized_api_put("/me/tracks", ids=track_ids)
@@ -113,9 +109,7 @@ class SpotifyClient:
         self._authorized_api_post(f"/playlists/{playlist_id}/tracks", uris=track_uris)
 
     def search(self, query: str, type: str, limit: int = 20, offset: int = 0) -> dict:
-        return self._authorized_api_get(
-            "/search", q=query, type=type, limit=limit, offset=offset
-        )
+        return self._authorized_api_get("/search", q=query, type=type, limit=limit, offset=offset)
 
     def create_playlist(self, name: str) -> dict:
         return self._authorized_api_post("/me/playlists", name=name, public=False)

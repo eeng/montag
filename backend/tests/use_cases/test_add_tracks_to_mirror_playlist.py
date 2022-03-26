@@ -21,9 +21,7 @@ def test_add_tracks_to_an_existent_playlist(repos, spotify_repo, ytmusic_repo):
     response = AddTracksToMirrorPlaylist(repos).execute(request)
 
     ytmusic_repo.find_mirror_playlist.assert_called_once_with(spotify_playlist)
-    ytmusic_repo.add_tracks.assert_called_once_with(
-        ytmusic_playlist.id, spotify_track_ids
-    )
+    ytmusic_repo.add_tracks.assert_called_once_with(ytmusic_playlist.id, spotify_track_ids)
     assert response == Success(ytmusic_playlist)
 
 
@@ -45,7 +43,5 @@ def test_add_tracks_to_a_new_playlist(repos, spotify_repo, ytmusic_repo):
     response = AddTracksToMirrorPlaylist(repos).execute(request)
 
     ytmusic_repo.create_playlist.assert_called_once_with(spotify_playlist.name)
-    ytmusic_repo.add_tracks.assert_called_once_with(
-        ytmusic_playlist.id, spotify_track_ids
-    )
+    ytmusic_repo.add_tracks.assert_called_once_with(ytmusic_playlist.id, spotify_track_ids)
     assert response == Success(ytmusic_playlist)

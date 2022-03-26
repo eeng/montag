@@ -30,9 +30,7 @@ def test_find_tracks_in_liked_songs_playlist():
 
 
 def test_find_tracks_in_another_playlist():
-    client = mock(
-        SpotifyClient, playlist_tracks=resource("spotify/playlist_tracks.json")
-    )
+    client = mock(SpotifyClient, playlist_tracks=resource("spotify/playlist_tracks.json"))
     repo = SpotifyRepo(client)
     playlist_id = "37i9dQZF1DX4E3UdUs7fUx"
 
@@ -64,13 +62,9 @@ def test_search_matching_tracks():
     client = mock(SpotifyClient, search=resource("spotify/search.json"))
     repo = SpotifyRepo(client)
 
-    tracks = repo.search_matching_tracks(
-        factory.track(name="The Reason", artists=["Hoobastank"])
-    )
+    tracks = repo.search_matching_tracks(factory.track(name="The Reason", artists=["Hoobastank"]))
 
-    client.search.assert_called_with(
-        "track:The Reason artist:Hoobastank", type="track", limit=10
-    )
+    client.search.assert_called_with("track:The Reason artist:Hoobastank", type="track", limit=10)
     assert [
         has_attrs(name="The Reason 1", id="77loZpT5Y5PRP1S451P9Yz"),
         has_attrs(name="The Reason 2", id="3e96gL2t9JYdzlVvJP3TFx"),

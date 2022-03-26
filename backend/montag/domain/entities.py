@@ -35,13 +35,9 @@ class TrackSuggestions(BaseModel):
     already_present: list[TrackId] = []
 
     @classmethod
-    def build(
-        cls, src_track: Track, suggestions: list[Track], existing_tracks: list[Track]
-    ) -> "TrackSuggestions":
+    def build(cls, src_track: Track, suggestions: list[Track], existing_tracks: list[Track]) -> "TrackSuggestions":
         already_present = [s.id for s in suggestions if s in existing_tracks]
-        return cls(
-            target=src_track, suggestions=suggestions, already_present=already_present
-        )
+        return cls(target=src_track, suggestions=suggestions, already_present=already_present)
 
 
 class Provider(Enum):

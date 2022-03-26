@@ -22,18 +22,11 @@ class SearchMatchingTracks(UseCase):
         src_repo = self.repos[request.src_provider]
         dst_repo = self.repos[request.dst_provider]
 
-        _, dst_playlist = fetch_mirror_playlist(
-            request.src_playlist_id, src_repo, dst_repo
-        )
+        _, dst_playlist = fetch_mirror_playlist(request.src_playlist_id, src_repo, dst_repo)
         existing_tracks = dst_repo.find_tracks(dst_playlist.id) if dst_playlist else []
 
         def calculate_suggestions(src_track):
-            suggestions = dst_repo.search_matching_tracks(
-                src_track, limit=request.max_suggestions
-            )
+            suggestions = dst_repo.search_matching_tracks(src_track, limit=request.max_suggestions)
             return TrackSuggestions.build(src_track, suggestions, existing_tracks)
 
-        track_suggestions = list(
-            map(calculate_suggestions, src_repo.find_tracks(request.src_playlist_id))
-        )
-        return Success(track_suggestions)
+        return Success(list(map(calculate_suggestions, src_repo.find_tracks(request.src_playlist_id))))

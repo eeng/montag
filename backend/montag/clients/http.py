@@ -19,7 +19,10 @@ class HttpResponse(Protocol):
 class HttpAdapter:
     @debug
     def get(
-        self, url: str, params: Optional[dict] = None, headers: Optional[dict] = None
+        self,
+        url: str,
+        params: Optional[dict] = None,
+        headers: Optional[dict] = None,
     ) -> HttpResponse:
         return requests.get(url, params=params, headers=headers)
 

@@ -26,9 +26,7 @@ class has_attrs(Matcher):
         self.expected_attrs = attrs
 
     def __eq__(self, other):
-        return all(
-            getattr(other, attr) == value for attr, value in self.expected_attrs.items()
-        )
+        return all(getattr(other, attr) == value for attr, value in self.expected_attrs.items())
 
     def __repr__(self):
         return f"<object with attrs {self.expected_attrs}>"
@@ -41,9 +39,7 @@ class has_entries(Matcher):
         self.expected_entries = entries
 
     def __eq__(self, other):
-        return all(
-            other[attr] == value for attr, value in self.expected_entries.items()
-        )
+        return all(other[attr] == value for attr, value in self.expected_entries.items())
 
     def __repr__(self):
         return f"<dict with entries {self.expected_entries}>"
