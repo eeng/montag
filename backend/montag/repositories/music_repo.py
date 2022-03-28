@@ -1,5 +1,6 @@
 from typing import Optional, Protocol
 from montag.domain.entities import Playlist, PlaylistId, Track, TrackId
+from montag.domain.errors import NotFoundError
 from montag.util.collections import find_by
 
 
@@ -26,6 +27,12 @@ class MusicRepo(Protocol):
 
     def find_playlist_by_id(self, playlist_id: PlaylistId) -> Optional[Playlist]:
         return find_by(lambda p: p.id == playlist_id, self.find_playlists())
+
+    def get_playlist_by_id(self, playlist_id: PlaylistId) -> Playlist:
+        if playlist := self.find_playlist_by_id(playlist_id):
+            return playlist
+        else:
+            raise NotFoundError(f"Could not find a playlist with ID '{playlist_id}'")
 
     def find_mirror_playlist(self, other: Playlist) -> Optional[Playlist]:
         def is_liked_or_has_same_name(p: Playlist):

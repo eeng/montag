@@ -25,8 +25,5 @@ def error_handling(func):
 def fetch_mirror_playlist(
     src_playlist_id: PlaylistId, src_repo: MusicRepo, dst_repo: MusicRepo
 ) -> tuple[Playlist, Optional[Playlist]]:
-    src_playlist = src_repo.find_playlist_by_id(src_playlist_id)
-    if src_playlist:
-        return (src_playlist, dst_repo.find_mirror_playlist(src_playlist))
-    else:
-        raise NotFoundError(f"Could not find a playlist with ID '{src_playlist_id}'.")
+    src_playlist = src_repo.get_playlist_by_id(src_playlist_id)
+    return (src_playlist, dst_repo.find_mirror_playlist(src_playlist))

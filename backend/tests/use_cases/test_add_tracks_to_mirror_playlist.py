@@ -9,7 +9,7 @@ def test_add_tracks_to_an_existent_playlist(repos, spotify_repo, ytmusic_repo):
     ytmusic_playlist = factory.playlist(name="Classics")
     spotify_track_ids = [t.id for t in factory.tracks(2)]
 
-    spotify_repo.find_playlist_by_id.return_value = spotify_playlist
+    spotify_repo.get_playlist_by_id.return_value = spotify_playlist
     ytmusic_repo.find_mirror_playlist.return_value = ytmusic_playlist
 
     request = AddTracksToMirrorPlaylist.Request(
@@ -30,7 +30,7 @@ def test_add_tracks_to_a_new_playlist(repos, spotify_repo, ytmusic_repo):
     ytmusic_playlist = factory.playlist(name="Classics")
     spotify_track_ids = [t.id for t in factory.tracks(2)]
 
-    spotify_repo.find_playlist_by_id.return_value = spotify_playlist
+    spotify_repo.get_playlist_by_id.return_value = spotify_playlist
     ytmusic_repo.find_mirror_playlist.return_value = None
     ytmusic_repo.create_playlist.return_value = ytmusic_playlist
 

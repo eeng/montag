@@ -22,7 +22,9 @@ class AddTracksToMirrorPlaylist(UseCase):
         src_repo = self.repos[request.src_provider]
         dst_repo = self.repos[request.dst_provider]
 
-        src_playlist, dst_playlist = fetch_mirror_playlist(request.src_playlist_id, src_repo, dst_repo)
+        src_playlist, dst_playlist = fetch_mirror_playlist(
+            request.src_playlist_id, src_repo, dst_repo
+        )
         if not dst_playlist:
             dst_playlist = dst_repo.create_playlist(src_playlist.name)
 
