@@ -1,10 +1,7 @@
 import functools
 import logging
-from typing import Optional
 
-from montag.domain.entities import Playlist, PlaylistId
-from montag.domain.errors import ApplicationError, NotFoundError
-from montag.repositories.music_repo import MusicRepo
+from montag.domain.errors import ApplicationError
 from montag.use_cases.types import Failure
 
 
@@ -20,10 +17,3 @@ def error_handling(func):
             return Failure(str(e))
 
     return wrapper
-
-
-def fetch_mirror_playlist(
-    src_playlist_id: PlaylistId, src_repo: MusicRepo, dst_repo: MusicRepo
-) -> tuple[Playlist, Optional[Playlist]]:
-    src_playlist = src_repo.get_playlist_by_id(src_playlist_id)
-    return (src_playlist, dst_repo.find_mirror_playlist(src_playlist))

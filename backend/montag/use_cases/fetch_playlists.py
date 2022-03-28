@@ -12,4 +12,5 @@ class FetchPlaylists(UseCase):
 
     @error_handling
     def execute(self, provider: Provider) -> Response[list[Playlist]]:
-        return Success(self.repos[provider].find_playlists())
+        playlists = self.repos[provider].find_playlists()
+        return Success(playlists)
