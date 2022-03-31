@@ -50,3 +50,7 @@ def fetch_auth_token() -> Optional[AuthToken]:
 def set_spotify_client_opts():
     g.spotify_fetch_auth_token = fetch_auth_token
     g.spotify_on_token_expired = store_auth_token
+
+
+def is_spotify_authorized():
+    return session.get(AUTH_TOKEN_SESSION_KEY) is not None

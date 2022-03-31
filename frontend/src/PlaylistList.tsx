@@ -1,3 +1,4 @@
+import { api } from "./api";
 import { Provider } from "./domain";
 
 type Props = {
@@ -6,9 +7,7 @@ type Props = {
 
 export const PlaylistList = ({ provider }: Props) => {
   const fetchPlaylists = () => {
-    fetch(`/api/playlists?provider=${provider}`)
-      .then((response) => response.json())
-      .then((data) => console.log(data));
+    api.playlists(provider).then((data) => console.log(data));
   };
 
   return (

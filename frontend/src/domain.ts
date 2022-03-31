@@ -3,4 +3,10 @@ enum Provider {
   YTMUSIC = "YouTubeMusic",
 }
 
-export { Provider };
+interface Playlist {
+  id: string;
+  name: string;
+  is_liked: boolean;
+}
+
+export { Provider, Playlist };

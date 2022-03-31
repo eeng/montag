@@ -1,6 +1,7 @@
 import { Provider } from "./domain";
 import { PlaylistList } from "./PlaylistList";
 import { ProviderSelector } from "./ProviderSelector";
+import { api } from "./api";
 
 const handleProviderSelected = (provider: Provider) => {
   switch (provider) {
@@ -21,6 +22,7 @@ export function App() {
       <p>Where would you like to migrate your music from?</p>
       <ProviderSelector onSelect={handleProviderSelected} />
       <PlaylistList provider={Provider.SPOTIFY} />
+      <button onClick={() => api.me().then(console.log)}>ME</button>
     </div>
   );
 }
