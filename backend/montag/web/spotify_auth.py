@@ -16,8 +16,8 @@ bp = Blueprint("spotify", __name__, url_prefix="/spotify")
 def spotify_login():
     state = secrets.token_hex(8)
     url = system().spotify_client.authorize_url(state)
-    redirect_to = request.args["redirect_to"]
-    session[AUTH_STATE_SESSION_KEY] = (state, redirect_to)
+    return_to = request.args["return_to"]
+    session[AUTH_STATE_SESSION_KEY] = (state, return_to)
     return redirect(url)
 
 

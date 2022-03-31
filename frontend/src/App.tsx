@@ -7,8 +7,8 @@ const handleProviderSelected = (provider: Provider) => {
   switch (provider) {
     case Provider.SPOTIFY:
       const backend_url = "http://localhost:5000";
-      const redirect_to = location.href;
-      location.href = `${backend_url}/spotify/login?redirect_to=${redirect_to}`;
+      const return_to = location.href;
+      location.href = `${backend_url}/spotify/login?return_to=${return_to}`;
       break;
 
     default:
