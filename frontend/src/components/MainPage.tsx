@@ -6,9 +6,8 @@ import { useSession } from "../contexts/SessionContext";
 const handleProviderSelected = (provider: Provider) => {
   switch (provider) {
     case Provider.SPOTIFY:
-      const backend_url = "http://localhost:5000";
       const return_to = location.href;
-      location.href = `${backend_url}/spotify/login?return_to=${return_to}`;
+      location.href = `/spotify/login?return_to=${return_to}`;
       break;
 
     default:
