@@ -1,8 +1,9 @@
 from flask import Blueprint, request
 from montag.domain.entities import Provider
 from montag.use_cases.fetch_playlists import FetchPlaylists
+from montag.web.serializers import list_of_models
 from montag.web.spotify_auth import is_spotify_authorized
-from montag.web.support import system
+from montag.web.support import as_json, system
 
 bp = Blueprint("api", __name__, url_prefix="/api")
 
@@ -19,4 +20,4 @@ def me():
 def fetch_playlists():
     provider = Provider(request.args["provider"])
     response = FetchPlaylists(system().repos).execute(provider)
-    return {"status": "success", "playlists": len(response.value)}
+    return as_json(response, serializer=list_of_models)

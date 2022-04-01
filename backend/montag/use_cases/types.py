@@ -14,10 +14,6 @@ class Success(Generic[T]):
 class Failure:
     msg: str
 
-    @property
-    def value(self):
-        return {"error": self.msg}
-
 
 Response = Union[Success[T], Failure]
 
