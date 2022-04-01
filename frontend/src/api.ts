@@ -4,22 +4,17 @@ interface MeResponse {
   authorized_providers: Provider[];
 }
 
-interface PlaylistsResponse {
-  playlists: Playlist[];
-}
-
 interface Api {
   me(): Promise<MeResponse>;
-  playlists(provider: Provider): Promise<PlaylistsResponse>;
+  playlists(provider: Provider): Promise<Playlist[]>;
 }
 
+const request = (url: string) =>
+  fetch(url)
+    .then((response) => response.json())
+    .then((json) => json["data"]);
+
 export const api: Api = {
-  me: () =>
-    fetch("/api/me").then((response) =>
-      response.json().then((json) => json["data"])
-    ),
-  playlists: (provider) =>
-    fetch(`/api/playlists?provider=${provider}`).then((response) =>
-      response.json().then((json) => json["data"])
-    ),
+  me: () => request("/api/me"),
+  playlists: (provider) => request(`/api/playlists?provider=${provider}`),
 };
