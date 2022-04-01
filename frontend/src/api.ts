@@ -14,9 +14,12 @@ interface Api {
 }
 
 export const api: Api = {
-  me: () => fetch("/api/me").then((response) => response.json()),
+  me: () =>
+    fetch("/api/me").then((response) =>
+      response.json().then((json) => json["data"])
+    ),
   playlists: (provider) =>
     fetch(`/api/playlists?provider=${provider}`).then((response) =>
-      response.json()
+      response.json().then((json) => json["data"])
     ),
 };

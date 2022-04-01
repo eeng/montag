@@ -9,7 +9,7 @@ def test_me_when_not_authenticated_in_any_provider(client):
     response = client.get("/api/me")
 
     assert response.status_code == 200
-    assert response.json == {"authorized_providers": []}
+    assert response.json == {"data": {"authorized_providers": []}}
 
 
 def test_me_when_authenticated_in_spotify(client):
@@ -19,7 +19,7 @@ def test_me_when_authenticated_in_spotify(client):
     response = client.get("/api/me")
 
     assert response.status_code == 200
-    assert response.json == {"authorized_providers": [Provider.SPOTIFY.value]}
+    assert response.json == {"data": {"authorized_providers": [Provider.SPOTIFY.value]}}
 
 
 def test_playlists_success(client, mock_system):
