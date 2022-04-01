@@ -1,5 +1,5 @@
-import { api } from "./api";
-import { Provider } from "./domain";
+import { api } from "../api";
+import { Provider } from "../domain";
 
 type Props = {
   provider: Provider;

@@ -1,4 +1,4 @@
-import { Provider } from "./domain";
+import { Provider } from "../domain";
 
 type Props = {
   onSelect: (provider: Provider) => void;
