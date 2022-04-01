@@ -13,7 +13,7 @@ def me():
     authorized_providers = []
     if is_spotify_authorized():
         authorized_providers.append(Provider.SPOTIFY.value)
-    return {"data": {"authorized_providers": authorized_providers}}
+    return as_json({"authorized_providers": authorized_providers})
 
 
 @bp.route("/playlists")
