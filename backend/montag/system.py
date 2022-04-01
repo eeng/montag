@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import Any, Callable, Optional
+from typing import Callable, Optional
 
 from ytmusicapi import YTMusic
 
@@ -9,7 +9,6 @@ from montag.repositories.music_repo import MusicRepo
 from montag.repositories.spotify_repo import SpotifyRepo
 from montag.repositories.ytmusic_repo import YouTubeMusicRepo
 from montag.use_cases.fetch_playlists import FetchPlaylists
-from montag.use_cases.types import Response
 
 
 @dataclass

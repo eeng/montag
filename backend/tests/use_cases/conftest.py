@@ -1,7 +1,6 @@
 import pytest
 from montag.domain.entities import Provider
 from montag.repositories.music_repo import MusicRepo
-
 from tests.helpers import mock
 
 

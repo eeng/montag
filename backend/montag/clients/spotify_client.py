@@ -99,7 +99,9 @@ class SpotifyClient:
         return self._authorized_api_get("/me/tracks", limit=limit, offset=offset)
 
     def playlist_tracks(self, playlist_id: str, limit: int = 20, offset: int = 0) -> dict:
-        return self._authorized_api_get(f"/playlists/{playlist_id}/tracks", limit=limit, offset=offset)
+        return self._authorized_api_get(
+            f"/playlists/{playlist_id}/tracks", limit=limit, offset=offset
+        )
 
     def add_liked_tracks(self, track_ids: list[str]) -> None:
         self._authorized_api_put("/me/tracks", ids=track_ids)
@@ -165,8 +167,3 @@ class BadRequestError(SpotifyError):
 
 class NotAuthorizedError(SpotifyError):
     """Raised when the authorization flow hasn't been started yet."""
-
-
-# TODO doesn't belong here
-class BadStateError(SpotifyError):
-    """Raised when the authorization flow sent state doesn't match the received one."""

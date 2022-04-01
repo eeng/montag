@@ -9,26 +9,10 @@ from tests.helpers import mock
 
 
 @pytest.fixture
-def app():
-    app = create_app()
-    app.config.update(TESTING=True, SECRET_KEY="test_key")
-    yield app
-
-
-@pytest.fixture
-def client(app):
-    with app.test_client() as client:
-        yield client
-
-
-@pytest.fixture
-def mock_spotify_client(app):
-    with app.app_context() as app_context:
-        client = mock(SpotifyClient)
-        system = mock(System)
-        system.spotify_client = client
-        app_context.g.system = system
-        yield client
+def mock_spotify_client(mock_system):
+    client = mock(SpotifyClient)
+    mock_system.spotify_client = client
+    yield client
 
 
 def test_spotify_login(client):
