@@ -38,7 +38,7 @@ def system():
 
 
 def examples():
-    FetchPlaylists(system().repos).execute(Provider.SPOTIFY)
+    system().fetch_playlists_use_case.execute(Provider.SPOTIFY)
 
     request = SearchMatchingTracks.Request(
         src_provider=Provider.SPOTIFY,

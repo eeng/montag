@@ -19,5 +19,5 @@ def me():
 @bp.route("/playlists")
 def fetch_playlists():
     provider = Provider(request.args["provider"])
-    response = FetchPlaylists(system().repos).execute(provider)
+    response = system().fetch_playlists_use_case.execute(provider)
     return as_json(response, serializer=list_of_models)

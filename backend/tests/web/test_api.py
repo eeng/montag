@@ -2,10 +2,12 @@ import pytest
 from montag.domain.entities import Provider
 from montag.repositories.music_repo import MusicRepo
 from montag.system import System
+from montag.use_cases.types import Failure, Success, UseCase
 from montag.web.app import create_app
 from montag.web.spotify_auth import AUTH_TOKEN_SESSION_KEY
 from tests import factory
 from tests.helpers import mock
+
 
 # TODO repeated in test_spotify_auth
 @pytest.fixture
@@ -46,10 +48,9 @@ def test_me_when_authenticated_in_spotify(client):
     assert response.json == {"authorized_providers": [Provider.SPOTIFY.value]}
 
 
-# TODO maybe mock the use case somehow?
 def test_playlists_success(client, mock_system):
     pl = factory.playlist()
-    mock_system.repos = {Provider.SPOTIFY: mock(MusicRepo, find_playlists=[pl])}
+    mock_system.fetch_playlists_use_case = mock(UseCase, execute=Success([pl]))
 
     response = client.get("/api/playlists", query_string={"provider": "Spotify"})
 
@@ -58,9 +59,7 @@ def test_playlists_success(client, mock_system):
 
 
 def test_playlists_error(client, mock_system):
-    repo = mock(MusicRepo)
-    repo.find_playlists.side_effect = ValueError("oops")
-    mock_system.repos = {Provider.SPOTIFY: repo}
+    mock_system.fetch_playlists_use_case = mock(UseCase, execute=Failure("oops"))
 
     response = client.get("/api/playlists", query_string={"provider": "Spotify"})
 

@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import Callable, Optional
+from typing import Any, Callable, Optional
 
 from ytmusicapi import YTMusic
 
@@ -8,6 +8,8 @@ from montag.domain.entities import Provider
 from montag.repositories.music_repo import MusicRepo
 from montag.repositories.spotify_repo import SpotifyRepo
 from montag.repositories.ytmusic_repo import YouTubeMusicRepo
+from montag.use_cases.fetch_playlists import FetchPlaylists
+from montag.use_cases.types import Response
 
 
 @dataclass
@@ -17,6 +19,7 @@ class System:
     ytmusic_client: YTMusic
     ytmusic_repo: YouTubeMusicRepo
     repos: dict[Provider, MusicRepo]
+    fetch_playlists_use_case: FetchPlaylists
 
     @classmethod
     def build(
@@ -40,4 +43,5 @@ class System:
             ytmusic_client=ytmusic_client,
             ytmusic_repo=ytmusic_repo,
             repos=repos,
+            fetch_playlists_use_case=FetchPlaylists(repos),
         )

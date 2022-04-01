@@ -18,7 +18,6 @@ const handleProviderSelected = (provider: Provider) => {
 
 export function MainPage() {
   const { isAuthorized } = useSession();
-  console.log(isAuthorized(Provider.SPOTIFY));
   return (
     <div>
       <p>Where would you like to migrate your music from?</p>
