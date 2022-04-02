@@ -9,7 +9,7 @@ AUTH_STATE_SESSION_KEY = "spotify_auth_state"
 AUTH_TOKEN_SESSION_KEY = "spotify_auth_token"
 
 
-bp = Blueprint("spotify", __name__, url_prefix="/spotify")
+bp = Blueprint("spotify", __name__, url_prefix="/providers/spotify")
 
 
 @bp.route("/login")

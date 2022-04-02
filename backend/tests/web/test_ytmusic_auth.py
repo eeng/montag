@@ -6,7 +6,7 @@ from tests.helpers import resource
 def test_ytmusic_login(client):
     return_to = "http://some-domain"
     response = client.post(
-        "/ytmusic/login",
+        "/providers/ytmusic/login",
         data={"headers_raw": resource("ytmusic/headers_raw"), "return_to": return_to},
     )
 

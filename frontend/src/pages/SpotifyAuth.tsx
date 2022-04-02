@@ -1,7 +1,7 @@
 export function SpotifyAuth() {
   function connect() {
     const return_to = location.origin;
-    location.href = `/spotify/login?return_to=${return_to}`;
+    location.href = `/providers/spotify/login?return_to=${return_to}`;
   }
 
   return (

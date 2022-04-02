@@ -5,7 +5,7 @@ from ytmusicapi import YTMusic
 AUTH_TOKEN_SESSION_KEY = "ytmusic_auth_token"
 
 
-bp = Blueprint("ytmusic", __name__, url_prefix="/ytmusic")
+bp = Blueprint("ytmusic", __name__, url_prefix="/providers/ytmusic")
 
 
 @bp.route("/login", methods=["POST"])
