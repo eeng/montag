@@ -1,6 +1,5 @@
 from flask import Blueprint, request
 from montag.domain.entities import Provider
-from montag.use_cases.fetch_playlists import FetchPlaylists
 from montag.web.serializers import list_of_models
 from montag.web.spotify_auth import is_spotify_authorized
 from montag.web.support import as_json, system

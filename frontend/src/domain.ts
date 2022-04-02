@@ -1,6 +1,6 @@
 enum Provider {
   SPOTIFY = "Spotify",
-  YTMUSIC = "YouTubeMusic",
+  YTMUSIC = "YouTube Music",
 }
 
 interface Playlist {

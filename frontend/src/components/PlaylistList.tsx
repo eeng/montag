@@ -1,19 +1,25 @@
+import { useEffect, useState } from "react";
 import { api } from "../api";
-import { Provider } from "../domain";
+import { Playlist, Provider } from "../domain";
 
 type Props = {
-  provider: Provider;
+  provider?: Provider;
 };
 
 export const PlaylistList = ({ provider }: Props) => {
-  const fetchPlaylists = () => {
-    api.playlists(provider).then((data) => console.log(data));
-  };
+  if (!provider) return null;
+
+  const [playlists, setPlaylists] = useState<Playlist[]>();
+
+  useEffect(() => {
+    api.playlists(provider).then(setPlaylists);
+  }, [provider]);
 
   return (
     <div>
-      <p>Playlists</p>
-      <button onClick={fetchPlaylists}>Fetch</button>
+      <p>{provider} Playlists</p>
+      {!playlists && "Loading..."}
+      {playlists && JSON.stringify(playlists)}
     </div>
   );
 };
