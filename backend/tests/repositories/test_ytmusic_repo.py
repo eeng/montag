@@ -2,13 +2,15 @@ import pytest
 from montag.domain.entities import Playlist, Track
 from montag.repositories.ytmusic_repo import YTMusicError, YouTubeMusicRepo
 from tests import factory
-from tests.helpers import mock, resource
+from tests.helpers import mock, json_resource
 from tests.matchers import has_attrs
 from ytmusicapi import YTMusic
 
 
 def test_find_playlists():
-    client = mock(YTMusic, get_library_playlists=resource("ytmusic/get_library_playlists.json"))
+    client = mock(
+        YTMusic, get_library_playlists=json_resource("ytmusic/get_library_playlists.json")
+    )
     repo = YouTubeMusicRepo(client)
 
     playlists = repo.find_playlists()
@@ -29,7 +31,7 @@ def test_find_playlists():
 
 
 def test_find_tracks_in_playlist():
-    client = mock(YTMusic, get_playlist=resource("ytmusic/get_playlist.json"))
+    client = mock(YTMusic, get_playlist=json_resource("ytmusic/get_playlist.json"))
     repo = YouTubeMusicRepo(client)
 
     playlists = repo.find_tracks(playlist_id="LM")
@@ -42,7 +44,7 @@ def test_find_tracks_in_playlist():
 
 
 def test_search_matching_tracks():
-    client = mock(YTMusic, search=resource("ytmusic/search.json"))
+    client = mock(YTMusic, search=json_resource("ytmusic/search.json"))
     repo = YouTubeMusicRepo(client)
 
     tracks = repo.search_matching_tracks(factory.track(name="The Reason", artists=["Hoobastank"]))
@@ -60,7 +62,7 @@ def test_create_playlist():
     client = mock(
         YTMusic,
         create_playlist=playlist_id,
-        get_library_playlists=resource("ytmusic/get_library_playlists.json"),
+        get_library_playlists=json_resource("ytmusic/get_library_playlists.json"),
     )
     repo = YouTubeMusicRepo(client)
 
@@ -73,7 +75,9 @@ def test_create_playlist():
 def test_add_tracks_success():
     playlist_id = "pl"
     track_ids = ["t1", "t2"]
-    client = mock(YTMusic, add_playlist_items=resource("ytmusic/add_playlist_items_success.json"))
+    client = mock(
+        YTMusic, add_playlist_items=json_resource("ytmusic/add_playlist_items_success.json")
+    )
     repo = YouTubeMusicRepo(client)
 
     repo.add_tracks(playlist_id, track_ids)
@@ -82,7 +86,9 @@ def test_add_tracks_success():
 
 
 def test_add_tracks_failure():
-    client = mock(YTMusic, add_playlist_items=resource("ytmusic/add_playlist_items_failure.json"))
+    client = mock(
+        YTMusic, add_playlist_items=json_resource("ytmusic/add_playlist_items_failure.json")
+    )
     repo = YouTubeMusicRepo(client)
 
     with pytest.raises(YTMusicError):

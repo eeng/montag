@@ -6,9 +6,13 @@ from montag.clients.http import HttpAdapter, HttpResponse
 from montag.util.clock import Clock
 
 
-def resource(filename: str) -> dict:
+def resource(filename: str) -> str:
     with open(f"tests/resources/{filename}") as f:
-        return json.load(f)
+        return f.read()
+
+
+def json_resource(filename: str) -> dict:
+    return json.loads(resource(filename))
 
 
 def mock(cls, **methods_to_stub) -> Mock:
@@ -36,7 +40,9 @@ def fake_response(body=Union[dict, str], status_code: Optional[int] = None) -> H
     if isinstance(body, dict):
         response.json.return_value = body
         # TODO this probably would not work with other non-Spotify response. Make tests pass the status
-        response.status_code = status_code or (int(body["error"]["status"]) if "error" in body else 200)
+        response.status_code = status_code or (
+            int(body["error"]["status"]) if "error" in body else 200
+        )
         return response
     else:
         response.text = body

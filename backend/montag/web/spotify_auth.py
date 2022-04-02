@@ -53,4 +53,4 @@ def set_spotify_client_opts():
 
 
 def is_spotify_authorized():
-    return session.get(AUTH_TOKEN_SESSION_KEY) is not None
+    return AUTH_TOKEN_SESSION_KEY in session

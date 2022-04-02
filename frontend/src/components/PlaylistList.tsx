@@ -12,6 +12,7 @@ export const PlaylistList = ({ provider }: Props) => {
   const [playlists, setPlaylists] = useState<Playlist[]>();
 
   useEffect(() => {
+    setPlaylists(undefined);
     api.playlists(provider).then(setPlaylists);
   }, [provider]);
 

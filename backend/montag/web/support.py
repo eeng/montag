@@ -3,7 +3,7 @@ from typing import Any, Callable, Tuple
 
 from flask import g
 from montag.system import System
-from montag.use_cases.types import Failure, Response, Success, T
+from montag.use_cases.types import Failure, Success
 
 
 def system() -> System:
@@ -11,6 +11,7 @@ def system() -> System:
         g.system = System.build(
             spotify_auth_token=g.spotify_fetch_auth_token(),
             spotify_on_token_expired=g.spotify_on_token_expired,
+            ytmusic_auth_token=g.ytmusic_fetch_auth_token(),
         )
     return g.system
 

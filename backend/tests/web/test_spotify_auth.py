@@ -1,8 +1,6 @@
 import pytest
 from flask import session
 from montag.clients.spotify_client import ACCOUNTS_URL, SpotifyClient
-from montag.system import System
-from montag.web.app import create_app
 from montag.web.spotify_auth import AUTH_STATE_SESSION_KEY, AUTH_TOKEN_SESSION_KEY
 from tests import factory
 from tests.helpers import mock

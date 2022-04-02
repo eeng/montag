@@ -2,12 +2,12 @@ from montag.clients.spotify_client import SpotifyClient
 from montag.domain.entities import Playlist, Track
 from montag.repositories.spotify_repo import LIKED_SONGS_ID, SpotifyRepo
 from tests import factory
-from tests.helpers import mock, resource
+from tests.helpers import mock, json_resource
 from tests.matchers import has_attrs
 
 
 def test_find_tracks_in_liked_songs_playlist():
-    client = mock(SpotifyClient, liked_tracks=resource("spotify/liked_tracks.json"))
+    client = mock(SpotifyClient, liked_tracks=json_resource("spotify/liked_tracks.json"))
     repo = SpotifyRepo(client)
 
     tracks = repo.find_tracks(playlist_id="LS")
@@ -30,7 +30,7 @@ def test_find_tracks_in_liked_songs_playlist():
 
 
 def test_find_tracks_in_another_playlist():
-    client = mock(SpotifyClient, playlist_tracks=resource("spotify/playlist_tracks.json"))
+    client = mock(SpotifyClient, playlist_tracks=json_resource("spotify/playlist_tracks.json"))
     repo = SpotifyRepo(client)
     playlist_id = "37i9dQZF1DX4E3UdUs7fUx"
 
@@ -44,7 +44,7 @@ def test_find_tracks_in_another_playlist():
 
 
 def test_find_playlists():
-    client = mock(SpotifyClient, my_playlists=resource("spotify/my_playlists.json"))
+    client = mock(SpotifyClient, my_playlists=json_resource("spotify/my_playlists.json"))
     repo = SpotifyRepo(client)
 
     playlists = repo.find_playlists()
@@ -59,7 +59,7 @@ def test_find_playlists():
 
 
 def test_search_matching_tracks():
-    client = mock(SpotifyClient, search=resource("spotify/search.json"))
+    client = mock(SpotifyClient, search=json_resource("spotify/search.json"))
     repo = SpotifyRepo(client)
 
     tracks = repo.search_matching_tracks(factory.track(name="The Reason", artists=["Hoobastank"]))
@@ -72,7 +72,7 @@ def test_search_matching_tracks():
 
 
 def test_create_playlist():
-    response = resource("spotify/create_playlist.json")
+    response = json_resource("spotify/create_playlist.json")
     client = mock(SpotifyClient, create_playlist=response)
     repo = SpotifyRepo(client)
 

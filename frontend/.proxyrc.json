@@ -4,5 +4,8 @@
   },
   "/spotify": {
     "target": "http://localhost:5000/"
+  },
+  "/ytmusic": {
+    "target": "http://localhost:5000/"
   }
 }

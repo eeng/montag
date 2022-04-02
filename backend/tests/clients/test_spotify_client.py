@@ -9,7 +9,7 @@ from montag.clients.spotify_client import (
     SpotifyClient,
 )
 from tests import factory
-from tests.helpers import fake_clock, mock_http_adapter, resource
+from tests.helpers import fake_clock, mock_http_adapter, json_resource
 from tests.matchers import has_attrs, has_entries, instance_of
 
 
@@ -40,7 +40,7 @@ def test_authorize_url_and_state():
 
 
 def test_request_access_token():
-    response = resource("spotify/access_token.json")
+    response = json_resource("spotify/access_token.json")
     http_adapter = mock_http_adapter(post=response)
     clock = fake_clock(timestamp=1647160000)
     client = SpotifyClient(
@@ -72,7 +72,7 @@ def test_request_access_token():
 
 
 def test_refresh_access_token(auth):
-    response = resource("spotify/refreshed_token.json")
+    response = json_resource("spotify/refreshed_token.json")
     http_adapter = mock_http_adapter(post=response)
     clock = fake_clock(timestamp=1647160000)
     client = SpotifyClient(
@@ -103,7 +103,7 @@ def test_refresh_access_token(auth):
 
 
 def test_me(auth):
-    response = resource("spotify/me.json")
+    response = json_resource("spotify/me.json")
     http_adapter = mock_http_adapter(get=response)
     client = SpotifyClient(auth_token=auth.token, http_adapter=http_adapter)
 
@@ -123,7 +123,7 @@ def test_me_requires_authorization():
 
 
 def test_bad_request_error(auth):
-    response = resource("spotify/token_expired.json")
+    response = json_resource("spotify/token_expired.json")
     http_adapter = mock_http_adapter(get=response)
 
     client = SpotifyClient(auth_token=auth.token, http_adapter=http_adapter)
@@ -134,8 +134,8 @@ def test_bad_request_error(auth):
 def test_token_expiration():
     """Should refresh the token and notify the on_token_expired callback"""
 
-    new_token_response = resource("spotify/refreshed_token.json")
-    me_response = resource("spotify/me.json")
+    new_token_response = json_resource("spotify/refreshed_token.json")
+    me_response = json_resource("spotify/me.json")
     http_adapter = mock_http_adapter(post=new_token_response, get=me_response)
     auth_token = factory.auth_token(expires_at=1647196101)
     on_token_expired = Mock()
@@ -150,12 +150,16 @@ def test_token_expiration():
         "https://accounts.spotify.com/api/token",
         data=has_entries(grant_type="refresh_token"),
     )
-    http_adapter.get.assert_called_once_with("https://api.spotify.com/v1/me", headers=instance_of(dict), params={})
-    on_token_expired.assert_called_once_with(has_attrs(access_token=new_token_response["access_token"]))
+    http_adapter.get.assert_called_once_with(
+        "https://api.spotify.com/v1/me", headers=instance_of(dict), params={}
+    )
+    on_token_expired.assert_called_once_with(
+        has_attrs(access_token=new_token_response["access_token"])
+    )
 
 
 def test_my_playlists(auth):
-    response = resource("spotify/my_playlists.json")
+    response = json_resource("spotify/my_playlists.json")
     http_adapter = mock_http_adapter(get=response)
     client = SpotifyClient(auth_token=auth.token, http_adapter=http_adapter)
 
@@ -170,7 +174,7 @@ def test_my_playlists(auth):
 
 
 def test_liked_tracks(auth):
-    response = resource("spotify/liked_tracks.json")
+    response = json_resource("spotify/liked_tracks.json")
     http_adapter = mock_http_adapter(get=response)
     client = SpotifyClient(auth_token=auth.token, http_adapter=http_adapter)
 
@@ -185,7 +189,7 @@ def test_liked_tracks(auth):
 
 
 def test_playlist_tracks(auth):
-    response = resource("spotify/playlist_tracks.json")
+    response = json_resource("spotify/playlist_tracks.json")
     http_adapter = mock_http_adapter(get=response)
     client = SpotifyClient(auth_token=auth.token, http_adapter=http_adapter)
     playlist_id = "6bMoQmuO8h4LuoiREgyYbZ"
@@ -201,7 +205,7 @@ def test_playlist_tracks(auth):
 
 
 def test_search(auth):
-    response = resource("spotify/search.json")
+    response = json_resource("spotify/search.json")
     http_adapter = mock_http_adapter(get=response)
     client = SpotifyClient(auth_token=auth.token, http_adapter=http_adapter)
 
@@ -216,7 +220,7 @@ def test_search(auth):
 
 
 def test_create_playlist(auth):
-    response = resource("spotify/create_playlist.json")
+    response = json_resource("spotify/create_playlist.json")
     http_adapter = mock_http_adapter(post=response, status_code=201)
     client = SpotifyClient(auth_token=auth.token, http_adapter=http_adapter)
 
@@ -247,7 +251,7 @@ def test_add_liked_tracks(auth):
 def test_add_playlist_tracks(auth):
     playlist_id = "we34qe"
     track_ids = ["t1", "t2"]
-    http_adapter = mock_http_adapter(post=resource("spotify/add_playlist_tracks.json"))
+    http_adapter = mock_http_adapter(post=json_resource("spotify/add_playlist_tracks.json"))
     client = SpotifyClient(auth_token=auth.token, http_adapter=http_adapter)
 
     response = client.add_playlist_tracks(playlist_id, track_ids)

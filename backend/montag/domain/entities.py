@@ -43,5 +43,5 @@ class TrackSuggestions(BaseModel):
 
 
 class Provider(Enum):
-    SPOTIFY = "Spotify"
-    YT_MUSIC = "YouTube Music"
+    SPOTIFY = "spotify"
+    YT_MUSIC = "ytmusic"

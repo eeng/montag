@@ -7,6 +7,6 @@ type Props = {
 export const ProviderSelector = ({ onSelect }: Props) => (
   <div>
     <button onClick={() => onSelect(Provider.SPOTIFY)}>Spotify</button>
-    <button onClick={() => onSelect(Provider.YTMUSIC)}>YouTube Music</button>
+    <button onClick={() => onSelect(Provider.YT_MUSIC)}>YouTube Music</button>
   </div>
 );

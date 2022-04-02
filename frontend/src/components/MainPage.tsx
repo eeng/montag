@@ -3,26 +3,18 @@ import { PlaylistList } from "../components/PlaylistList";
 import { ProviderSelector } from "../components/ProviderSelector";
 import { useSession } from "../contexts/SessionContext";
 import { useState } from "react";
-
-function startAuthFlow(provider: Provider) {
-  switch (provider) {
-    case Provider.SPOTIFY:
-      const return_to = location.href;
-      location.href = `/spotify/login?return_to=${return_to}`;
-      break;
-
-    default:
-      break;
-  }
-}
+import { useNavigate } from "react-router-dom";
 
 export function MainPage() {
   const { isAuthorized } = useSession();
+  const navigate = useNavigate();
   const [srcProvider, setSrcProvider] = useState<Provider>();
+
+  const goToAuthPage = (provider: Provider) => navigate(`/auth/${provider}`);
 
   const onSrcProviderSelected = (provider: Provider) => {
     if (isAuthorized(provider)) setSrcProvider(provider);
-    else startAuthFlow(provider);
+    else goToAuthPage(provider);
   };
 
   const onReset = () => setSrcProvider(undefined);

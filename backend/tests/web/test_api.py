@@ -26,7 +26,7 @@ def test_playlists_success(client, mock_system):
     pl = factory.playlist()
     mock_system.fetch_playlists_use_case = mock(UseCase, execute=Success([pl]))
 
-    response = client.get("/api/playlists", query_string={"provider": "Spotify"})
+    response = client.get("/api/playlists", query_string={"provider": Provider.SPOTIFY.value})
 
     assert response.status_code == 200
     assert response.json == {"data": [pl.dict()]}
@@ -35,7 +35,7 @@ def test_playlists_success(client, mock_system):
 def test_playlists_error(client, mock_system):
     mock_system.fetch_playlists_use_case = mock(UseCase, execute=Failure("oops"))
 
-    response = client.get("/api/playlists", query_string={"provider": "Spotify"})
+    response = client.get("/api/playlists", query_string={"provider": Provider.SPOTIFY.value})
 
     assert response.status_code == 500
     assert response.json == {"error": "oops"}

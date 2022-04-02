@@ -25,12 +25,13 @@ class System:
         cls,
         spotify_auth_token: Optional[AuthToken],
         spotify_on_token_expired: Callable[[AuthToken], None],
+        ytmusic_auth_token: Optional[str],
     ):
         spotify_client = SpotifyClient(
             auth_token=spotify_auth_token, on_token_expired=spotify_on_token_expired
         )
         spotify_repo = SpotifyRepo(client=spotify_client)
-        ytmusic_client = YTMusic("tmp/ytmusic_auth.json")
+        ytmusic_client = YTMusic(ytmusic_auth_token or "")
         ytmusic_repo = YouTubeMusicRepo(ytmusic_client)
         repos = {
             Provider.SPOTIFY: spotify_repo,
