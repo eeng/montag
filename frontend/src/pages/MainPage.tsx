@@ -25,7 +25,7 @@ export function MainPage() {
       <button onClick={onReset}>Reset</button>
       <p>Where would you like to migrate your music from?</p>
       <ProviderSelector onSelect={onSrcProviderSelected} />
-      <PlaylistList provider={srcProvider} />
+      <PlaylistList provider={srcProvider} onSelect={console.log} />
     </div>
   );
 }

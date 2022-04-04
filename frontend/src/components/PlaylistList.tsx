@@ -1,12 +1,14 @@
 import { useEffect, useState } from "react";
 import { api } from "../api";
 import { Playlist, Provider, ProviderData } from "../domain";
+import { PlaylistItem } from "./PlaylistItem";
 
 type Props = {
   provider?: Provider;
+  onSelect(playlist: Playlist): void;
 };
 
-export const PlaylistList = ({ provider }: Props) => {
+export const PlaylistList = ({ provider, onSelect }: Props) => {
   if (!provider) return null;
 
   const [playlists, setPlaylists] = useState<Playlist[]>();
@@ -20,7 +22,14 @@ export const PlaylistList = ({ provider }: Props) => {
     <div>
       <p>{ProviderData.get(provider).display_name} Playlists</p>
       {!playlists && "Loading..."}
-      {playlists && JSON.stringify(playlists)}
+      {playlists &&
+        playlists.map((playlist) => (
+          <PlaylistItem
+            key={playlist.id}
+            playlist={playlist}
+            onSelect={onSelect}
+          />
+        ))}
     </div>
   );
 };
