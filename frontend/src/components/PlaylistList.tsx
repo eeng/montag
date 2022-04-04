@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { api } from "../api";
-import { Playlist, Provider } from "../domain";
+import { Playlist, Provider, ProviderData } from "../domain";
 
 type Props = {
   provider?: Provider;
@@ -18,7 +18,7 @@ export const PlaylistList = ({ provider }: Props) => {
 
   return (
     <div>
-      <p>{provider} Playlists</p>
+      <p>{ProviderData.get(provider).display_name} Playlists</p>
       {!playlists && "Loading..."}
       {playlists && JSON.stringify(playlists)}
     </div>

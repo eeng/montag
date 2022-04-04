@@ -1,4 +1,4 @@
-import { Provider } from "../domain";
+import { Provider, ProviderData } from "../domain";
 
 type Props = {
   onSelect: (provider: Provider) => void;
@@ -6,7 +6,8 @@ type Props = {
 
 export const ProviderSelector = ({ onSelect }: Props) => (
   <div>
-    <button onClick={() => onSelect(Provider.SPOTIFY)}>Spotify</button>
-    <button onClick={() => onSelect(Provider.YT_MUSIC)}>YouTube Music</button>
+    {[...ProviderData].map(([provider, { display_name }]) => (
+      <button onClick={() => onSelect(provider)}>{display_name}</button>
+    ))}
   </div>
 );
