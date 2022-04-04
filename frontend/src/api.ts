@@ -1,12 +1,12 @@
-import { Playlist, Provider } from "./domain";
+import { Playlist, ProviderId } from "./domain";
 
 interface MeResponse {
-  authorized_providers: Provider[];
+  authorized_providers: ProviderId[];
 }
 
 interface Api {
   me(): Promise<MeResponse>;
-  playlists(provider: Provider): Promise<Playlist[]>;
+  playlists(provider: ProviderId): Promise<Playlist[]>;
 }
 
 const request = (url: string) =>

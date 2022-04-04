@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { api } from "../api";
-import { Playlist, Provider, ProviderData } from "../domain";
+import { Playlist, Provider } from "../domain";
 import { PlaylistItem } from "./PlaylistItem";
 
 type Props = {
@@ -15,12 +15,12 @@ export const PlaylistList = ({ provider, onSelect }: Props) => {
 
   useEffect(() => {
     setPlaylists(undefined);
-    api.playlists(provider).then(setPlaylists);
+    api.playlists(provider.id).then(setPlaylists);
   }, [provider]);
 
   return (
     <div>
-      <p>{ProviderData.get(provider).display_name} Playlists</p>
+      <p>{provider.displayName} Playlists</p>
       {!playlists && "Loading..."}
       {playlists &&
         playlists.map((playlist) => (

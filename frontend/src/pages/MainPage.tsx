@@ -11,7 +11,7 @@ export function MainPage() {
   const [srcProvider, setSrcProvider] = useState<Provider>();
 
   const requestAuthorization = (provider: Provider) =>
-    navigate(`/auth/${provider}`);
+    navigate(`/auth/${provider.id}`);
 
   const onSrcProviderSelected = (provider: Provider) => {
     if (isAuthorized(provider)) setSrcProvider(provider);

@@ -22,7 +22,7 @@ export const SessionProvider = ({ children }: Props) => {
   useEffect(() => {
     api.me().then((response) => {
       const isAuthorized = (provider: Provider) =>
-        response.authorized_providers.includes(provider);
+        response.authorized_providers.includes(provider.id);
       setSession({ isAuthorized });
     });
   }, []);
