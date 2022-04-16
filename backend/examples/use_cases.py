@@ -9,6 +9,7 @@ from montag.use_cases.search_matching_tracks import SearchMatchingTracks
 
 
 SPOTIFY_TOKEN_FILE = "tmp/spotify_token.json"
+YTMUSIC_AUTH_FILE = "tmp/ytmusic_auth.json"
 
 
 def write_spotify_auth_token(auth_token: AuthToken):
@@ -30,10 +31,16 @@ def run_spotify_auth_flow():
     write_spotify_auth_token(auth_token)
 
 
+def read_ytmusic_auth_token() -> str:
+    with open(YTMUSIC_AUTH_FILE, "r") as f:
+        return f.read()
+
+
 def system():
     return System.build(
         spotify_auth_token=read_spotify_auth_token(),
         spotify_on_token_expired=write_spotify_auth_token,
+        ytmusic_auth_token=read_ytmusic_auth_token(),
     )
 
 
