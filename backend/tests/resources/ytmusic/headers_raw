@@ -1,0 +1,34 @@
+accept: */*
+accept-encoding: gzip, deflate, br
+accept-language: en-US,en;q=0.9,es-ES;q=0.8,es;q=0.7
+authorization: SAPISIDHASH 1648909240_9e22633292b6e74994f4f05bf37838734efb9989
+content-length: 2067
+content-type: application/json
+cookie: LOGIN_INFO=AFmmF2swRAIgblla7vrvArcqpX_wQ3HoPs8uRmTftsM7JOkzU_kErPoCIA7al7EplBtMEBIxuuQ7OvyHFeQY4I3KQrprg_JU9Iip:QUQ3MjNmemdNYTZKM3J6Q0t3ZnMwS1RNUE13NUFiZGhSM2NJUGZOMkN3QnhQbk1IUXNGMFZmdHpVQi0zM1pQXzJmUzhvS1ZSdXhaR1lPcGN2SXpZU2xhQktVMVFUS1dITktlY2NZYkxaM1hRcWZOYlVncVc4bWUycmh3M0k4RTRfWGR6dkI3QkJQelBtWDJLMGt6T01jdTNnWkZsLWZVR3o4bzV2MURhOTZ0TWxxRzYxclNSOUNkTmkzdXZZY3NPaDNGWDBKOGxWbHZHNUJFa0NXT3ozNnZwRXl1UXlkR01LQQ==; VISITOR_INFO1_LIVE=xRleuN2Ed54; _gcl_au=1.1.593591519.1647298444; SID=Igh0ro7TBbdeOaNbWp34xS3V1qd2BRzx6xBwT9173BeZIxR0dBILklWc5Pd_W3R3fEhXzQ.; __Secure-1PSID=Igh0ro7TBbdeOaNbWp34xS3V1qd2BRzx6xBwT9173BeZIxR0QW9EJmqpWiezdxzNVslEMA.; __Secure-3PSID=Igh0ro7TBbdeOaNbWp34xS3V1qd2BRzx6xBwT9173BeZIxR0I9VD6ywlsB7CTBl3HIKqVg.; HSID=A_l04inQd87-k9BSs; SSID=A2IfVrRywzjGYo3sk; APISID=nZWqH-mBW6u3aEB6/A_vbZoTMoIZWpcnG5; SAPISID=iBEcDmUbd8Ax1LBm/A1ELPuWL4rBD75eIu; __Secure-1PAPISID=iBEcDmUbd8Ax1LBm/A1ELPuWL4rBD75eIu; __Secure-3PAPISID=iBEcDmUbd8Ax1LBm/A1ELPuWL4rBD75eIu; PREF=library_tab_browse_id=FEmusic_liked_playlists; YSC=l28ILEEitk8; SIDCC=AJi4QfEAQIpXO98r4Uwl5qW899v2phf-tHLJMyaARAMMVBOXpHpMosO1V4Qhn3Kpzd9RPFQEYA; __Secure-3PSIDCC=AJi4QfFKaWoKg-KZUGWNPSfU6qSpmLGJCVODAX4ort0dTw7wOA4wof1UGf-66_QxhHbYNTBw
+origin: https://music.youtube.com
+referer: https://music.youtube.com/
+sec-ch-ua: " Not A;Brand";v="99", "Chromium";v="100", "Google Chrome";v="100"
+sec-ch-ua-arch: "arm"
+sec-ch-ua-bitness: "64"
+sec-ch-ua-full-version: "100.0.4896.60"
+sec-ch-ua-full-version-list: " Not A;Brand";v="99.0.0.0", "Chromium";v="100.0.4896.60", "Google Chrome";v="100.0.4896.60"
+sec-ch-ua-mobile: ?0
+sec-ch-ua-model
+sec-ch-ua-platform: "macOS"
+sec-ch-ua-platform-version: "12.3.0"
+sec-fetch-dest: empty
+sec-fetch-mode: same-origin
+sec-fetch-site: same-origin
+user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4896.60 Safari/537.36
+x-client-data: CJW2yQEIprbJAQjEtskBCKmdygEIlNLKAQjqkMsBCJWhywEI6vLLAQie+csBCOeEzAEIpY7MAQianMwBCJmhzAEI0KLMAQ==
+Decoded:
+message ClientVariations {
+  // Active client experiment variation IDs.
+  repeated int32 variation_id = [3300117, 3300134, 3300164, 3313321, 3320084, 3328106, 3330197, 3340650, 3341470, 3342951, 3344165, 3345946, 3346585, 3346768];
+}
+x-goog-authuser: 0
+x-goog-pageid: 115782043558337279396
+x-goog-visitor-id: Cgt4UmxldU4yRWQ1NCiut6GSBg%3D%3D
+x-origin: https://music.youtube.com
+x-youtube-client-name: 67
+x-youtube-client-version: 1.20220328.01.00
