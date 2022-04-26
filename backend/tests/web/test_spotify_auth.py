@@ -13,10 +13,14 @@ def mock_spotify_client(mock_system):
     yield client
 
 
-def test_spotify_login(client):
+def test_spotify_login(client, mock_spotify_client):
+    fake_spotify_auth_url = "http://spotify-auth"
+    mock_spotify_client.authorize_url.return_value = fake_spotify_auth_url
+
     response = client.get("/providers/spotify/login", query_string={"return_to": "..."})
+
     assert response.status_code == 302
-    assert ACCOUNTS_URL in response.headers["Location"]
+    assert fake_spotify_auth_url in response.headers["Location"]
     assert AUTH_STATE_SESSION_KEY in session
 
 
