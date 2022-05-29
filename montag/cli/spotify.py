@@ -1,53 +1,71 @@
 import json
-from queue import Queue
+import os
 import secrets
-from threading import Thread
+from multiprocessing import Process, Queue
+from typing import Optional, Tuple
+from urllib.parse import urlparse
 
 import click
-from montag import CALLBACK_PARAMS_QUEUE
 from montag.clients.spotify_client import AuthToken, SpotifyClient
-from montag.web.app import create_app
+from montag.config import Config
+from werkzeug import Request, Response, run_simple
 
-SPOTIFY_TOKEN_FILE = "tmp/spotify_token.json"
+TOKEN_FILE = "tmp/spotify_token.json"
 
-def write_spotify_auth_token(auth_token: AuthToken):
-    with open(SPOTIFY_TOKEN_FILE, "w") as f:
+
+def write_auth_token(auth_token: AuthToken):
+    os.makedirs(os.path.dirname(TOKEN_FILE), exist_ok=True)
+    with open(TOKEN_FILE, "w") as f:
         json.dump(auth_token.dict(), f)
 
 
-def read_spotify_auth_token() -> AuthToken:
-    with open(SPOTIFY_TOKEN_FILE, "r") as f:
-        return AuthToken(**json.load(f))
+def read_auth_token() -> Optional[AuthToken]:
+    try:
+        with open(TOKEN_FILE, "r") as f:
+            return AuthToken(**json.load(f))
+    except:
+        return None
 
-def start_web_server_to_handle_auth_redirect():
-  callback_params_queue = Queue()
-  app = create_app()
 
-  def thread_target(queue):
-    app.config[CALLBACK_PARAMS_QUEUE] = queue
-    app.run(host='0.0.0.0', port=5000, debug=False, use_reloader=False, load_dotenv=False)
+def get_web_server_host_and_port() -> Tuple[str, int]:
+    redirect_uri = urlparse(Config.spotify_redirect_uri)
+    if redirect_uri.hostname is None or redirect_uri.port is None:
+        raise click.UsageError("Please specify a valid SPOTIFY_REDIRECT_URI environment variable.")
+    return (redirect_uri.hostname, int(redirect_uri.port))
 
-  Thread(target=thread_target, args =(callback_params_queue, )).start()
-  return callback_params_queue
+
+# TODO add werkzeug dep and remove flask
+def start_web_server_for_auth_callback(q: Queue) -> None:
+    @Request.application
+    def app(request: Request) -> Response:
+        q.put((request.args["code"], request.args["state"]))
+        return Response("Done! You can close this browser tab.", 200)
+
+    (hostname, port) = get_web_server_host_and_port()
+    run_simple(hostname, port, app)
+
+
+def wait_for_auth_callback() -> Tuple[str, str]:
+    callback_params_queue: Queue[Tuple[str, str]] = Queue()
+    web_server = Process(target=start_web_server_for_auth_callback, args=(callback_params_queue,))
+    web_server.start()
+    callback_params = callback_params_queue.get(block=True)
+    web_server.terminate()
+    return callback_params
+
 
 @click.command()
 def auth_spotify():
-  """Runs the Spotify authorization flow to obtain the access token and store it in the file system."""
-  client = SpotifyClient()
-  sent_state = secrets.token_hex(8)
-  url = client.authorize_url(sent_state)
+    """Runs the Spotify authorization flow to obtain the access token and store it in the file system."""
+    client = SpotifyClient()
+    sent_state = secrets.token_hex(8)
+    url = client.authorize_url(sent_state)
 
-  click.echo('Please go to the following address to authenticate your Spotify account:\n')
-  click.secho(url + '\n', bold=True)
+    click.echo("Please go to the following address to authenticate your Spotify account:\n")
+    click.secho(url + "\n", bold=True)
 
-  callback_params_queue = start_web_server_to_handle_auth_redirect()
+    (code, _) = wait_for_auth_callback()
 
-  (received_state, code) = callback_params_queue.get()
-
-  if sent_state != received_state:
-    click.secho('Wrong state', fg='red')
-    return
-
-  click.secho(code, fg='green')
-  # auth_token = client.request_access_token(code)
-  # write_spotify_auth_token(auth_token)
+    auth_token = client.request_access_token(code)
+    write_auth_token(auth_token)
+    click.secho(f"Done! Token saved to {TOKEN_FILE}", fg="green")

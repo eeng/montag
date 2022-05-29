@@ -14,6 +14,6 @@ def error_handling(func):
             return Failure(str(e))
         except Exception as e:
             logging.exception(e)
-            return Failure(str(e))
+            return Failure(str(e) or type(e).__name__)
 
     return wrapper
