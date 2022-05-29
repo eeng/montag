@@ -17,10 +17,12 @@ def read_auth_token() -> Optional[str]:
 @click.command()
 def auth_ytmusic():
     """Runs the YTMusic authorization flow."""
-    headers = click.edit()
+    MARKER = "# Please paste above browser headers as explanied here: https://ytmusicapi.readthedocs.io/en/latest/setup.html#copy-authentication-headers\n"
+    message = click.edit("\n\n" + MARKER)
 
     try:
-        YTMusic.setup(headers_raw=headers or ".", filepath=AUTH_FILE)
+        headers = (message or "none").split(MARKER, 1)[0].rstrip("\n")
+        YTMusic.setup(headers_raw=headers, filepath=AUTH_FILE)
         click.secho(f"Done! Token saved to {AUTH_FILE}", fg="green")
     except Exception as err:
         click.secho(f"Error: {str(err)}", fg="red")
