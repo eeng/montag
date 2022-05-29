@@ -1,13 +1,13 @@
 import secrets
 from typing import Optional
 
-from flask import Blueprint, g, redirect, request, session
+from flask import Blueprint, current_app, g, redirect, request, session
+from montag import CALLBACK_PARAMS_QUEUE
 from montag.clients.spotify_client import AuthToken
 from montag.web.support import system
 
 AUTH_STATE_SESSION_KEY = "spotify_auth_state"
 AUTH_TOKEN_SESSION_KEY = "spotify_auth_token"
-
 
 bp = Blueprint("spotify", __name__, url_prefix="/providers/spotify")
 
@@ -23,16 +23,24 @@ def spotify_login():
 
 @bp.route("/callback")
 def spotify_callback():
-    (sent_state, redirect_to) = session.pop(AUTH_STATE_SESSION_KEY)
-    received_state = request.args.get("state")
-    if sent_state == received_state:
-        code = request.args["code"]
-        auth_token = system().spotify_client.request_access_token(code)
-        store_auth_token(auth_token)
-        return redirect(redirect_to)
-    else:
-        # TODO what to do here?
-        raise ValueError(request.args)
+    state = request.args.get("state")
+    code = request.args["code"]
+    current_app.config[CALLBACK_PARAMS_QUEUE].put((state, code))
+    shutdown_func = request.environ.get('werkzeug.server.shutdown')
+    if shutdown_func is None:
+        raise RuntimeError('Not running werkzeug')
+    shutdown_func()
+    return 'Done!'
+    # (sent_state, redirect_to) = session.pop(AUTH_STATE_SESSION_KEY)
+    # received_state = request.args.get("state")
+    # if sent_state == received_state:
+    #     code = request.args["code"]
+    #     auth_token = system().spotify_client.request_access_token(code)
+    #     store_auth_token(auth_token)
+    #     return redirect(redirect_to)
+    # else:
+    #     # TODO what to do here?
+    #     raise ValueError(request.args)
 
 
 def store_auth_token(auth_token: AuthToken):

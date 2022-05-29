@@ -1,6 +1,6 @@
 from flask import Flask, session
 from montag.config import Config
-from montag.web import spotify_auth, ytmusic_auth, api
+from montag.web import api, spotify_auth, ytmusic_auth
 
 
 def create_app():
