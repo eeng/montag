@@ -34,7 +34,6 @@ def get_web_server_host_and_port() -> Tuple[str, int]:
     return (redirect_uri.hostname, int(redirect_uri.port))
 
 
-# TODO add werkzeug dep and remove flask
 def start_web_server_for_auth_callback(q: Queue) -> None:
     @Request.application
     def app(request: Request) -> Response:
@@ -57,6 +56,7 @@ def wait_for_auth_callback() -> Tuple[str, str]:
 @click.command()
 def auth_spotify():
     """Runs the Spotify authorization flow to obtain the access token and store it in the file system."""
+
     client = SpotifyClient()
     sent_state = secrets.token_hex(8)
     url = client.authorize_url(sent_state)

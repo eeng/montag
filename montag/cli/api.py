@@ -1,6 +1,5 @@
 import click
 from montag.cli import spotify, ytmusic
-
 from montag.domain.entities import Provider
 from montag.system import System
 from montag.use_cases.types import Success
@@ -18,6 +17,7 @@ def system() -> System:
 @click.argument("provider", type=Provider)
 def fetch_playlists(provider: Provider):
     response = system().fetch_playlists_use_case.execute(provider)
+    # TODO don't like this, and how to handle errors like unauthenticated?
     if isinstance(response, Success):
         for playlist in response.value:
             playlist_id = click.style(playlist.id, dim=True)
