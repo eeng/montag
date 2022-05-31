@@ -11,6 +11,7 @@ from pydantic import BaseModel
 class SearchMatchingTracks(UseCase):
     repos: dict[Provider, MusicRepo]
 
+    # TODO validate that src <> dst, and that src_playlist_id exists?
     class Request(BaseModel):
         src_provider: Provider
         dst_provider: Provider

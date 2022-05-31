@@ -9,6 +9,7 @@ from montag.repositories.music_repo import MusicRepo
 from montag.repositories.spotify_repo import SpotifyRepo
 from montag.repositories.ytmusic_repo import YouTubeMusicRepo
 from montag.use_cases.fetch_playlists import FetchPlaylists
+from montag.use_cases.search_matching_tracks import SearchMatchingTracks
 
 
 @dataclass
@@ -19,6 +20,7 @@ class System:
     ytmusic_repo: YouTubeMusicRepo
     repos: dict[Provider, MusicRepo]
     fetch_playlists_use_case: FetchPlaylists
+    search_matching_tracks_use_case: SearchMatchingTracks
 
     @classmethod
     def build(
@@ -44,4 +46,5 @@ class System:
             ytmusic_repo=ytmusic_repo,
             repos=repos,
             fetch_playlists_use_case=FetchPlaylists(repos),
+            search_matching_tracks_use_case=SearchMatchingTracks(repos),
         )
