@@ -20,8 +20,8 @@ def system() -> System:
 def fetch_playlists(provider: Provider):
     response = system().fetch_playlists_use_case.execute(provider)
 
-    def on_success(value: list[Playlist]):
-        for playlist in value:
+    def on_success(playlists: list[Playlist]):
+        for playlist in playlists:
             playlist_id = click.style(playlist.id, dim=True)
             playlist_name = click.style(playlist.name, bold=True)
             click.echo(f"{playlist_name} {playlist_id}")
@@ -34,24 +34,14 @@ def fetch_playlists(provider: Provider):
 @click.argument("dst_provider", type=Provider)
 @click.argument("src_playlist_id", type=PlaylistId)
 @click.option("-l", "--max-suggestions", type=int, default=3, show_default=True)
-def search_matching_tracks(
-    src_provider: Provider,
-    dst_provider: Provider,
-    src_playlist_id: PlaylistId,
-    max_suggestions: int,
-):
+def search_matching_tracks(**params):
     click.echo(f"Searching for matching tracks ...")
 
-    request = SearchMatchingTracks.Request(
-        src_playlist_id=src_playlist_id,
-        src_provider=src_provider,
-        dst_provider=dst_provider,
-        max_suggestions=max_suggestions,
-    )
+    request = SearchMatchingTracks.Request(**params)
     response = system().search_matching_tracks_use_case.execute(request)
 
-    def on_success(value: list[TrackSuggestions]):
-        for track_suggestions in value:
+    def on_success(tracks_suggestions: list[TrackSuggestions]):
+        for track_suggestions in tracks_suggestions:
             target = track_suggestions.target
             track_name = click.style(target.name, bold=True, fg="yellow")
             artist = click.style(" ".join(target.artists), bold=True)

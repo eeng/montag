@@ -76,7 +76,8 @@ def test_when_a_track_already_exists_in_dst_playlist(repos, spotify_repo, ytmusi
 
 
 def test_when_src_playlist_do_not_exists(repos, spotify_repo):
-    spotify_repo.get_playlist_by_id.side_effect = NotFoundError("playlist not found")
+    error = NotFoundError("playlist not found")
+    spotify_repo.get_playlist_by_id.side_effect = error
     request = SearchMatchingTracks.Request(
         src_playlist_id="inexistent",
         src_provider=Provider.SPOTIFY,
@@ -85,4 +86,4 @@ def test_when_src_playlist_do_not_exists(repos, spotify_repo):
 
     response = SearchMatchingTracks(repos).execute(request)
 
-    assert response == Failure("playlist not found")
+    assert response == Failure("playlist not found", error)

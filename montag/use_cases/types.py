@@ -1,6 +1,5 @@
 from dataclasses import dataclass
-from typing import Generic, Protocol, TypeVar, Union
-
+from typing import Generic, Optional, Protocol, TypeVar, Union
 
 T = TypeVar("T")
 
@@ -13,6 +12,7 @@ class Success(Generic[T]):
 @dataclass
 class Failure:
     msg: str
+    exception: Optional[Exception] = None
 
 
 Response = Union[Success[T], Failure]

@@ -14,8 +14,9 @@ def test_fetch_playlists(repos, spotify_repo):
 
 
 def test_error_handling_with_unexpected_errors(repos, spotify_repo):
-    spotify_repo.find_playlists.side_effect = ValueError("some message")
+    error = ValueError("some message")
+    spotify_repo.find_playlists.side_effect = error
 
     response = FetchPlaylists(repos).execute(Provider.SPOTIFY)
 
-    assert response == Failure("some message")
+    assert response == Failure("some message", error)
