@@ -1,6 +1,7 @@
 import click
 from montag.cli import spotify, ytmusic
-from montag.domain.entities import PlaylistId, Provider
+from montag.cli.support import handle_response
+from montag.domain.entities import Playlist, PlaylistId, Provider, TrackSuggestions
 from montag.system import System
 from montag.use_cases.search_matching_tracks import SearchMatchingTracks
 from montag.use_cases.types import Success
@@ -18,12 +19,14 @@ def system() -> System:
 @click.argument("provider", type=Provider)
 def fetch_playlists(provider: Provider):
     response = system().fetch_playlists_use_case.execute(provider)
-    # TODO don't like this, and how to handle errors like unauthenticated?
-    if isinstance(response, Success):
-        for playlist in response.value:
+
+    def on_success(value: list[Playlist]):
+        for playlist in value:
             playlist_id = click.style(playlist.id, dim=True)
             playlist_name = click.style(playlist.name, bold=True)
             click.echo(f"{playlist_name} {playlist_id}")
+
+    handle_response(response, on_success)
 
 
 @click.command()
@@ -46,8 +49,9 @@ def search_matching_tracks(
         max_suggestions=max_suggestions,
     )
     response = system().search_matching_tracks_use_case.execute(request)
-    if isinstance(response, Success):
-        for track_suggestions in response.value:
+
+    def on_success(value: list[TrackSuggestions]):
+        for track_suggestions in value:
             target = track_suggestions.target
             track_name = click.style(target.name, bold=True, fg="yellow")
             artist = click.style(" ".join(target.artists), bold=True)
@@ -60,3 +64,5 @@ def search_matching_tracks(
                 track_name = click.style(suggestion.name, fg=track_color)
                 artist = click.style(", ".join(suggestion.artists), bold=True)
                 click.echo(f"{track_id} {track_name} from {artist} ({suggestion.album})")
+
+    handle_response(response, on_success)
