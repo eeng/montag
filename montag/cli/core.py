@@ -18,7 +18,7 @@ def system() -> System:
 @click.command()
 @click.argument("provider", type=Provider)
 def fetch_playlists(provider: Provider):
-    response = system().fetch_playlists_use_case.execute(provider)
+    response = system().fetch_playlists(provider)
 
     def on_success(playlists: list[Playlist]):
         for playlist in playlists:
@@ -38,7 +38,7 @@ def search_matching_tracks(**params):
     click.echo(f"Searching for matching tracks ...")
 
     request = SearchMatchingTracks.Request(**params)
-    response = system().search_matching_tracks_use_case.execute(request)
+    response = system().search_matching_tracks(request)
 
     def on_success(tracks_suggestions: list[TrackSuggestions]):
         for track_suggestions in tracks_suggestions:

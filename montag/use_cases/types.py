@@ -21,3 +21,6 @@ Response = Union[Success[T], Failure]
 class UseCase(Protocol):
     def execute(self, request: object) -> Response:
         ...
+
+    def __call__(self, request: object) -> Response:
+        return self.execute(request)

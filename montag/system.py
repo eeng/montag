@@ -19,8 +19,8 @@ class System:
     ytmusic_client: YTMusic
     ytmusic_repo: YouTubeMusicRepo
     repos: dict[Provider, MusicRepo]
-    fetch_playlists_use_case: FetchPlaylists
-    search_matching_tracks_use_case: SearchMatchingTracks
+    fetch_playlists: FetchPlaylists
+    search_matching_tracks: SearchMatchingTracks
 
     @classmethod
     def build(
@@ -45,6 +45,6 @@ class System:
             ytmusic_client=ytmusic_client,
             ytmusic_repo=ytmusic_repo,
             repos=repos,
-            fetch_playlists_use_case=FetchPlaylists(repos),
-            search_matching_tracks_use_case=SearchMatchingTracks(repos),
+            fetch_playlists=FetchPlaylists(repos),
+            search_matching_tracks=SearchMatchingTracks(repos),
         )
