@@ -1,6 +1,6 @@
 from montag.domain.entities import Provider
 from montag.use_cases.add_tracks_to_playlist import AddTracksToPlaylist
-from montag.use_cases.types import Success
+from montag.use_cases.support import Success
 from tests import factory
 
 

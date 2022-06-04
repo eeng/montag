@@ -2,7 +2,7 @@ import logging
 from typing import Callable
 
 import click
-from montag.use_cases.types import Response, Success, T
+from montag.use_cases.support import Response, Success, T
 
 
 def handle_response(response: Response[T], on_success: Callable[[T], None]):

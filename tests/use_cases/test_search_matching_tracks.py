@@ -3,7 +3,7 @@ from unittest.mock import call
 from montag.domain.entities import Provider, SuggestedTrack, Track
 from montag.domain.errors import NotFoundError
 from montag.use_cases.search_matching_tracks import SearchMatchingTracks, TrackSuggestions
-from montag.use_cases.types import Failure, Success
+from montag.use_cases.support import Failure, Success
 from tests import factory
 
 

@@ -1,6 +1,6 @@
 from montag.domain.entities import Provider
 from montag.use_cases.fetch_playlists import FetchPlaylists
-from montag.use_cases.types import Failure, Success
+from montag.use_cases.support import Failure, Success
 from tests import factory
 
 

@@ -4,7 +4,6 @@ from montag.cli.support import handle_response
 from montag.domain.entities import Playlist, PlaylistId, Provider, TrackSuggestions
 from montag.system import System
 from montag.use_cases.search_matching_tracks import SearchMatchingTracks
-from montag.use_cases.types import Success
 
 
 def system() -> System:
