@@ -49,8 +49,7 @@ def search_matching_tracks(**params):
 
             for suggestion in track_suggestions.suggestions:
                 track_id = click.style(suggestion.id, dim=True)
-                already_in_playlist = suggestion.id in track_suggestions.already_present
-                track_color = "green" if already_in_playlist else "cyan"
+                track_color = "green" if suggestion.already_present else "cyan"
                 track_name = click.style(suggestion.name, fg=track_color)
                 artist = click.style(", ".join(suggestion.artists), bold=True)
                 click.echo(f"{track_id} {track_name} from {artist} ({suggestion.album})")

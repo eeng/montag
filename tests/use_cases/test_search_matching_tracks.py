@@ -1,6 +1,6 @@
 from unittest.mock import call
 
-from montag.domain.entities import Provider
+from montag.domain.entities import Provider, SuggestedTrack, Track
 from montag.domain.errors import NotFoundError
 from montag.use_cases.search_matching_tracks import SearchMatchingTracks, TrackSuggestions
 from montag.use_cases.types import Failure, Success
@@ -28,8 +28,12 @@ def test_search_tracks_matching_the_ones_in_the_src_playlist(repos, spotify_repo
 
     assert response == Success(
         [
-            TrackSuggestions(target=track1, suggestions=track1_suggestions),
-            TrackSuggestions(target=track2, suggestions=track2_suggestions),
+            TrackSuggestions(
+                target=track1, suggestions=list(map(SuggestedTrack.build, track1_suggestions))
+            ),
+            TrackSuggestions(
+                target=track2, suggestions=list(map(SuggestedTrack.build, track2_suggestions))
+            ),
         ]
     )
     spotify_repo.find_tracks.assert_called_once_with(playlist_id)
@@ -67,8 +71,10 @@ def test_when_a_track_already_exists_in_dst_playlist(repos, spotify_repo, ytmusi
         [
             TrackSuggestions(
                 target=src_track,
-                suggestions=[dst_t1, dst_t2],
-                already_present=[dst_t1.id],
+                suggestions=[
+                    SuggestedTrack(**dst_t1.dict(), already_present=True),
+                    SuggestedTrack(**dst_t2.dict(), already_present=False),
+                ],
             )
         ]
     )
