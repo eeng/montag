@@ -3,6 +3,7 @@ from montag.cli import spotify, ytmusic
 from montag.cli.support import handle_response
 from montag.domain.entities import Playlist, PlaylistId, Provider, TrackSuggestions
 from montag.system import System
+from montag.use_cases.create_playlist import CreatePlaylist
 from montag.use_cases.search_matching_tracks import SearchMatchingTracks
 
 
@@ -14,16 +15,38 @@ def system() -> System:
     )
 
 
+def display_playlist(playlist):
+    playlist_id = click.style(playlist.id, dim=True)
+    playlist_name = click.style(playlist.name, bold=True)
+    click.echo(f"{playlist_name} {playlist_id}")
+
+
 @click.command()
 @click.argument("provider", type=Provider)
 def fetch_playlists(provider: Provider):
+    "Retrieve all the playlist in the provider"
+
     response = system().fetch_playlists(provider)
 
     def on_success(playlists: list[Playlist]):
         for playlist in playlists:
-            playlist_id = click.style(playlist.id, dim=True)
-            playlist_name = click.style(playlist.name, bold=True)
-            click.echo(f"{playlist_name} {playlist_id}")
+            display_playlist(playlist)
+
+    handle_response(response, on_success)
+
+
+@click.command()
+@click.argument("provider", type=Provider)
+@click.argument("playlist_name", type=str)
+def create_playlist(**params):
+    "Add a new playlist to a provider"
+
+    request = CreatePlaylist.Request(**params)
+    response = system().create_playlist(request)
+
+    def on_success(playlist: Playlist):
+        click.secho("Playlist created!", fg="green")
+        display_playlist(playlist)
 
     handle_response(response, on_success)
 
@@ -34,6 +57,8 @@ def fetch_playlists(provider: Provider):
 @click.argument("src_playlist_id", type=PlaylistId)
 @click.option("-l", "--max-suggestions", type=int, default=3, show_default=True)
 def search_matching_tracks(**params):
+    "For each track in the src playlist, seeks for similar tracks in the dst provider"
+
     click.echo(f"Searching for matching tracks ...")
 
     request = SearchMatchingTracks.Request(**params)

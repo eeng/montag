@@ -8,6 +8,7 @@ from montag.domain.entities import Provider
 from montag.repositories.music_repo import MusicRepo
 from montag.repositories.spotify_repo import SpotifyRepo
 from montag.repositories.ytmusic_repo import YouTubeMusicRepo
+from montag.use_cases.create_playlist import CreatePlaylist
 from montag.use_cases.fetch_playlists import FetchPlaylists
 from montag.use_cases.search_matching_tracks import SearchMatchingTracks
 
@@ -20,6 +21,7 @@ class System:
     ytmusic_repo: YouTubeMusicRepo
     repos: dict[Provider, MusicRepo]
     fetch_playlists: FetchPlaylists
+    create_playlist: CreatePlaylist
     search_matching_tracks: SearchMatchingTracks
 
     @classmethod
@@ -46,5 +48,6 @@ class System:
             ytmusic_repo=ytmusic_repo,
             repos=repos,
             fetch_playlists=FetchPlaylists(repos),
+            create_playlist=CreatePlaylist(repos),
             search_matching_tracks=SearchMatchingTracks(repos),
         )

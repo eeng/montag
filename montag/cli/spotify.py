@@ -55,7 +55,7 @@ def wait_for_auth_callback() -> Tuple[str, str]:
 
 @click.command()
 def auth_spotify():
-    """Runs the Spotify authorization flow to obtain the access token and store it in the file system."""
+    """Runs the Spotify authorization flow"""
 
     client = SpotifyClient()
     sent_state = secrets.token_hex(8)
