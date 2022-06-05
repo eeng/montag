@@ -1,3 +1,6 @@
+from email.policy import default
+from typing import Optional
+
 import click
 from montag.cli import spotify, ytmusic
 from montag.cli.support import handle_response
@@ -58,7 +61,7 @@ def create_playlist(**params):
     handle_response(response, on_success)
 
 
-def format_track(track: Track, name_color: str = "black") -> str:
+def format_track(track: Track, name_color: Optional[str] = None) -> str:
     track_id = click.style(track.id, dim=True)
     track_name = click.style(track.name, fg=name_color, bold=True)
     artist = click.style(", ".join(track.artists), bold=True)
@@ -66,35 +69,32 @@ def format_track(track: Track, name_color: str = "black") -> str:
 
 
 def display_target_track(track: Track):
-    click.echo(f"\nSuggestions for {format_track(track, name_color='yellow')}):")
+    click.echo(f"\nSuggestions for {format_track(track, name_color='yellow')}:")
 
 
 def display_suggested_track(suggestion: SuggestedTrack):
-    track_color = "green" if suggestion.already_present else "cyan"
+    track_color = "cyan" if suggestion.already_present else "blue"
     click.echo(" " * 3 + format_track(suggestion, track_color))
 
 
-@click.command()
-@click.argument("src_provider", type=Provider)
-@click.argument("dst_provider", type=Provider)
-@click.argument("src_playlist_id", type=PlaylistId)
-@click.option("-l", "--max-suggestions", type=int, default=3, show_default=True)
-def search_matching_tracks(**params):
-    "For each track in the src playlist, seeks for similar tracks in the dst provider"
+def display_suggestions(track_suggestions: TrackSuggestions):
+    display_target_track(track_suggestions.target)
 
-    click.echo(f"Searching for matching tracks ...")
+    for suggestion in track_suggestions.suggestions:
+        display_suggested_track(suggestion)
 
-    request = SearchMatchingTracks.Request(**params)
-    response = system().search_matching_tracks(request)
 
-    def on_success(tracks_suggestions: list[TrackSuggestions]):
-        for track_suggestions in tracks_suggestions:
-            display_target_track(track_suggestions.target)
+def add_recommended_track(track_suggestions: TrackSuggestions, dry_run: bool):
+    some_suggestion_already_added = any([s.already_present for s in track_suggestions.suggestions])
 
-            for suggestion in track_suggestions.suggestions:
-                display_suggested_track(suggestion)
+    if some_suggestion_already_added:
+        click.secho("Ignoring since one of these suggestions already exists in the playlist")
+    else:
+        new_track = track_suggestions.suggestions[0]
+        click.echo(f"Adding track {format_track(new_track, name_color='green')}")
 
-    handle_response(response, on_success)
+        if not dry_run:
+            pass
 
 
 @click.command()
@@ -102,7 +102,8 @@ def search_matching_tracks(**params):
 @click.argument("dst_provider", type=Provider)
 @click.argument("src_playlist_id", type=PlaylistId)
 @click.option("-l", "--max-suggestions", type=int, default=3, show_default=True)
-def replicate_playlist(**params):
+@click.option("-d", "--dry-run", type=bool, is_flag=True)
+def replicate_playlist(dry_run: bool, **params):
     "Copy songs from the src to the dst playlist"
 
     click.echo(f"Searching for matching tracks ...")
@@ -112,11 +113,10 @@ def replicate_playlist(**params):
 
     def on_success(tracks_suggestions: list[TrackSuggestions]):
         for track_suggestions in tracks_suggestions:
-            display_target_track(track_suggestions.target)
-
-            for suggestion in track_suggestions.suggestions:
-                display_suggested_track(suggestion)
-
-        click.echo("Adding track")
+            if track_suggestions.suggestions:
+                display_suggestions(track_suggestions)
+                add_recommended_track(track_suggestions, dry_run=dry_run)
+            else:
+                click.secho("No suggestions found.", fg="magenta")
 
     handle_response(response, on_success)
