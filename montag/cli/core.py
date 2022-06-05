@@ -1,7 +1,14 @@
 import click
 from montag.cli import spotify, ytmusic
 from montag.cli.support import handle_response
-from montag.domain.entities import Playlist, PlaylistId, Provider, TrackSuggestions
+from montag.domain.entities import (
+    Playlist,
+    PlaylistId,
+    Provider,
+    SuggestedTrack,
+    Track,
+    TrackSuggestions,
+)
 from montag.system import System
 from montag.use_cases.create_playlist import CreatePlaylist
 from montag.use_cases.search_matching_tracks import SearchMatchingTracks
@@ -51,6 +58,22 @@ def create_playlist(**params):
     handle_response(response, on_success)
 
 
+def format_track(track: Track, name_color: str = "black") -> str:
+    track_id = click.style(track.id, dim=True)
+    track_name = click.style(track.name, fg=name_color, bold=True)
+    artist = click.style(", ".join(track.artists), bold=True)
+    return click.style(f"{track_name} from {artist} of album {track.album} {track_id}")
+
+
+def display_target_track(track: Track):
+    click.echo(f"\nSuggestions for {format_track(track, name_color='yellow')}):")
+
+
+def display_suggested_track(suggestion: SuggestedTrack):
+    track_color = "green" if suggestion.already_present else "cyan"
+    click.echo(" " * 3 + format_track(suggestion, track_color))
+
+
 @click.command()
 @click.argument("src_provider", type=Provider)
 @click.argument("dst_provider", type=Provider)
@@ -66,16 +89,34 @@ def search_matching_tracks(**params):
 
     def on_success(tracks_suggestions: list[TrackSuggestions]):
         for track_suggestions in tracks_suggestions:
-            target = track_suggestions.target
-            track_name = click.style(target.name, bold=True, fg="yellow")
-            artist = click.style(" ".join(target.artists), bold=True)
-            click.echo(f"\nSuggestions for {track_name} from {artist} ({target.album}):")
+            display_target_track(track_suggestions.target)
 
             for suggestion in track_suggestions.suggestions:
-                track_id = click.style(suggestion.id, dim=True)
-                track_color = "green" if suggestion.already_present else "cyan"
-                track_name = click.style(suggestion.name, fg=track_color)
-                artist = click.style(", ".join(suggestion.artists), bold=True)
-                click.echo(f"{track_id} {track_name} from {artist} ({suggestion.album})")
+                display_suggested_track(suggestion)
+
+    handle_response(response, on_success)
+
+
+@click.command()
+@click.argument("src_provider", type=Provider)
+@click.argument("dst_provider", type=Provider)
+@click.argument("src_playlist_id", type=PlaylistId)
+@click.option("-l", "--max-suggestions", type=int, default=3, show_default=True)
+def replicate_playlist(**params):
+    "Copy songs from the src to the dst playlist"
+
+    click.echo(f"Searching for matching tracks ...")
+
+    request = SearchMatchingTracks.Request(**params)
+    response = system().search_matching_tracks(request)
+
+    def on_success(tracks_suggestions: list[TrackSuggestions]):
+        for track_suggestions in tracks_suggestions:
+            display_target_track(track_suggestions.target)
+
+            for suggestion in track_suggestions.suggestions:
+                display_suggested_track(suggestion)
+
+        click.echo("Adding track")
 
     handle_response(response, on_success)
