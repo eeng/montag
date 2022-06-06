@@ -84,27 +84,13 @@ def display_suggestions(track_suggestions: TrackSuggestions):
         display_suggested_track(suggestion)
 
 
-def add_recommended_track(track_suggestions: TrackSuggestions, dry_run: bool):
-    some_suggestion_already_added = any([s.already_present for s in track_suggestions.suggestions])
-
-    if some_suggestion_already_added:
-        click.secho("Ignoring since one of these suggestions already exists in the playlist")
-    else:
-        new_track = track_suggestions.suggestions[0]
-        click.echo(f"Adding track {format_track(new_track, name_color='green')}")
-
-        if not dry_run:
-            pass
-
-
 @click.command()
 @click.argument("src_provider", type=Provider)
 @click.argument("dst_provider", type=Provider)
 @click.argument("src_playlist_id", type=PlaylistId)
 @click.option("-l", "--max-suggestions", type=int, default=3, show_default=True)
-@click.option("-d", "--dry-run", type=bool, is_flag=True)
-def replicate_playlist(dry_run: bool, **params):
-    "Copy songs from the src to the dst playlist"
+def search_matching_tracks(**params):
+    "For each track in the src playlist, seeks for similar tracks in the dst provider"
 
     click.echo(f"Searching for matching tracks ...")
 
@@ -115,7 +101,6 @@ def replicate_playlist(dry_run: bool, **params):
         for track_suggestions in tracks_suggestions:
             if track_suggestions.suggestions:
                 display_suggestions(track_suggestions)
-                add_recommended_track(track_suggestions, dry_run=dry_run)
             else:
                 click.secho("No suggestions found.", fg="magenta")
 
