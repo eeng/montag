@@ -1,4 +1,3 @@
-from email.policy import default
 from typing import Optional
 
 import click
@@ -13,6 +12,7 @@ from montag.domain.entities import (
     TrackSuggestions,
 )
 from montag.system import System
+from montag.use_cases.add_tracks_to_playlist import AddTracksToPlaylist
 from montag.use_cases.create_playlist import CreatePlaylist
 from montag.use_cases.search_matching_tracks import SearchMatchingTracks
 
@@ -34,7 +34,7 @@ def display_playlist(playlist):
 @click.command()
 @click.argument("provider", type=Provider)
 def fetch_playlists(provider: Provider):
-    "Retrieve all the playlist in the provider"
+    """Retrieve all the playlist in the provider"""
 
     response = system().fetch_playlists(provider)
 
@@ -49,7 +49,7 @@ def fetch_playlists(provider: Provider):
 @click.argument("provider", type=Provider)
 @click.argument("playlist_name", type=str)
 def create_playlist(**params):
-    "Add a new playlist to a provider"
+    """Add a new playlist to a provider"""
 
     request = CreatePlaylist.Request(**params)
     response = system().create_playlist(request)
@@ -84,23 +84,62 @@ def display_suggestions(track_suggestions: TrackSuggestions):
         display_suggested_track(suggestion)
 
 
+def add_suggestion(
+    track_suggestions: TrackSuggestions,
+    provider: Provider,
+    playlist_id: PlaylistId,
+    dry_run: bool,
+):
+    if track_suggestions.is_some_already_present:
+        click.echo("Track already in destination, ignoring.")
+    else:
+        new_track = track_suggestions.suggestions[0]
+        click.secho(f"Adding track {format_track(new_track, name_color='green')}")
+
+        if not dry_run:
+            request = AddTracksToPlaylist.Request(
+                provider=provider, playlist_id=playlist_id, track_ids=[new_track.id]
+            )
+            response = system().add_tracks_to_playlist(request)
+
+            def on_success(_):
+                click.secho("Done!", fg="green")
+
+            handle_response(response, on_success=on_success)
+
+
 @click.command()
 @click.argument("src_provider", type=Provider)
-@click.argument("dst_provider", type=Provider)
 @click.argument("src_playlist_id", type=PlaylistId)
+@click.argument("dst_provider", type=Provider)
+@click.argument("dst_playlist_id", type=PlaylistId)
 @click.option("-l", "--max-suggestions", type=int, default=3, show_default=True)
-def search_matching_tracks(**params):
-    "For each track in the src playlist, seeks for similar tracks in the dst provider"
+@click.option("-d", "--dry-run", type=bool, default=False, is_flag=True)
+def replicate_playlist(
+    src_provider: Provider,
+    src_playlist_id: PlaylistId,
+    dst_provider: Provider,
+    dst_playlist_id: PlaylistId,
+    max_suggestions: int,
+    dry_run: bool,
+):
+    """Copy an entire playlist from one provider to another"""
 
     click.echo(f"Searching for matching tracks ...")
 
-    request = SearchMatchingTracks.Request(**params)
+    request = SearchMatchingTracks.Request(
+        src_provider=src_provider,
+        src_playlist_id=src_playlist_id,
+        dst_provider=dst_provider,
+        max_suggestions=max_suggestions,
+    )
     response = system().search_matching_tracks(request)
 
     def on_success(tracks_suggestions: list[TrackSuggestions]):
         for track_suggestions in tracks_suggestions:
             if track_suggestions.suggestions:
                 display_suggestions(track_suggestions)
+                add_suggestion(track_suggestions, dst_provider, dst_playlist_id, dry_run)
             else:
                 click.secho("No suggestions found.", fg="magenta")
 

@@ -13,8 +13,8 @@ class SearchMatchingTracks(UseCase):
     # TODO validate that src <> dst
     class Request(BaseModel):
         src_provider: Provider
-        dst_provider: Provider
         src_playlist_id: PlaylistId
+        dst_provider: Provider
         max_suggestions: int = 5
 
     @error_handling

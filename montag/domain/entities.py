@@ -51,3 +51,7 @@ class TrackSuggestions(BaseModel):
             SuggestedTrack.build(s, already_present=(s in existing_tracks)) for s in suggestions
         ]
         return cls(target=src_track, suggestions=suggested_tracks)
+
+    @property
+    def is_some_already_present(self) -> bool:
+        return any([s.already_present for s in self.suggestions])
