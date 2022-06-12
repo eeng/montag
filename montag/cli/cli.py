@@ -12,6 +12,7 @@ cli.add_command(ytmusic.auth_ytmusic)
 cli.add_command(core.fetch_playlists)
 cli.add_command(core.create_playlist)
 cli.add_command(core.fetch_tracks)
+cli.add_command(core.add_tracks)
 cli.add_command(core.replicate_playlist)
 
 if __name__ == "__main__":

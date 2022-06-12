@@ -9,6 +9,7 @@ from montag.domain.entities import (
     Provider,
     SuggestedTrack,
     Track,
+    TrackId,
     TrackSuggestions,
 )
 from montag.system import System
@@ -81,6 +82,22 @@ def fetch_tracks(**params):
     def on_success(tracks: list[Track]):
         for track in tracks:
             click.echo(format_track(track, name_color="green"))
+
+    handle_response(response, on_success)
+
+
+@click.command()
+@click.argument("provider", type=Provider)
+@click.argument("playlist-id", type=PlaylistId)
+@click.option("-t", "--track-ids", type=TrackId, required=True, multiple=True)
+def add_tracks(**params):
+    """Add one or more tracks to the specified playlist"""
+
+    request = AddTracksToPlaylist.Request(**params)
+    response = system().add_tracks_to_playlist(request)
+
+    def on_success(_):
+        click.secho("Done!", fg="green")
 
     handle_response(response, on_success)
 
