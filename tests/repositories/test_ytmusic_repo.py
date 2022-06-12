@@ -1,3 +1,4 @@
+from unittest.mock import call
 import pytest
 from montag.domain.entities import Playlist, Track
 from montag.repositories.ytmusic_repo import YTMusicError, YouTubeMusicRepo
@@ -72,7 +73,18 @@ def test_create_playlist():
     assert playlist == Playlist(id=playlist_id, name=playlist_name)
 
 
-def test_add_tracks_success():
+def test_add_tracks_to_liked_playlist_success():
+    playlist_id = "LM"
+    track_ids = ["t1", "t2"]
+    client = mock(YTMusic, rate_song=json_resource("ytmusic/rate_song.json"))
+    repo = YouTubeMusicRepo(client)
+
+    repo.add_tracks(playlist_id, track_ids)
+
+    client.rate_song.assert_has_calls([call("t1", "LIKE"), call("t2", "LIKE")])
+
+
+def test_add_tracks_to_other_playlist_success():
     playlist_id = "pl"
     track_ids = ["t1", "t2"]
     client = mock(
@@ -85,7 +97,7 @@ def test_add_tracks_success():
     client.add_playlist_items.assert_called_once_with(playlist_id, track_ids)
 
 
-def test_add_tracks_failure():
+def test_add_tracks_to_other_playlist_failure():
     client = mock(
         YTMusic, add_playlist_items=json_resource("ytmusic/add_playlist_items_failure.json")
     )

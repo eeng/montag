@@ -1,0 +1,62 @@
+{
+  "responseContext": {
+    "visitorData": "Cgt4UmxldU4yRWQ1NCiw3peVBg%3D%3D",
+    "serviceTrackingParams": [
+      {
+        "service": "CSI",
+        "params": [
+          { "key": "c", "value": "WEB_REMIX" },
+          { "key": "cver", "value": "0.1" },
+          { "key": "yt_li", "value": "1" },
+          { "key": "Like_rid", "value": "0x29eaf637b7ccd37b" }
+        ]
+      },
+      {
+        "service": "GFEEDBACK",
+        "params": [
+          { "key": "logged_in", "value": "1" },
+          {
+            "key": "e",
+            "value": "24140247,24077266,23983296,24232198,23882685,24002025,24222952,24167177,24007246,24230438,24077241,24004644,24199774,23735347,24135310,24211178,24224832,24034168,23946420,24196598,24213408,24001373,24191629,23918597,1714246,24215196,23744176,24187043,24165080,23940248,24181174,24002022,23804281,23934970,24219713,24185614,24212037,24162650,23998056,24082661,24085811,24169501,24211628,24120820,24164186,24187377,24199710,24036947,24198739,24189951,24199724,24210094,24222810,24230151,24187516,23966208,24080738"
+          }
+        ]
+      },
+      {
+        "service": "ECATCHER",
+        "params": [
+          { "key": "client.version", "value": "0.1" },
+          { "key": "client.name", "value": "WEB_REMIX" },
+          {
+            "key": "client.fexp",
+            "value": "24140247,24077266,23983296,24232198,23882685,24002025,24222952,24167177,24007246,24230438,24077241,24004644,24199774,23735347,24135310,24211178,24224832,24034168,23946420,24196598,24213408,24001373,24191629,23918597,1714246,24215196,23744176,24187043,24165080,23940248,24181174,24002022,23804281,23934970,24219713,24185614,24212037,24162650,23998056,24082661,24085811,24169501,24211628,24120820,24164186,24187377,24199710,24036947,24198739,24189951,24199724,24210094,24222810,24230151,24187516,23966208,24080738"
+          }
+        ]
+      }
+    ]
+  },
+  "actions": [
+    {
+      "clickTrackingParams": "IhMI1f3op4eo-AIV6v7VCh1Z_Q6l",
+      "addToToastAction": {
+        "item": {
+          "notificationActionRenderer": {
+            "responseText": { "runs": [{ "text": "Added to your likes" }] },
+            "actionButton": {
+              "buttonRenderer": {
+                "style": "STYLE_DEFAULT",
+                "isDisabled": false,
+                "text": { "runs": [{ "text": "View" }] },
+                "navigationEndpoint": {
+                  "clickTrackingParams": "CAEQ8FsiEwjV_einh6j4AhXq_tUKHVn9DqU=",
+                  "browseEndpoint": { "browseId": "VLLM" }
+                },
+                "trackingParams": "CAEQ8FsiEwjV_einh6j4AhXq_tUKHVn9DqU="
+              }
+            },
+            "trackingParams": "CAAQuWoiEwjV_einh6j4AhXq_tUKHVn9DqU="
+          }
+        }
+      }
+    }
+  ]
+}

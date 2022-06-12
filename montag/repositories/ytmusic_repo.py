@@ -4,6 +4,8 @@ from montag.domain.entities import Playlist, PlaylistId, Track, TrackId
 from montag.repositories.music_repo import MusicRepo
 from ytmusicapi import YTMusic
 
+LIKED_MUSIC_PLAYLIST_ID = "LM"
+
 
 @dataclass
 class YouTubeMusicRepo(MusicRepo):
@@ -15,7 +17,7 @@ class YouTubeMusicRepo(MusicRepo):
             Playlist(
                 id=item["playlistId"],
                 name=item["title"],
-                is_liked=item["playlistId"] == "LM",
+                is_liked=item["playlistId"] == LIKED_MUSIC_PLAYLIST_ID,
             )
             for item in response
         ]
@@ -52,11 +54,15 @@ class YouTubeMusicRepo(MusicRepo):
             raise YTMusicError(response)
 
     def add_tracks(self, playlist_id: PlaylistId, track_ids: list[TrackId]) -> None:
-        response = self.client.add_playlist_items(playlist_id, track_ids)
-        if isinstance(response, dict) and "SUCCEEDED" in response["status"]:
-            pass
+        if playlist_id == LIKED_MUSIC_PLAYLIST_ID:
+            for track_id in track_ids:
+                self.client.rate_song(track_id, "LIKE")
         else:
-            raise YTMusicError(response)
+            response = self.client.add_playlist_items(playlist_id, track_ids)
+            if isinstance(response, dict) and "SUCCEEDED" in response["status"]:
+                pass
+            else:
+                raise YTMusicError(response)
 
 
 class YTMusicError(Exception):
