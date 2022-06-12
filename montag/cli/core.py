@@ -14,6 +14,7 @@ from montag.domain.entities import (
 from montag.system import System
 from montag.use_cases.add_tracks_to_playlist import AddTracksToPlaylist
 from montag.use_cases.create_playlist import CreatePlaylist
+from montag.use_cases.fetch_tracks import FetchTracks
 from montag.use_cases.search_matching_tracks import SearchMatchingTracks
 
 
@@ -66,6 +67,22 @@ def format_track(track: Track, name_color: Optional[str] = None) -> str:
     track_name = click.style(track.name, fg=name_color, bold=True)
     artist = click.style(", ".join(track.artists), bold=True)
     return click.style(f"{track_name} from {artist} of album {track.album} {track_id}")
+
+
+@click.command()
+@click.argument("provider", type=Provider)
+@click.argument("playlist-id", type=PlaylistId)
+def fetch_tracks(**params):
+    """Gets all tracks in the specified playlist_id of the provider"""
+
+    request = FetchTracks.Request(**params)
+    response = system().fetch_tracks(request)
+
+    def on_success(tracks: list[Track]):
+        for track in tracks:
+            click.echo(format_track(track, name_color="green"))
+
+    handle_response(response, on_success)
 
 
 def display_target_track(track: Track):

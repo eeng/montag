@@ -12,6 +12,7 @@ from montag.repositories.ytmusic_repo import YouTubeMusicRepo
 from montag.use_cases.add_tracks_to_playlist import AddTracksToPlaylist
 from montag.use_cases.create_playlist import CreatePlaylist
 from montag.use_cases.fetch_playlists import FetchPlaylists
+from montag.use_cases.fetch_tracks import FetchTracks
 from montag.use_cases.search_matching_tracks import SearchMatchingTracks
 
 
@@ -24,6 +25,7 @@ class System:
     repos: dict[Provider, MusicRepo]
     fetch_playlists: FetchPlaylists
     create_playlist: CreatePlaylist
+    fetch_tracks: FetchTracks
     search_matching_tracks: SearchMatchingTracks
     add_tracks_to_playlist: AddTracksToPlaylist
 
@@ -52,6 +54,7 @@ class System:
             repos=repos,
             fetch_playlists=FetchPlaylists(repos),
             create_playlist=CreatePlaylist(repos),
+            fetch_tracks=FetchTracks(repos),
             search_matching_tracks=SearchMatchingTracks(repos),
             add_tracks_to_playlist=AddTracksToPlaylist(repos),
         )
