@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from typing import Optional
 
 from montag.domain.entities import PlaylistId, Provider, TrackSuggestions
 from montag.repositories.music_repo import MusicRepo
@@ -7,6 +8,7 @@ from pydantic import BaseModel
 
 
 @dataclass
+# TODO i don't think its working with the liked playlists
 class SearchMatchingTracks(UseCase):
     repos: dict[Provider, MusicRepo]
 
@@ -16,6 +18,7 @@ class SearchMatchingTracks(UseCase):
         src_playlist_id: PlaylistId
         dst_provider: Provider
         max_suggestions: int = 5
+        limit: Optional[int] = None
 
     @error_handling
     def execute(self, request: Request) -> Response[list[TrackSuggestions]]:
@@ -30,7 +33,6 @@ class SearchMatchingTracks(UseCase):
             suggestions = dst_repo.search_matching_tracks(src_track, limit=request.max_suggestions)
             return TrackSuggestions.build(src_track, suggestions, existing_tracks)
 
-        track_suggestions = list(
-            map(calculate_suggestions, src_repo.find_tracks(request.src_playlist_id))
-        )
+        src_tracks = src_repo.find_tracks(request.src_playlist_id)
+        track_suggestions = list(map(calculate_suggestions, src_tracks[: request.limit]))
         return Success(track_suggestions)

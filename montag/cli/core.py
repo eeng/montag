@@ -147,14 +147,16 @@ def add_suggestion(
 @click.argument("src_playlist_id", type=PlaylistId)
 @click.argument("dst_provider", type=Provider)
 @click.argument("dst_playlist_id", type=PlaylistId)
-@click.option("-l", "--max-suggestions", type=int, default=3, show_default=True)
+@click.option("-m", "--max_suggestions_per_track", type=int, default=3, show_default=True)
+@click.option("-l", "--max_tracks_to_replicate", type=int)
 @click.option("-d", "--dry-run", type=bool, default=False, is_flag=True)
 def replicate_playlist(
     src_provider: Provider,
     src_playlist_id: PlaylistId,
     dst_provider: Provider,
     dst_playlist_id: PlaylistId,
-    max_suggestions: int,
+    max_suggestions_per_track: int,
+    max_tracks_to_replicate: Optional[int],
     dry_run: bool,
 ):
     """Copy an entire playlist from one provider to another"""
@@ -165,7 +167,8 @@ def replicate_playlist(
         src_provider=src_provider,
         src_playlist_id=src_playlist_id,
         dst_provider=dst_provider,
-        max_suggestions=max_suggestions,
+        max_suggestions=max_suggestions_per_track,
+        limit=max_tracks_to_replicate,
     )
     response = system().search_matching_tracks(request)
 
