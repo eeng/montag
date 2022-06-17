@@ -1,10 +1,17 @@
 from dataclasses import dataclass
 
 from montag.clients.spotify_client import SpotifyClient
-from montag.domain.entities import Playlist, PlaylistId, Track, TrackId
+from montag.domain.entities import (
+    LikedSongsPlaylistByProvider,
+    Playlist,
+    PlaylistId,
+    Provider,
+    Track,
+    TrackId,
+)
 from montag.repositories.music_repo import MusicRepo
 
-LIKED_SONGS_ID = "LS"
+LIKED_SONGS_ID = LikedSongsPlaylistByProvider[Provider.SPOTIFY]
 
 
 @dataclass
@@ -24,7 +31,9 @@ class SpotifyRepo(MusicRepo):
         return [
             track
             for offset in range(0, total + 1, limit)
-            for track in self._find_tracks_batch(playlist_id=playlist_id, limit=limit, offset=offset)
+            for track in self._find_tracks_batch(
+                playlist_id=playlist_id, limit=limit, offset=offset
+            )
         ]
 
     def _find_tracks_batch(self, **kargs) -> list[Track]:

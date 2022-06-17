@@ -4,6 +4,7 @@ import click
 from montag.cli import spotify, ytmusic
 from montag.cli.support import handle_response
 from montag.domain.entities import (
+    LikedSongsPlaylistByProvider,
     Playlist,
     PlaylistId,
     Provider,
@@ -144,17 +145,17 @@ def add_suggestion(
 
 @click.command()
 @click.argument("src_provider", type=Provider)
-@click.argument("src_playlist_id", type=PlaylistId)
 @click.argument("dst_provider", type=Provider)
-@click.argument("dst_playlist_id", type=PlaylistId)
-@click.option("-m", "--max_suggestions_per_track", type=int, default=3, show_default=True)
-@click.option("-l", "--max_tracks_to_replicate", type=int)
+@click.option("-st", "--src-playlist-id", type=PlaylistId, show_default="Liked songs in src")
+@click.option("-dt", "--dst-playlist-id", type=PlaylistId, show_default="Liked songs in dst")
+@click.option("-m", "--max-suggestions-per-track", type=int, default=3, show_default=True)
+@click.option("-l", "--max-tracks-to-replicate", type=int)
 @click.option("-d", "--dry-run", type=bool, default=False, is_flag=True)
 def replicate_playlist(
     src_provider: Provider,
-    src_playlist_id: PlaylistId,
     dst_provider: Provider,
-    dst_playlist_id: PlaylistId,
+    src_playlist_id: Optional[PlaylistId],
+    dst_playlist_id: Optional[PlaylistId],
     max_suggestions_per_track: int,
     max_tracks_to_replicate: Optional[int],
     dry_run: bool,
@@ -162,6 +163,9 @@ def replicate_playlist(
     """Copy an entire playlist from one provider to another"""
 
     click.echo(f"Searching for matching tracks ...")
+
+    src_playlist_id = src_playlist_id or LikedSongsPlaylistByProvider[src_provider]
+    dst_playlist_id = dst_playlist_id or LikedSongsPlaylistByProvider[dst_provider]
 
     request = SearchMatchingTracks.Request(
         src_provider=src_provider,

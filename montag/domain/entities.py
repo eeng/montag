@@ -12,6 +12,12 @@ class Provider(Enum):
     YT_MUSIC = "ytmusic"
 
 
+LikedSongsPlaylistByProvider = {
+    Provider.SPOTIFY: "LS",
+    Provider.YT_MUSIC: "LM",
+}
+
+
 class Playlist(BaseModel):
     id: PlaylistId
     name: str

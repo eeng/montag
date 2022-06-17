@@ -1,10 +1,17 @@
 from dataclasses import dataclass
 
-from montag.domain.entities import Playlist, PlaylistId, Track, TrackId
+from montag.domain.entities import (
+    LikedSongsPlaylistByProvider,
+    Playlist,
+    PlaylistId,
+    Provider,
+    Track,
+    TrackId,
+)
 from montag.repositories.music_repo import MusicRepo
 from ytmusicapi import YTMusic
 
-LIKED_MUSIC_PLAYLIST_ID = "LM"
+LIKED_MUSIC_PLAYLIST_ID = LikedSongsPlaylistByProvider[Provider.YT_MUSIC]
 
 
 @dataclass
