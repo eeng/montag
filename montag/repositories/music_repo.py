@@ -9,6 +9,7 @@ class MusicRepo(Protocol):
         """Returns all the user's playlists."""
         ...
 
+    # TODO make sure this throws NotFoundError when the playlist doesn't exists
     def find_tracks(self, playlist_id: PlaylistId) -> list[Track]:
         """Returns all tracks in the specified playlist."""
         ...

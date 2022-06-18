@@ -8,21 +8,24 @@ from tests import factory
 
 
 def test_search_tracks_matching_the_ones_in_the_src_playlist(repos, spotify_repo, ytmusic_repo):
-    playlist_id = "PLVUD"
+    src_playlist_id = "PLVUD"
+    dst_playlist_id = "WERQZ"
     track1, track2 = factory.track(name="T1"), factory.track(name="T2")
     track1_suggestions = factory.tracks(2, name="For T1")
     track2_suggestions = factory.tracks(3, name="For T2")
 
     spotify_repo.find_tracks.return_value = [track1, track2]
+    ytmusic_repo.find_tracks.return_value = []
     ytmusic_repo.search_matching_tracks.side_effect = [
         track1_suggestions,
         track2_suggestions,
     ]
 
     request = SearchMatchingTracks.Request(
-        src_playlist_id=playlist_id,
         src_provider=Provider.SPOTIFY,
         dst_provider=Provider.YT_MUSIC,
+        src_playlist_id=src_playlist_id,
+        dst_playlist_id=dst_playlist_id,
     )
     response = SearchMatchingTracks(repos).execute(request)
 
@@ -36,7 +39,8 @@ def test_search_tracks_matching_the_ones_in_the_src_playlist(repos, spotify_repo
             ),
         ]
     )
-    spotify_repo.find_tracks.assert_called_once_with(playlist_id)
+    spotify_repo.find_tracks.assert_called_once_with(src_playlist_id)
+    ytmusic_repo.find_tracks.assert_called_once_with(dst_playlist_id)
     ytmusic_repo.search_matching_tracks.assert_has_calls(
         [call(track1, limit=5), call(track2, limit=5)]
     )
@@ -53,17 +57,15 @@ def test_when_a_track_already_exists_in_dst_playlist(repos, spotify_repo, ytmusi
         factory.track(name="S3"),
     ]
 
-    spotify_repo.find_playlist_by_id.return_value = spotify_playlist
     spotify_repo.find_tracks.return_value = [src_track]
-
-    ytmusic_repo.find_mirror_playlist.return_value = ytmusic_playlist
     ytmusic_repo.find_tracks.return_value = [dst_t1, dst_t3]
     ytmusic_repo.search_matching_tracks.return_value = [dst_t1, dst_t2]
 
     request = SearchMatchingTracks.Request(
-        src_playlist_id=spotify_playlist.id,
         src_provider=Provider.SPOTIFY,
+        src_playlist_id=spotify_playlist.id,
         dst_provider=Provider.YT_MUSIC,
+        dst_playlist_id=ytmusic_playlist.id,
     )
     response = SearchMatchingTracks(repos).execute(request)
 
@@ -83,9 +85,10 @@ def test_when_a_track_already_exists_in_dst_playlist(repos, spotify_repo, ytmusi
 
 def test_when_src_playlist_do_not_exists(repos, spotify_repo):
     error = NotFoundError("playlist not found")
-    spotify_repo.get_playlist_by_id.side_effect = error
+    spotify_repo.find_tracks.side_effect = error
     request = SearchMatchingTracks.Request(
         src_playlist_id="inexistent",
+        dst_playlist_id="inexistent",
         src_provider=Provider.SPOTIFY,
         dst_provider=Provider.YT_MUSIC,
     )

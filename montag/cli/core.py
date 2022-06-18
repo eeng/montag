@@ -146,11 +146,12 @@ def add_suggestion(
 @click.command()
 @click.argument("src_provider", type=Provider)
 @click.argument("dst_provider", type=Provider)
-@click.option("-st", "--src-playlist-id", type=PlaylistId, show_default="Liked songs in src")
-@click.option("-dt", "--dst-playlist-id", type=PlaylistId, show_default="Liked songs in dst")
+@click.option("-sl", "--src-playlist-id", type=PlaylistId, show_default="Liked songs in src")
+@click.option("-dl", "--dst-playlist-id", type=PlaylistId, show_default="Liked songs in dst")
 @click.option("-m", "--max-suggestions-per-track", type=int, default=3, show_default=True)
 @click.option("-l", "--max-tracks-to-replicate", type=int)
 @click.option("-d", "--dry-run", type=bool, default=False, is_flag=True)
+# TODO improve error handling when things don't exists
 def replicate_playlist(
     src_provider: Provider,
     dst_provider: Provider,
@@ -169,8 +170,9 @@ def replicate_playlist(
 
     request = SearchMatchingTracks.Request(
         src_provider=src_provider,
-        src_playlist_id=src_playlist_id,
         dst_provider=dst_provider,
+        src_playlist_id=src_playlist_id,
+        dst_playlist_id=dst_playlist_id,
         max_suggestions=max_suggestions_per_track,
         limit=max_tracks_to_replicate,
     )

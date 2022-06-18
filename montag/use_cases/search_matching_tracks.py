@@ -17,6 +17,7 @@ class SearchMatchingTracks(UseCase):
         src_provider: Provider
         src_playlist_id: PlaylistId
         dst_provider: Provider
+        dst_playlist_id: PlaylistId
         max_suggestions: int = 5
         limit: Optional[int] = None
 
@@ -25,9 +26,7 @@ class SearchMatchingTracks(UseCase):
         src_repo = self.repos[request.src_provider]
         dst_repo = self.repos[request.dst_provider]
 
-        src_playlist = src_repo.get_playlist_by_id(request.src_playlist_id)
-        dst_playlist = dst_repo.find_mirror_playlist(src_playlist)
-        existing_tracks = dst_repo.find_tracks(dst_playlist.id) if dst_playlist else []
+        existing_tracks = dst_repo.find_tracks(request.dst_playlist_id)
 
         def calculate_suggestions(src_track):
             suggestions = dst_repo.search_matching_tracks(src_track, limit=request.max_suggestions)
