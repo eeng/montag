@@ -1,8 +1,7 @@
 from typing import Optional
 
 import click
-from montag.cli import spotify, ytmusic
-from montag.cli.support import handle_response
+from montag.cli.support import handle_response, system
 from montag.domain.entities import (
     LikedSongsPlaylistByProvider,
     Playlist,
@@ -13,19 +12,10 @@ from montag.domain.entities import (
     TrackId,
     TrackSuggestions,
 )
-from montag.system import System
 from montag.use_cases.add_tracks_to_playlist import AddTracksToPlaylist
 from montag.use_cases.create_playlist import CreatePlaylist
 from montag.use_cases.fetch_tracks import FetchTracks
 from montag.use_cases.search_matching_tracks import SearchMatchingTracks
-
-
-def system() -> System:
-    return System.build(
-        spotify_auth_token=spotify.read_auth_token(),
-        spotify_on_token_expired=spotify.write_auth_token,
-        ytmusic_auth_token=ytmusic.read_auth_token(),
-    )
 
 
 def display_playlist(playlist):
