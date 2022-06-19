@@ -3,10 +3,10 @@ from typing import Optional
 import click
 from montag.cli.support import handle_response, system
 from montag.domain.entities import (
-    LikedSongsPlaylistByProvider,
     Playlist,
     PlaylistId,
     Provider,
+    Providers,
     SuggestedTrack,
     Track,
     TrackId,
@@ -18,6 +18,13 @@ from montag.use_cases.fetch_tracks import FetchTracks
 from montag.use_cases.search_matching_tracks import SearchMatchingTracks
 
 
+@click.command()
+def get_providers():
+    """Show available music providers"""
+    for provider_id, provider_data in Providers.items():
+        click.secho(f"{provider_data.name: <15}{click.style(provider_id.value, bold=True)}")
+
+
 def display_playlist(playlist):
     playlist_id = click.style(playlist.id, dim=True)
     playlist_name = click.style(playlist.name, bold=True)
@@ -26,7 +33,7 @@ def display_playlist(playlist):
 
 @click.command()
 @click.argument("provider", type=Provider)
-def fetch_playlists(provider: Provider):
+def get_playlists(provider: Provider):
     """Retrieve all the playlist in the provider"""
 
     response = system().fetch_playlists(provider)
@@ -64,7 +71,7 @@ def format_track(track: Track, name_color: Optional[str] = None) -> str:
 @click.command()
 @click.argument("provider", type=Provider)
 @click.argument("playlist-id", type=PlaylistId)
-def fetch_tracks(**params):
+def get_tracks(**params):
     """Gets all tracks in the specified playlist_id of the provider"""
 
     request = FetchTracks.Request(**params)
@@ -154,8 +161,8 @@ def replicate_playlist(
 
     click.echo(f"Searching for matching tracks ...")
 
-    src_playlist_id = src_playlist_id or LikedSongsPlaylistByProvider[src_provider]
-    dst_playlist_id = dst_playlist_id or LikedSongsPlaylistByProvider[dst_provider]
+    src_playlist_id = src_playlist_id or Providers[src_provider].liked_songs_playlist
+    dst_playlist_id = dst_playlist_id or Providers[dst_provider].liked_songs_playlist
 
     request = SearchMatchingTracks.Request(
         src_provider=src_provider,

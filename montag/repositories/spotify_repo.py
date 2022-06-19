@@ -2,7 +2,7 @@ from dataclasses import dataclass
 
 from montag.clients.spotify_client import BadRequestError, SpotifyClient
 from montag.domain.entities import (
-    LikedSongsPlaylistByProvider,
+    Providers,
     Playlist,
     PlaylistId,
     Provider,
@@ -12,7 +12,7 @@ from montag.domain.entities import (
 from montag.domain.errors import PlaylistNotFoundError
 from montag.repositories.music_repo import MusicRepo
 
-LIKED_SONGS_ID = LikedSongsPlaylistByProvider[Provider.SPOTIFY]
+LIKED_SONGS_ID = Providers[Provider.SPOTIFY].liked_songs_playlist
 
 
 @dataclass

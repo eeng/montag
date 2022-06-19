@@ -12,9 +12,14 @@ class Provider(Enum):
     YT_MUSIC = "ytmusic"
 
 
-LikedSongsPlaylistByProvider = {
-    Provider.SPOTIFY: "LS",
-    Provider.YT_MUSIC: "LM",
+class ProviderData(BaseModel):
+    liked_songs_playlist: PlaylistId
+    name: str
+
+
+Providers = {
+    Provider.SPOTIFY: ProviderData(name="Spotify", liked_songs_playlist="LS"),
+    Provider.YT_MUSIC: ProviderData(name="YouTube Music", liked_songs_playlist="LM"),
 }
 
 
