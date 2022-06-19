@@ -1,7 +1,7 @@
 from unittest.mock import call
 
 from montag.domain.entities import Provider, SuggestedTrack, Track
-from montag.domain.errors import NotFoundError
+from montag.domain.errors import PlaylistNotFoundError
 from montag.use_cases.search_matching_tracks import SearchMatchingTracks, TrackSuggestions
 from montag.use_cases.support import Failure, Success
 from tests import factory
@@ -84,7 +84,7 @@ def test_when_a_track_already_exists_in_dst_playlist(repos, spotify_repo, ytmusi
 
 
 def test_when_src_playlist_do_not_exists(repos, spotify_repo):
-    error = NotFoundError("playlist not found")
+    error = PlaylistNotFoundError("WQRSD")
     spotify_repo.find_tracks.side_effect = error
     request = SearchMatchingTracks.Request(
         src_playlist_id="inexistent",
@@ -95,4 +95,4 @@ def test_when_src_playlist_do_not_exists(repos, spotify_repo):
 
     response = SearchMatchingTracks(repos).execute(request)
 
-    assert response == Failure("playlist not found", error)
+    assert response == Failure("Could not find a playlist with ID 'WQRSD'", error)

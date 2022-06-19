@@ -1,22 +1,21 @@
 {
-    "country": "AR",
-    "display_name": "bob",
-    "email": "bob@acme.com",
-    "explicit_content": {
-        "filter_enabled": false,
-        "filter_locked": false
-    },
-    "external_urls": {
-        "spotify": "https://open.spotify.com/user/bob"
-    },
-    "followers": {
-        "href": null,
-        "total": 2
-    },
-    "href": "https://api.spotify.com/v1/users/bob",
-    "id": "bob",
-    "images": [],
-    "product": "premium",
-    "type": "user",
-    "uri": "spotify:user:bob"
+  "country": "AR",
+  "display_name": "bob",
+  "email": "bob@acme.com",
+  "explicit_content": {
+    "filter_enabled": false,
+    "filter_locked": false
+  },
+  "external_urls": {
+    "spotify": "https://open.spotify.com/user/bob"
+  },
+  "followers": {
+    "href": null,
+    "total": 2
+  },
+  "href": "https://api.spotify.com/v1/users/bob",
+  "id": "bob",
+  "product": "premium",
+  "type": "user",
+  "uri": "spotify:user:bob"
 }

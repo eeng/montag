@@ -154,7 +154,7 @@ class SpotifyClient:
         if 200 <= response.status_code <= 299:
             return response.json() if decode_json_on_success else {}
         else:
-            raise BadRequestError(response.json())
+            raise BadRequestError(response.json()["error"])
 
 
 class SpotifyError(Exception):
@@ -163,6 +163,10 @@ class SpotifyError(Exception):
 
 class BadRequestError(SpotifyError):
     """Raised when the API replies with a non-200 status code."""
+
+    def __init__(self, response: dict):
+        self.status = response["status"]
+        super().__init__(response.get("message"))
 
 
 class NotAuthorizedError(SpotifyError):

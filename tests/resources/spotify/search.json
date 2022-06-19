@@ -1,166 +1,166 @@
 {
-    "tracks": {
-        "href": "https://api.spotify.com/v1/search?query=The+Reason&type=track&offset=0&limit=2",
-        "items": [
+  "tracks": {
+    "href": "https://api.spotify.com/v1/search?query=The+Reason&type=track&offset=0&limit=2",
+    "items": [
+      {
+        "album": {
+          "album_type": "album",
+          "artists": [
             {
-                "album": {
-                    "album_type": "album",
-                    "artists": [
-                        {
-                            "external_urls": {
-                                "spotify": "https://open.spotify.com/artist/2MqhkhX4npxDZ62ObR5ELO"
-                            },
-                            "href": "https://api.spotify.com/v1/artists/2MqhkhX4npxDZ62ObR5ELO",
-                            "id": "2MqhkhX4npxDZ62ObR5ELO",
-                            "name": "Hoobastank",
-                            "type": "artist",
-                            "uri": "spotify:artist:2MqhkhX4npxDZ62ObR5ELO"
-                        }
-                    ],
-                    "available_markets": [],
-                    "external_urls": {
-                        "spotify": "https://open.spotify.com/album/2zE1YKY7Okj10Tjl09jjth"
-                    },
-                    "href": "https://api.spotify.com/v1/albums/2zE1YKY7Okj10Tjl09jjth",
-                    "id": "2zE1YKY7Okj10Tjl09jjth",
-                    "images": [
-                        {
-                            "height": 640,
-                            "url": "https://i.scdn.co/image/ab67616d0000b27376cc6eedca8eb381afcd1e46",
-                            "width": 640
-                        },
-                        {
-                            "height": 300,
-                            "url": "https://i.scdn.co/image/ab67616d00001e0276cc6eedca8eb381afcd1e46",
-                            "width": 300
-                        },
-                        {
-                            "height": 64,
-                            "url": "https://i.scdn.co/image/ab67616d0000485176cc6eedca8eb381afcd1e46",
-                            "width": 64
-                        }
-                    ],
-                    "name": "The Reason (15th Anniversary Deluxe)",
-                    "release_date": "2003-12-09",
-                    "release_date_precision": "day",
-                    "total_tracks": 17,
-                    "type": "album",
-                    "uri": "spotify:album:2zE1YKY7Okj10Tjl09jjth"
-                },
-                "artists": [
-                    {
-                        "external_urls": {
-                            "spotify": "https://open.spotify.com/artist/2MqhkhX4npxDZ62ObR5ELO"
-                        },
-                        "href": "https://api.spotify.com/v1/artists/2MqhkhX4npxDZ62ObR5ELO",
-                        "id": "2MqhkhX4npxDZ62ObR5ELO",
-                        "name": "Hoobastank",
-                        "type": "artist",
-                        "uri": "spotify:artist:2MqhkhX4npxDZ62ObR5ELO"
-                    }
-                ],
-                "available_markets": [],
-                "disc_number": 1,
-                "duration_ms": 232800,
-                "explicit": false,
-                "external_ids": {
-                    "isrc": "USIR20300704"
-                },
-                "external_urls": {
-                    "spotify": "https://open.spotify.com/track/77loZpT5Y5PRP1S451P9Yz"
-                },
-                "href": "https://api.spotify.com/v1/tracks/77loZpT5Y5PRP1S451P9Yz",
-                "id": "77loZpT5Y5PRP1S451P9Yz",
-                "is_local": false,
-                "name": "The Reason 1",
-                "popularity": 83,
-                "preview_url": null,
-                "track_number": 8,
-                "type": "track",
-                "uri": "spotify:track:77loZpT5Y5PRP1S451P9Yz"
+              "external_urls": {
+                "spotify": "https://open.spotify.com/artist/2MqhkhX4npxDZ62ObR5ELO"
+              },
+              "href": "https://api.spotify.com/v1/artists/2MqhkhX4npxDZ62ObR5ELO",
+              "id": "2MqhkhX4npxDZ62ObR5ELO",
+              "name": "Hoobastank",
+              "type": "artist",
+              "uri": "spotify:artist:2MqhkhX4npxDZ62ObR5ELO"
+            }
+          ],
+          "available_markets": [],
+          "external_urls": {
+            "spotify": "https://open.spotify.com/album/2zE1YKY7Okj10Tjl09jjth"
+          },
+          "href": "https://api.spotify.com/v1/albums/2zE1YKY7Okj10Tjl09jjth",
+          "id": "2zE1YKY7Okj10Tjl09jjth",
+          "images": [
+            {
+              "height": 640,
+              "url": "https://i.scdn.co/image/ab67616d0000b27376cc6eedca8eb381afcd1e46",
+              "width": 640
             },
             {
-                "album": {
-                    "album_type": "album",
-                    "artists": [
-                        {
-                            "external_urls": {
-                                "spotify": "https://open.spotify.com/artist/0LyfQWJT6nXafLPZqxe9Of"
-                            },
-                            "href": "https://api.spotify.com/v1/artists/0LyfQWJT6nXafLPZqxe9Of",
-                            "id": "0LyfQWJT6nXafLPZqxe9Of",
-                            "name": "Various Artists",
-                            "type": "artist",
-                            "uri": "spotify:artist:0LyfQWJT6nXafLPZqxe9Of"
-                        }
-                    ],
-                    "available_markets": [],
-                    "external_urls": {
-                        "spotify": "https://open.spotify.com/album/0AA35HK5gDxxJ2N7VZsx9W"
-                    },
-                    "href": "https://api.spotify.com/v1/albums/0AA35HK5gDxxJ2N7VZsx9W",
-                    "id": "0AA35HK5gDxxJ2N7VZsx9W",
-                    "images": [
-                        {
-                            "height": 640,
-                            "url": "https://i.scdn.co/image/ab67616d0000b273600b4cb7b14cbeb3404fd15d",
-                            "width": 640
-                        },
-                        {
-                            "height": 300,
-                            "url": "https://i.scdn.co/image/ab67616d00001e02600b4cb7b14cbeb3404fd15d",
-                            "width": 300
-                        },
-                        {
-                            "height": 64,
-                            "url": "https://i.scdn.co/image/ab67616d00004851600b4cb7b14cbeb3404fd15d",
-                            "width": 64
-                        }
-                    ],
-                    "name": "Temazos y Hitazos: 2000's",
-                    "release_date": "2022-03-14",
-                    "release_date_precision": "day",
-                    "total_tracks": 48,
-                    "type": "album",
-                    "uri": "spotify:album:0AA35HK5gDxxJ2N7VZsx9W"
-                },
-                "artists": [
-                    {
-                        "external_urls": {
-                            "spotify": "https://open.spotify.com/artist/2MqhkhX4npxDZ62ObR5ELO"
-                        },
-                        "href": "https://api.spotify.com/v1/artists/2MqhkhX4npxDZ62ObR5ELO",
-                        "id": "2MqhkhX4npxDZ62ObR5ELO",
-                        "name": "Hoobastank",
-                        "type": "artist",
-                        "uri": "spotify:artist:2MqhkhX4npxDZ62ObR5ELO"
-                    }
-                ],
-                "available_markets": [],
-                "disc_number": 1,
-                "duration_ms": 232800,
-                "explicit": false,
-                "external_ids": {
-                    "isrc": "USIR20300704"
-                },
-                "external_urls": {
-                    "spotify": "https://open.spotify.com/track/3e96gL2t9JYdzlVvJP3TFx"
-                },
-                "href": "https://api.spotify.com/v1/tracks/3e96gL2t9JYdzlVvJP3TFx",
-                "id": "3e96gL2t9JYdzlVvJP3TFx",
-                "is_local": false,
-                "name": "The Reason 2",
-                "popularity": 1,
-                "preview_url": null,
-                "track_number": 9,
-                "type": "track",
-                "uri": "spotify:track:3e96gL2t9JYdzlVvJP3TFx"
+              "height": 300,
+              "url": "https://i.scdn.co/image/ab67616d00001e0276cc6eedca8eb381afcd1e46",
+              "width": 300
+            },
+            {
+              "height": 64,
+              "url": "https://i.scdn.co/image/ab67616d0000485176cc6eedca8eb381afcd1e46",
+              "width": 64
             }
+          ],
+          "name": "The Reason (15th Anniversary Deluxe)",
+          "release_date": "2003-12-09",
+          "release_date_precision": "day",
+          "total_tracks": 17,
+          "type": "album",
+          "uri": "spotify:album:2zE1YKY7Okj10Tjl09jjth"
+        },
+        "artists": [
+          {
+            "external_urls": {
+              "spotify": "https://open.spotify.com/artist/2MqhkhX4npxDZ62ObR5ELO"
+            },
+            "href": "https://api.spotify.com/v1/artists/2MqhkhX4npxDZ62ObR5ELO",
+            "id": "2MqhkhX4npxDZ62ObR5ELO",
+            "name": "Hoobastank",
+            "type": "artist",
+            "uri": "spotify:artist:2MqhkhX4npxDZ62ObR5ELO"
+          }
         ],
-        "limit": 2,
-        "next": "https://api.spotify.com/v1/search?query=The+Reason&type=track&offset=2&limit=2",
-        "offset": 0,
-        "previous": null,
-        "total": 10016
-    }
+        "available_markets": [],
+        "disc_number": 1,
+        "duration_ms": 232800,
+        "explicit": false,
+        "external_ids": {
+          "isrc": "USIR20300704"
+        },
+        "external_urls": {
+          "spotify": "https://open.spotify.com/track/77loZpT5Y5PRP1S451P9Yz"
+        },
+        "href": "https://api.spotify.com/v1/tracks/77loZpT5Y5PRP1S451P9Yz",
+        "id": "77loZpT5Y5PRP1S451P9Yz",
+        "is_local": false,
+        "name": "The Reason 1",
+        "popularity": 83,
+        "preview_url": null,
+        "track_number": 8,
+        "type": "track",
+        "uri": "spotify:track:77loZpT5Y5PRP1S451P9Yz"
+      },
+      {
+        "album": {
+          "album_type": "album",
+          "artists": [
+            {
+              "external_urls": {
+                "spotify": "https://open.spotify.com/artist/0LyfQWJT6nXafLPZqxe9Of"
+              },
+              "href": "https://api.spotify.com/v1/artists/0LyfQWJT6nXafLPZqxe9Of",
+              "id": "0LyfQWJT6nXafLPZqxe9Of",
+              "name": "Various Artists",
+              "type": "artist",
+              "uri": "spotify:artist:0LyfQWJT6nXafLPZqxe9Of"
+            }
+          ],
+          "available_markets": [],
+          "external_urls": {
+            "spotify": "https://open.spotify.com/album/0AA35HK5gDxxJ2N7VZsx9W"
+          },
+          "href": "https://api.spotify.com/v1/albums/0AA35HK5gDxxJ2N7VZsx9W",
+          "id": "0AA35HK5gDxxJ2N7VZsx9W",
+          "images": [
+            {
+              "height": 640,
+              "url": "https://i.scdn.co/image/ab67616d0000b273600b4cb7b14cbeb3404fd15d",
+              "width": 640
+            },
+            {
+              "height": 300,
+              "url": "https://i.scdn.co/image/ab67616d00001e02600b4cb7b14cbeb3404fd15d",
+              "width": 300
+            },
+            {
+              "height": 64,
+              "url": "https://i.scdn.co/image/ab67616d00004851600b4cb7b14cbeb3404fd15d",
+              "width": 64
+            }
+          ],
+          "name": "Temazos y Hitazos: 2000's",
+          "release_date": "2022-03-14",
+          "release_date_precision": "day",
+          "total_tracks": 48,
+          "type": "album",
+          "uri": "spotify:album:0AA35HK5gDxxJ2N7VZsx9W"
+        },
+        "artists": [
+          {
+            "external_urls": {
+              "spotify": "https://open.spotify.com/artist/2MqhkhX4npxDZ62ObR5ELO"
+            },
+            "href": "https://api.spotify.com/v1/artists/2MqhkhX4npxDZ62ObR5ELO",
+            "id": "2MqhkhX4npxDZ62ObR5ELO",
+            "name": "Hoobastank",
+            "type": "artist",
+            "uri": "spotify:artist:2MqhkhX4npxDZ62ObR5ELO"
+          }
+        ],
+        "available_markets": [],
+        "disc_number": 1,
+        "duration_ms": 232800,
+        "explicit": false,
+        "external_ids": {
+          "isrc": "USIR20300704"
+        },
+        "external_urls": {
+          "spotify": "https://open.spotify.com/track/3e96gL2t9JYdzlVvJP3TFx"
+        },
+        "href": "https://api.spotify.com/v1/tracks/3e96gL2t9JYdzlVvJP3TFx",
+        "id": "3e96gL2t9JYdzlVvJP3TFx",
+        "is_local": false,
+        "name": "The Reason 2",
+        "popularity": 1,
+        "preview_url": null,
+        "track_number": 9,
+        "type": "track",
+        "uri": "spotify:track:3e96gL2t9JYdzlVvJP3TFx"
+      }
+    ],
+    "limit": 2,
+    "next": "https://api.spotify.com/v1/search?query=The+Reason&type=track&offset=2&limit=2",
+    "offset": 0,
+    "previous": null,
+    "total": 10016
+  }
 }

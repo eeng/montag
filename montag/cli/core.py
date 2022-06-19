@@ -151,7 +151,6 @@ def add_suggestion(
 @click.option("-m", "--max-suggestions-per-track", type=int, default=3, show_default=True)
 @click.option("-l", "--max-tracks-to-replicate", type=int)
 @click.option("-d", "--dry-run", type=bool, default=False, is_flag=True)
-# TODO improve error handling when things don't exists
 def replicate_playlist(
     src_provider: Provider,
     dst_provider: Provider,

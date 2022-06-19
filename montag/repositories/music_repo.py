@@ -1,6 +1,7 @@
 from typing import Optional, Protocol
+
 from montag.domain.entities import Playlist, PlaylistId, Track, TrackId
-from montag.domain.errors import NotFoundError
+from montag.domain.errors import PlaylistNotFoundError
 from montag.util.collections import find_by
 
 
@@ -33,7 +34,7 @@ class MusicRepo(Protocol):
         if playlist := self.find_playlist_by_id(playlist_id):
             return playlist
         else:
-            raise NotFoundError(f"Could not find a playlist with ID '{playlist_id}'")
+            raise PlaylistNotFoundError
 
     def find_mirror_playlist(self, other: Playlist) -> Optional[Playlist]:
         def is_liked_or_has_same_name(p: Playlist):

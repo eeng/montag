@@ -1,6 +1,7 @@
 from unittest.mock import call
 import pytest
 from montag.domain.entities import Playlist, Track
+from montag.domain.errors import PlaylistNotFoundError
 from montag.repositories.ytmusic_repo import YTMusicError, YouTubeMusicRepo
 from tests import factory
 from tests.helpers import mock, json_resource
@@ -42,6 +43,15 @@ def test_find_tracks_in_playlist():
         Track(id="qG6_d9tpR84", name="Zombie", album="Disobey", artists=["Bad Wolves"]),
         Track(id="6tsW4ik73ac", name="No More", album=None, artists=["Disturbed"]),
     ]
+
+
+def test_find_tracks_in_inexistent_playlist():
+    client = mock(YTMusic)
+    client.get_playlist.side_effect = Exception("Server returned HTTP 404: Not Found.")
+    repo = YouTubeMusicRepo(client)
+
+    with pytest.raises(PlaylistNotFoundError):
+        repo.find_tracks(playlist_id="LM")
 
 
 def test_search_matching_tracks():

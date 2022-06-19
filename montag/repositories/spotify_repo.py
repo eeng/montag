@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 
-from montag.clients.spotify_client import SpotifyClient
+from montag.clients.spotify_client import BadRequestError, SpotifyClient
 from montag.domain.entities import (
     LikedSongsPlaylistByProvider,
     Playlist,
@@ -9,6 +9,7 @@ from montag.domain.entities import (
     Track,
     TrackId,
 )
+from montag.domain.errors import PlaylistNotFoundError
 from montag.repositories.music_repo import MusicRepo
 
 LIKED_SONGS_ID = LikedSongsPlaylistByProvider[Provider.SPOTIFY]
@@ -49,10 +50,16 @@ class SpotifyRepo(MusicRepo):
         ]
 
     def _fetch_liked_or_playlist_tracks(self, playlist_id, **kwargs):
-        if playlist_id == LIKED_SONGS_ID:
-            return self.client.liked_tracks(**kwargs)
-        else:
-            return self.client.playlist_tracks(playlist_id, **kwargs)
+        try:
+            if playlist_id == LIKED_SONGS_ID:
+                return self.client.liked_tracks(**kwargs)
+            else:
+                return self.client.playlist_tracks(playlist_id, **kwargs)
+        except BadRequestError as e:
+            if e.status == 404:
+                raise PlaylistNotFoundError(playlist_id)
+            else:
+                raise e
 
     def search_matching_tracks(self, target: Track, limit=10) -> list[Track]:
         q = f"track:{target.name} artist:{target.artists[0]}"

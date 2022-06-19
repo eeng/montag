@@ -8,6 +8,7 @@ from montag.domain.entities import (
     Track,
     TrackId,
 )
+from montag.domain.errors import PlaylistNotFoundError
 from montag.repositories.music_repo import MusicRepo
 from ytmusicapi import YTMusic
 
@@ -30,8 +31,14 @@ class YouTubeMusicRepo(MusicRepo):
         ]
 
     def find_tracks(self, playlist_id: PlaylistId) -> list[Track]:
-        response = self.client.get_playlist(playlistId=playlist_id)
-        return self._track_from_json(response["tracks"])
+        try:
+            response = self.client.get_playlist(playlistId=playlist_id)
+            return self._track_from_json(response["tracks"])
+        except Exception as e:
+            if "404" in str(e):
+                raise PlaylistNotFoundError(playlist_id)
+            else:
+                raise e
 
     def search_matching_tracks(self, target: Track, limit=10) -> list[Track]:
         q = f"{target.name} {target.artists[0]}"

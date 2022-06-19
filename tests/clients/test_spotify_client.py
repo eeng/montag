@@ -127,8 +127,10 @@ def test_bad_request_error(auth):
     http_adapter = mock_http_adapter(get=response)
 
     client = SpotifyClient(auth_token=auth.token, http_adapter=http_adapter)
-    with pytest.raises(BadRequestError):
+    with pytest.raises(BadRequestError) as excinfo:
         client.me()
+
+    assert excinfo.value.status == 401
 
 
 def test_token_expiration():

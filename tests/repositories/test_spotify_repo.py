@@ -1,8 +1,10 @@
-from montag.clients.spotify_client import SpotifyClient
+import pytest
+from montag.clients.spotify_client import BadRequestError, SpotifyClient
 from montag.domain.entities import Playlist, Track
+from montag.domain.errors import PlaylistNotFoundError
 from montag.repositories.spotify_repo import LIKED_SONGS_ID, SpotifyRepo
 from tests import factory
-from tests.helpers import mock, json_resource
+from tests.helpers import json_resource, mock
 from tests.matchers import has_attrs
 
 
@@ -41,6 +43,18 @@ def test_find_tracks_in_another_playlist():
         has_attrs(name="Lamento Boliviano"),
         has_attrs(name="La chispa adecuada"),
     ] == tracks
+
+
+def test_find_tracks_in_inexistent_playlist():
+    client = mock(SpotifyClient)
+    client.playlist_tracks.side_effect = BadRequestError({"status": 404})
+    repo = SpotifyRepo(client)
+    playlist_id = "IXCRW"
+
+    with pytest.raises(PlaylistNotFoundError) as excinfo:
+        repo.find_tracks(playlist_id=playlist_id)
+
+    assert excinfo.value.playlist_id == playlist_id
 
 
 def test_find_playlists():
