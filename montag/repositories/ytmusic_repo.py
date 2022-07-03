@@ -35,10 +35,7 @@ class YouTubeMusicRepo(MusicRepo):
             response = self.client.get_playlist(playlistId=playlist_id)
             return self._track_from_json(response["tracks"])
         except Exception as e:
-            if "400" in str(e) or "404" in str(e):
-                raise PlaylistNotFoundError(playlist_id)
-            else:
-                raise e
+            raise PlaylistNotFoundError(playlist_id, Provider.YT_MUSIC)
 
     def search_matching_tracks(self, target: Track, limit=10) -> list[Track]:
         q = f"{target.name} {target.artists[0]}"

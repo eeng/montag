@@ -1,3 +1,4 @@
+from tokenize import Pointfloat
 from unittest.mock import call
 
 from montag.domain.entities import Provider, SuggestedTrack, Track
@@ -84,7 +85,7 @@ def test_when_a_track_already_exists_in_dst_playlist(repos, spotify_repo, ytmusi
 
 
 def test_when_src_playlist_do_not_exists(repos, spotify_repo):
-    error = PlaylistNotFoundError("WQRSD")
+    error = PlaylistNotFoundError("WQRSD", Provider.YT_MUSIC)
     spotify_repo.find_tracks.side_effect = error
     request = SearchMatchingTracks.Request(
         src_playlist_id="inexistent",
@@ -95,4 +96,6 @@ def test_when_src_playlist_do_not_exists(repos, spotify_repo):
 
     response = SearchMatchingTracks(repos).execute(request)
 
-    assert response == Failure("Could not find a playlist with ID 'WQRSD'", error)
+    assert response == Failure(
+        "Could not find a playlist with ID 'WQRSD' in Provider.YT_MUSIC", error
+    )

@@ -57,7 +57,7 @@ class SpotifyRepo(MusicRepo):
                 return self.client.playlist_tracks(playlist_id, **kwargs)
         except BadRequestError as e:
             if e.status == 404:
-                raise PlaylistNotFoundError(playlist_id)
+                raise PlaylistNotFoundError(playlist_id, Provider.SPOTIFY)
             else:
                 raise e
 
