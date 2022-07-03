@@ -1,102 +1,114 @@
 {
-    "id": "PLVUD6HCAOnsHaSO5FwX-tyiEy7XpWmx5M",
-    "privacy": "PUBLIC",
-    "title": "Test Playlist 1",
-    "thumbnails": [
-        {
-            "url": "https://yt3.ggpht.com/ohpyVadH4tq9HI2IRG5nqeTZVygvMiLBClQ_DEJlRvbP03-2BNZM-v7LDq5-OA5lf8UfNr27KXg=s192",
-            "width": 192,
-            "height": 192
-        },
-        {
-            "url": "https://yt3.ggpht.com/ohpyVadH4tq9HI2IRG5nqeTZVygvMiLBClQ_DEJlRvbP03-2BNZM-v7LDq5-OA5lf8UfNr27KXg=s576",
-            "width": 576,
-            "height": 576
-        },
-        {
-            "url": "https://yt3.ggpht.com/ohpyVadH4tq9HI2IRG5nqeTZVygvMiLBClQ_DEJlRvbP03-2BNZM-v7LDq5-OA5lf8UfNr27KXg=s1200",
-            "width": 1200,
-            "height": 1200
-        }
-    ],
-    "description": null,
-    "author": {
-        "name": "Emma",
-        "id": "UC0byS93fJLZ2nDZoPqGaxCA"
+  "id": "PLVUD6HCAOnsHaSO5FwX-tyiEy7XpWmx5M",
+  "privacy": "PUBLIC",
+  "title": "Test Playlist 1",
+  "thumbnails": [
+    {
+      "url": "https://yt3.ggpht.com/ohpyVadH4tq9HI2IRG5nqeTZVygvMiLBClQ_DEJlRvbP03-2BNZM-v7LDq5-OA5lf8UfNr27KXg=s192",
+      "width": 192,
+      "height": 192
     },
-    "duration": "8 minutes, 8 seconds",
-    "trackCount": 2,
-    "suggestions_token": "4qmFsgIwEiRWTFBMVlVENkhDQU9uc0hhU081RndYLXR5aUV5N1hwV214NU0aCGtnRURDT1VF",
-    "tracks": [
+    {
+      "url": "https://yt3.ggpht.com/ohpyVadH4tq9HI2IRG5nqeTZVygvMiLBClQ_DEJlRvbP03-2BNZM-v7LDq5-OA5lf8UfNr27KXg=s576",
+      "width": 576,
+      "height": 576
+    },
+    {
+      "url": "https://yt3.ggpht.com/ohpyVadH4tq9HI2IRG5nqeTZVygvMiLBClQ_DEJlRvbP03-2BNZM-v7LDq5-OA5lf8UfNr27KXg=s1200",
+      "width": 1200,
+      "height": 1200
+    }
+  ],
+  "description": null,
+  "author": {
+    "name": "Emma",
+    "id": "UC0byS93fJLZ2nDZoPqGaxCA"
+  },
+  "duration": "8 minutes, 8 seconds",
+  "trackCount": 2,
+  "suggestions_token": "4qmFsgIwEiRWTFBMVlVENkhDQU9uc0hhU081RndYLXR5aUV5N1hwV214NU0aCGtnRURDT1VF",
+  "tracks": [
+    {
+      "videoId": "qG6_d9tpR84",
+      "title": "Zombie",
+      "artists": [
         {
-            "videoId": "qG6_d9tpR84",
-            "title": "Zombie",
-            "artists": [
-                {
-                    "name": "Bad Wolves",
-                    "id": "UCNZgKQ8UFu_-UlJizJEBxkg"
-                }
-            ],
-            "album": {
-                "name": "Disobey",
-                "id": "MPREb_HuKG1awDF6A"
-            },
-            "likeStatus": "LIKE",
-            "thumbnails": [
-                {
-                    "url": "https://lh3.googleusercontent.com/hvDj7hKmqmEXzWDxQChmRCVXsXORs-TZi0jw98BSOV9-P_JQtWJMjsZ3e_T4r5ziaCG0dy74TFeDiJbr=w60-h60-l90-rj",
-                    "width": 60,
-                    "height": 60
-                },
-                {
-                    "url": "https://lh3.googleusercontent.com/hvDj7hKmqmEXzWDxQChmRCVXsXORs-TZi0jw98BSOV9-P_JQtWJMjsZ3e_T4r5ziaCG0dy74TFeDiJbr=w120-h120-l90-rj",
-                    "width": 120,
-                    "height": 120
-                }
-            ],
-            "isAvailable": true,
-            "isExplicit": false,
-            "duration": "4:15",
-            "duration_seconds": 255,
-            "setVideoId": "56B44F6D10557CC6",
-            "feedbackTokens": {
-                "add": "AB9zfpKKDdFyTQCrSUsI8kS1hma88OeNSfdDJYk67Xms5HOwcRgdp1B9zgNkYhAXd_Xxu4RSCxUJ9x5tChZMpRlnKyE4DgDgmw",
-                "remove": "AB9zfpIJqav9fu3k073C-uqxod4Iy_wifNUBeKsa212_Lo-PcexMbjlhPEv1aToNVoAG6FNh9KeTml3I43hTDqGwq3TTPrHXBg"
-            }
+          "name": "Bad Wolves",
+          "id": "UCNZgKQ8UFu_-UlJizJEBxkg"
+        }
+      ],
+      "album": {
+        "name": "Disobey",
+        "id": "MPREb_HuKG1awDF6A"
+      },
+      "likeStatus": "LIKE",
+      "thumbnails": [
+        {
+          "url": "https://lh3.googleusercontent.com/hvDj7hKmqmEXzWDxQChmRCVXsXORs-TZi0jw98BSOV9-P_JQtWJMjsZ3e_T4r5ziaCG0dy74TFeDiJbr=w60-h60-l90-rj",
+          "width": 60,
+          "height": 60
         },
         {
-            "videoId": "6tsW4ik73ac",
-            "title": "No More",
-            "artists": [
-                {
-                    "name": "Disturbed",
-                    "id": "UCMHHDXMvnMKRzuEKtMe8ZRA"
-                }
-            ],
-            "album": null,
-            "likeStatus": "INDIFFERENT",
-            "thumbnails": [
-                {
-                    "url": "https://lh3.googleusercontent.com/Sl7hXYnUfq--7m3G1jtOP5uYX2o7FKb7xwT320BVjAdgZY2ZfCIjbSFDPltMt4H-zaq7uGvyEUfQg5U=w60-h60-l90-rj",
-                    "width": 60,
-                    "height": 60
-                },
-                {
-                    "url": "https://lh3.googleusercontent.com/Sl7hXYnUfq--7m3G1jtOP5uYX2o7FKb7xwT320BVjAdgZY2ZfCIjbSFDPltMt4H-zaq7uGvyEUfQg5U=w120-h120-l90-rj",
-                    "width": 120,
-                    "height": 120
-                }
-            ],
-            "isAvailable": true,
-            "isExplicit": false,
-            "duration": "3:53",
-            "duration_seconds": 233,
-            "setVideoId": "289F4A46DF0A30D2",
-            "feedbackTokens": {
-                "add": "AB9zfpKTHXer2LALM4GcwZPMAaD6oET36qf6cyFlAnx4M9ikMsz3i8k45RGvT04v6H9a-Nz-RgGzT4Fnf3uwS8fwOCrEYKd-qg",
-                "remove": "AB9zfpJV0CGaDWdZ-5F-R6usOFzPHzpzzxdNvz2-oavv9fWR0oXsyEztbKEf5TEi_7IltzLOTaVkjEWuAa-SfeEcKqlImNjlbA"
-            }
+          "url": "https://lh3.googleusercontent.com/hvDj7hKmqmEXzWDxQChmRCVXsXORs-TZi0jw98BSOV9-P_JQtWJMjsZ3e_T4r5ziaCG0dy74TFeDiJbr=w120-h120-l90-rj",
+          "width": 120,
+          "height": 120
         }
-    ],
-    "duration_seconds": 488
+      ],
+      "isAvailable": true,
+      "isExplicit": false,
+      "duration": "4:15",
+      "duration_seconds": 255,
+      "setVideoId": "56B44F6D10557CC6",
+      "feedbackTokens": {
+        "add": "AB9zfpKKDdFyTQCrSUsI8kS1hma88OeNSfdDJYk67Xms5HOwcRgdp1B9zgNkYhAXd_Xxu4RSCxUJ9x5tChZMpRlnKyE4DgDgmw",
+        "remove": "AB9zfpIJqav9fu3k073C-uqxod4Iy_wifNUBeKsa212_Lo-PcexMbjlhPEv1aToNVoAG6FNh9KeTml3I43hTDqGwq3TTPrHXBg"
+      }
+    },
+    {
+      "videoId": "6tsW4ik73ac",
+      "title": "No More",
+      "artists": [
+        {
+          "name": "Disturbed",
+          "id": "UCMHHDXMvnMKRzuEKtMe8ZRA"
+        }
+      ],
+      "album": null,
+      "likeStatus": "INDIFFERENT",
+      "thumbnails": [
+        {
+          "url": "https://lh3.googleusercontent.com/Sl7hXYnUfq--7m3G1jtOP5uYX2o7FKb7xwT320BVjAdgZY2ZfCIjbSFDPltMt4H-zaq7uGvyEUfQg5U=w60-h60-l90-rj",
+          "width": 60,
+          "height": 60
+        },
+        {
+          "url": "https://lh3.googleusercontent.com/Sl7hXYnUfq--7m3G1jtOP5uYX2o7FKb7xwT320BVjAdgZY2ZfCIjbSFDPltMt4H-zaq7uGvyEUfQg5U=w120-h120-l90-rj",
+          "width": 120,
+          "height": 120
+        }
+      ],
+      "isAvailable": true,
+      "isExplicit": false,
+      "duration": "3:53",
+      "duration_seconds": 233,
+      "setVideoId": "289F4A46DF0A30D2",
+      "feedbackTokens": {
+        "add": "AB9zfpKTHXer2LALM4GcwZPMAaD6oET36qf6cyFlAnx4M9ikMsz3i8k45RGvT04v6H9a-Nz-RgGzT4Fnf3uwS8fwOCrEYKd-qg",
+        "remove": "AB9zfpJV0CGaDWdZ-5F-R6usOFzPHzpzzxdNvz2-oavv9fWR0oXsyEztbKEf5TEi_7IltzLOTaVkjEWuAa-SfeEcKqlImNjlbA"
+      }
+    },
+    {
+      "videoId": null,
+      "title": "Should be ignored cause does not have videoId",
+      "artists": [],
+      "album": null,
+      "likeStatus": "INDIFFERENT",
+      "thumbnails": [],
+      "isAvailable": true,
+      "isExplicit": false,
+      "duration": "3:53",
+      "duration_seconds": 233
+    }
+  ],
+  "duration_seconds": 488
 }

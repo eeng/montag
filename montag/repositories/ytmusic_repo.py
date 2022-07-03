@@ -52,6 +52,7 @@ class YouTubeMusicRepo(MusicRepo):
                 artists=[artist["name"] for artist in item["artists"]],
             )
             for item in tracks_json
+            if item["videoId"]
         ]
 
     def create_playlist(self, name: str) -> Playlist:

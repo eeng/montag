@@ -8,7 +8,6 @@ from pydantic import BaseModel
 
 
 @dataclass
-# TODO i don't think its working with the liked playlists
 class SearchMatchingTracks(UseCase):
     repos: dict[Provider, MusicRepo]
 
