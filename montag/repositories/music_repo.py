@@ -10,9 +10,8 @@ class MusicRepo(Protocol):
         """Returns all the user's playlists."""
         ...
 
-    # TODO make sure this throws NotFoundError when the playlist doesn't exists
     def find_tracks(self, playlist_id: PlaylistId) -> list[Track]:
-        """Returns all tracks in the specified playlist."""
+        """Returns all tracks in the specified playlist. Throws PlaylistNotFoundError if the playlist does not exists."""
         ...
 
     def search_matching_tracks(self, target: Track, limit=10) -> list[Track]:
@@ -29,12 +28,6 @@ class MusicRepo(Protocol):
 
     def find_playlist_by_id(self, playlist_id: PlaylistId) -> Optional[Playlist]:
         return find_by(lambda p: p.id == playlist_id, self.find_playlists())
-
-    def get_playlist_by_id(self, playlist_id: PlaylistId) -> Playlist:
-        if playlist := self.find_playlist_by_id(playlist_id):
-            return playlist
-        else:
-            raise PlaylistNotFoundError
 
     def find_mirror_playlist(self, other: Playlist) -> Optional[Playlist]:
         def is_liked_or_has_same_name(p: Playlist):
