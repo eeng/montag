@@ -35,7 +35,7 @@ class YouTubeMusicRepo(MusicRepo):
             response = self.client.get_playlist(playlistId=playlist_id)
             return self._track_from_json(response["tracks"])
         except Exception as e:
-            if "404" in str(e):
+            if "400" in str(e) or "404" in str(e):
                 raise PlaylistNotFoundError(playlist_id)
             else:
                 raise e

@@ -54,6 +54,15 @@ def test_find_tracks_in_inexistent_playlist():
         repo.find_tracks(playlist_id="LM")
 
 
+def test_find_tracks_with_invalid_playlist_id():
+    client = mock(YTMusic)
+    client.get_playlist.side_effect = Exception("Server returned HTTP 400: Bad Request.")
+    repo = YouTubeMusicRepo(client)
+
+    with pytest.raises(PlaylistNotFoundError):
+        repo.find_tracks(playlist_id="LM")
+
+
 def test_search_matching_tracks():
     client = mock(YTMusic, search=json_resource("ytmusic/search.json"))
     repo = YouTubeMusicRepo(client)
